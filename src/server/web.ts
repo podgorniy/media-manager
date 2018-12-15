@@ -5,7 +5,7 @@ import * as path from 'path'
 import {connect} from 'mongoose'
 require('./models/images')
 
-const DEV_PORT = 8888
+const DEV_PORT = 8888 // TODO: move to environment variables
 
 export async function startServer() {
     const app = express()
@@ -16,5 +16,5 @@ export async function startServer() {
     initRoutes(app)
     const appPort = process.env.PORT || DEV_PORT
     app.listen(appPort)
-    console.log(`App started at ${appPort}`)
+    console.log(`App started at http://localhost:${appPort}`)
 }

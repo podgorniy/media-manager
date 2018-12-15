@@ -8,6 +8,8 @@ function asyncHandler(fn) {
 
 export function initRoutes(app: Express) {
     app.get('*', asyncHandler(async (req, res) => {
+        req.session.visits = (req.session.visits || 0) + 1
+        res.locals.visits = req.session.visits
         res.render('default')
     }))
 }
