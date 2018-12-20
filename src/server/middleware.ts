@@ -3,10 +3,10 @@ import {isDev} from '../common/lib'
 import * as express from 'express'
 import session = require('express-session')
 import {SESSION_SECRET} from '../common/config'
+
 const mongoose = require('mongoose')
 const connectMongo = require('connect-mongo')
 const Bundler = require('parcel-bundler')
-
 const MongoStore = connectMongo(session)
 
 export function initMiddleware(app: Express) {
