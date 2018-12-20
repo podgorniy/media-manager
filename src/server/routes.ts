@@ -1,4 +1,4 @@
-import {Express} from 'express';
+import {Express} from 'express'
 
 function asyncHandler(fn) {
     return (req, res, next) => {
