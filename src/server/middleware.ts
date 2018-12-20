@@ -2,6 +2,7 @@ import {Express} from 'express'
 import {isDev} from '../common/lib'
 import * as express from 'express'
 import session = require('express-session')
+import {SESSION_SECRET} from '../common/config'
 const mongoose = require('mongoose')
 const connectMongo = require('connect-mongo')
 const Bundler = require('parcel-bundler')
@@ -18,7 +19,7 @@ export function initMiddleware(app: Express) {
     app.use(bundler.middleware())
     app.use(express.static('static'))
     app.use(session({
-        secret: 'mamamilaramu', // TODO: move to environment variables
+        secret: SESSION_SECRET,
         store: new MongoStore({
             mongooseConnection: mongoose.connection,
             collection: 'sessions'
