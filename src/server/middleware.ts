@@ -25,6 +25,7 @@ export function initMiddleware(app: Express) {
             collection: 'sessions'
         }),
         resave: false,
+        saveUninitialized: false,
         cookie: {
             // secure: true //TODO make secure for production
         }
