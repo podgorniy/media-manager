@@ -1,4 +1,4 @@
-import {model, Schema, Document} from 'mongoose';
+import {model, Schema, Document} from 'mongoose'
 
 interface IImage extends Document {
     url: string
@@ -17,4 +17,4 @@ const ImageSchema = new Schema({
     collection: 'images'
 })
 
-const ImageModel = model<IImage>('image', ImageSchema)
+export const ImageModel = model<IImage>('image', ImageSchema)

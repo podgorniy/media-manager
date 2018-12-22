@@ -4,7 +4,6 @@ import {initRoutes} from './routes'
 import * as path from 'path'
 import {connect} from 'mongoose'
 import {MONGO_URL, WEB_PORT} from '../common/config'
-require('./models/images')
 
 export async function startServer() {
     const app = express()

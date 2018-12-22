@@ -3,6 +3,8 @@ import {isDev} from '../common/lib'
 import * as express from 'express'
 import session = require('express-session')
 import {SESSION_SECRET} from '../common/config'
+import {configurePassport} from './passport'
+import bodyParser = require('body-parser')
 
 const mongoose = require('mongoose')
 const connectMongo = require('connect-mongo')
@@ -30,4 +32,8 @@ export function initMiddleware(app: Express) {
             secure: !isDev()
         }
     }))
+    app.use(bodyParser.urlencoded({
+        extended: true // use https://www.npmjs.com/package/qs#readme parsing library
+    }))
+    configurePassport(app)
 }

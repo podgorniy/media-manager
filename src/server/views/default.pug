@@ -10,3 +10,7 @@ html
     body
         h1 Hi there, you visited this website #{visits}
         img(src="/img/clouds-dawn-dusk-459095.jpg" width=350)
+        form(action="/api/v1/login" method="post")
+            input(name="name" type="text")
+            input(name="password" type="password")
+            button(type="submit") Login
