@@ -6,7 +6,6 @@ html
         link(rel="icon" href="favicon.png" sizes="16x16 32x32" type="image/png")
         title= title || 'FIXME'
         link(rel="stylesheet" href="/dist/index.css")
-        script(src="/dist/index.js")
     body
         h1 Hi there, you visited this website #{visits}
         img(src="/img/clouds-dawn-dusk-459095.jpg" width=350)
@@ -14,3 +13,12 @@ html
             input(name="name" type="text")
             input(name="password" type="password")
             button(type="submit") Login
+        if isLoggedIn
+            h1 Hi user
+            button.logout Logout me
+        else
+            h1 Hi guest
+        form.imgupload(action="/")
+            input(type="file" multiple)
+            button Выслать
+        script(src="/dist/index.js")

@@ -3,9 +3,13 @@ import {compare, hash} from 'bcrypt'
 
 const saltRounds = 10
 
-interface IUser extends Document {
+export interface IUserFields {
+    _id: any
     name: string
     password: string
+}
+
+interface IUser extends IUserFields, Document {
     passwordMatches: (password: string) => Promise<boolean>
 }
 
