@@ -1,5 +1,6 @@
 import {Express} from 'express'
-import {UserModel} from './models/user'
+import {IUserFields, UserModel} from './models/user'
+import {compareHashed} from './utils';
 
 const passport = require('passport')
 const Strategy = require('passport-local')
@@ -9,13 +10,13 @@ export function configurePassport(app: Express) {
         usernameField: 'name',
         passwordField: 'password'
     }, async function (username, password, done) {
-        let user
+        let user: IUserFields
         try {
             user = await UserModel.findOne({name: username})
             if (!user) {
                 return done(null, false, {message: 'wrong username'})
             }
-            if (await user.passwordMatches(password)) {
+            if (await compareHashed(password, user.password)) {
                 return done(null, user)
             } else {
                 return done(null, false, {message: 'wrong password'})
