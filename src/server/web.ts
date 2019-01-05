@@ -4,7 +4,6 @@ import {initRoutes} from './routes'
 import * as path from 'path'
 import {connect} from 'mongoose'
 import {MONGO_URL, WEB_PORT} from '../common/config'
-import {UserModel} from './models/user'
 
 export async function startServer() {
     const app = express()
@@ -13,12 +12,6 @@ export async function startServer() {
     await connect(MONGO_URL, {
         useNewUrlParser: true
     })
-    await UserModel.deleteMany({name: 'admin'})
-    const newAdminUser = new UserModel({
-        name: 'admin',
-        password: await UserModel.hashString('123')
-    })
-    await newAdminUser.save()
     initMiddleware(app)
     initRoutes(app)
     app.listen(WEB_PORT)
