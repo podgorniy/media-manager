@@ -13,8 +13,8 @@ const MongoStore = connectMongo(session)
 
 export function initMiddleware(app: Express) {
     const bundler = new Bundler('./src/client/index.ts', {
-        outDir: 'static/dist',
-        publicUrl: '/dist',
+        outDir: 'static/client',
+        publicUrl: '/client',
         contentHash: false,
         sourceMaps: isDev()
     })

@@ -2,4 +2,4 @@
 .idea
 .cache
 node_modules
-static/dist
+static/client
