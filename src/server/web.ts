@@ -3,7 +3,7 @@ import {initMiddleware} from './middleware'
 import {initRoutes} from './routes'
 import * as path from 'path'
 import {connect} from 'mongoose'
-import {MONGO_URL, WEB_PORT} from '../common/config'
+import {MONGO_URL, WEB_PORT} from './env'
 
 export async function startServer() {
     const app = express()

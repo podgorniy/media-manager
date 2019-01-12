@@ -2,7 +2,7 @@ import {Express} from 'express'
 import {isDev} from '../common/lib'
 import * as express from 'express'
 import session = require('express-session')
-import {SESSION_SECRET} from '../common/config'
+import {SESSION_SECRET} from './env'
 import {configurePassport} from './passport'
 import bodyParser = require('body-parser')
 

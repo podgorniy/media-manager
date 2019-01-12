@@ -1,6 +1,6 @@
 import {RequestHandler} from 'express';
 import * as path from 'path';
-import {UPLOADS_DIR} from '../common/config';
+import {UPLOADS_DIR} from './env';
 import {compare, hash} from 'bcrypt';
 
 export function asyncHandler(fn: RequestHandler) {
