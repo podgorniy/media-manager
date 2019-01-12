@@ -12,7 +12,7 @@ const Bundler = require('parcel-bundler')
 const MongoStore = connectMongo(session)
 
 export function initMiddleware(app: Express) {
-    const bundler = new Bundler('./src/client/index.ts', {
+    const bundler = new Bundler('./src/client/index.tsx', {
         outDir: 'static/client',
         publicUrl: '/client',
         contentHash: false,
