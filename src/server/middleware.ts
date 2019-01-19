@@ -32,8 +32,6 @@ export function initMiddleware(app: Express) {
             secure: !isDev()
         }
     }))
-    app.use(bodyParser.urlencoded({
-        extended: true // use https://www.npmjs.com/package/qs#readme parsing library
-    }))
+    app.use(bodyParser.json())
     configurePassport(app)
 }

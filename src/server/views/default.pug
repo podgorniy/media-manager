@@ -8,18 +8,6 @@ html
         link(rel="stylesheet" href="/client/index.css")
     body
         div(id="app")
-        //h1 Hi there, you visited this website #{visits}
-        //img(src="/img/clouds-dawn-dusk-459095.jpg" width=350)
-        //form(action="/api/v1/login" method="post")
-        //    input(name="name" type="text")
-        //    input(name="password" type="password")
-        //    button(type="submit") Login
-        //if isLoggedIn
-        //    h1 Hi user
-        //    button.logout Logout me
-        //else
-        //    h1 Hi guest
-        //form.imgupload(action="/")
-        //    input(type="file" multiple)
-        //    button Выслать
+        script
+            != 'window["initialState"] = ' + JSON.stringify(initialState) + ';'
         script(src="/client/index.js")
