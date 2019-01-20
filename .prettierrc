@@ -1,0 +1,9 @@
+{
+    "tabWidth": 4,
+    "semi": false,
+    "singleQuote": true,
+    "printWidth": 180,
+    "parser": "typescript",
+    "jsxSingleQuote": true,
+    "bracketSpacing": false
+}
