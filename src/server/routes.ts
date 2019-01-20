@@ -14,7 +14,7 @@ const passport = require('passport')
 declare global {
     namespace Express {
         interface Request {
-            user: IUserFields
+            user?: IUserFields
         }
 
         interface Response {
