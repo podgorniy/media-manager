@@ -11,19 +11,19 @@ import {IInitialState} from '../common/interfaces';
 const passport = require('passport')
 
 // https://stackoverflow.com/a/47448486
-declare global {
-    namespace Express {
-        interface Request {
-            user?: IUserFields
-        }
-
-        interface Response {
-            locals: {
-                initialState: IInitialState
-            }
-        }
-    }
-}
+// declare global {
+//     namespace Express {
+//         interface Request {
+//             user?: IUserFields
+//         }
+//
+//         interface Response {
+//             locals: {
+//                 initialState: IInitialState
+//             }
+//         }
+//     }
+// }
 
 function isAuthenticated(req, res, next) {
     if (req.isAuthenticated()) {
