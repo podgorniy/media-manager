@@ -32,23 +32,3 @@ if (logoutButton) {
         console.log('logoutRes', logoutRes)
     })
 }
-
-// const imgupload = document.querySelector('.imgupload')
-// if (imgupload) {
-//     imgupload.addEventListener('submit', async (event) => {
-//         event.preventDefault()
-//         const filesField: HTMLInputElement = imgupload.querySelector('input[type="file"]')
-//         const formData = new FormData()
-//         for (let i = 0; i < filesField.files.length; i += 1) {
-//             const file = filesField.files[i]
-//             const fileName = file.name
-//             formData.append('uploads', file, fileName)
-//         }
-//         const uploadResult = await fetch('/api/v1/upload', {
-//             method: 'POST',
-//             body: formData
-//         })
-//         const uploadResultJSON = await uploadResult.json()
-//         console.log(`uploadResultJSON`, uploadResultJSON)
-//     })
-// }
