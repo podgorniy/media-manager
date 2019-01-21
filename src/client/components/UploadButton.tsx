@@ -3,6 +3,7 @@ import * as React from 'react'
 
 export class UploadButton extends React.Component<{}, {}> {
     private _fileInputRef = React.createRef<HTMLInputElement>()
+
     private _handlerSubmit = async event => {
         event.preventDefault()
         const filesField: HTMLInputElement = this._fileInputRef.current
@@ -18,10 +19,6 @@ export class UploadButton extends React.Component<{}, {}> {
         })
         const uploadResultJSON = await uploadResult.json()
         console.log(`uploadResultJSON`, uploadResultJSON)
-    }
-    private _handleChange = event => {
-        event.preventDefault()
-        console.log(`Selected files: ${event.target.files}`)
     }
 
     render() {
