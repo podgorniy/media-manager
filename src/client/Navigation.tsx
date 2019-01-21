@@ -3,7 +3,7 @@ import {observer} from 'mobx-react'
 import {inject} from 'mobx-react'
 import {IAppState} from './app-state'
 import {LogoutBtn} from './LogoutBtn'
-import {UploadButton} from './components/UploadButton'
+import {UploadForm} from './components/UploadForm'
 
 @inject('appState')
 @observer
@@ -15,7 +15,7 @@ export class Navigation extends React.Component<{} & IAppState, {}> {
                 {appState.isAuthenticated ? (
                     <>
                         <LogoutBtn />
-                        <UploadButton />
+                        <UploadForm />
                     </>
                 ) : (
                     <div>Please login</div>

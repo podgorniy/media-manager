@@ -1,7 +1,7 @@
-require('./UploadButton.less')
+require('./UploadForm.less')
 import * as React from 'react'
 
-export class UploadButton extends React.Component<{}, {}> {
+export class UploadForm extends React.Component<{}, {}> {
     private _fileInputRef = React.createRef<HTMLInputElement>()
 
     private _handlerSubmit = async event => {
@@ -24,7 +24,10 @@ export class UploadButton extends React.Component<{}, {}> {
     render() {
         return (
             <form onSubmit={this._handlerSubmit}>
-                <input ref={this._fileInputRef} type='file' multiple />
+                <label className='UploadButtonLabel'>
+                    Choose files
+                    <input className='UploadButtonInput' ref={this._fileInputRef} type='file' multiple />
+                </label>
                 <button type='submit'>Submit</button>
             </form>
         )
