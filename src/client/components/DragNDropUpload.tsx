@@ -1,10 +1,14 @@
+require('dropzone/dist/min/basic.min.css')
+require('dropzone/dist/min/dropzone.min.css')
 require('./DragNDropUpload.less')
+import Dropzone = require('dropzone')
 import * as React from 'react'
 import {inject, observer} from 'mobx-react'
 import {IAppState} from '../app-state'
 
 interface IDragNDropUploadState {
-    visible: boolean
+    filesHovering: boolean
+    persistForm: boolean
 }
 
 @inject('appState')
@@ -12,62 +16,72 @@ interface IDragNDropUploadState {
 export class DragNDropUpload extends React.Component<{} & IAppState, IDragNDropUploadState> {
     private readonly ref = React.createRef<HTMLDivElement>()
     private dragEnterCount = 0
+    private dropZone
 
-    constructor(props) {
-        super(props)
-        this.state = {
-            visible: false
-        }
-        this._dragEnter = this._dragEnter.bind(this)
-        this._dragLeave = this._dragLeave.bind(this)
-        this._dragEnd = this._dragEnd.bind(this)
+    state = {
+        filesHovering: false,
+        persistForm: false
     }
 
-    private _dragEnter(event) {
+    private _dragEnter = () => {
         this.dragEnterCount += 1
         this.setState({
-            visible: true
+            filesHovering: true
         })
-        // console.log('_dragEnter', event.target, this.e, this.l)
     }
 
-    private _dragLeave(event) {
+    private _dragLeave = () => {
         this.dragEnterCount -= 1
         if (!this.dragEnterCount) {
             this.setState({
-                visible: false
+                filesHovering: false
             })
         }
     }
 
-    private _dragEnd(event) {
-        console.log('_dragEnd', event)
+    private _hideForm = () => {
+        this.dragEnterCount = 0
+        this.setState({
+            filesHovering: false,
+            persistForm: false
+        })
     }
 
     componentDidMount(): void {
-        console.log('add dnd events')
-        document.addEventListener('dragenter', this._dragEnter, false)
-        document.addEventListener('dragleave', this._dragLeave, false)
-        document.addEventListener('dragend', this._dragEnd, false) // TODO: review if needed
+        document.addEventListener('dragenter', this._dragEnter, true)
+        document.addEventListener('dragleave', this._dragLeave, true)
+        Dropzone.autoDiscover = false // otherwise runtime errors
+        this.dropZone = new Dropzone(this.ref.current, {
+            url: '/api/v1/upload',
+            paramName: 'uploads',
+            acceptedFiles: 'image/*,.mp4'
+        })
     }
 
     componentWillUnmount(): void {
-        console.log('remove dnd events')
-        document.removeEventListener('dragenter', this._dragEnter, false)
-        document.removeEventListener('dragleave', this._dragLeave, false)
-        document.removeEventListener('dragend', this._dragEnd, false) // TODO: review if needed
+        document.removeEventListener('dragenter', this._dragEnter, true)
+        document.removeEventListener('dragleave', this._dragLeave, true)
+        this.dropZone.disable()
+        this.dropZone = null
     }
 
     render() {
+        const shouldBeShown = this.state.persistForm || this.state.filesHovering
         return (
             <div
+                className='dropzone DragNDropUpload'
                 style={{
-                    display: this.state.visible ? 'block' : 'none'
+                    display: shouldBeShown ? 'block' : 'none'
                 }}
-                ref={this.ref}
-                className='DragNDropUpload'
             >
-                <h1>Heya</h1>
+                <div className='DragNDropUpload__dropzone' ref={this.ref}>
+                    <div className='DragNDropUpload__head'>
+                        <h1>Загрузка файлов</h1>
+                        <div className='DragNDropUpload__btn-wrapper'>
+                            <button onClick={this._hideForm}>Закрыть это</button>
+                        </div>
+                    </div>
+                </div>
             </div>
         )
     }

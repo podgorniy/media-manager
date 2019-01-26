@@ -1,8 +1,29 @@
 .DragNDropUpload {
     background: blue;
+    // [override .dropzone-s styles]
+    border: 0;
+    padding: 0;
+    // [/override .dropzone-s styles]
     bottom: 0;
     left: 0;
     position: fixed;
     right: 0;
     top: 0;
+}
+
+.DragNDropUpload__dropzone {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
+.DragNDropUpload__head {
+    display: flex;
+    align-items: center;
+}
+
+.DragNDropUpload__btn-wrapper {
+    padding-left: 1em;
 }
