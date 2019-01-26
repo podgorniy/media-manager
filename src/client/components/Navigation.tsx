@@ -1,8 +1,8 @@
 import * as React from 'react'
 import {inject, observer} from 'mobx-react'
-import {IAppState} from './app-state'
+import {IAppState} from '../app-state'
 import {LogoutBtn} from './LogoutBtn'
-import {UploadForm} from './components/UploadForm'
+import {UploadForm} from './UploadForm'
 
 @inject('appState')
 @observer

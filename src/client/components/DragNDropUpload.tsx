@@ -1,7 +1,7 @@
 require('./DragNDropUpload.less')
 import * as React from 'react'
 import {inject, observer} from 'mobx-react'
-import {IAppState} from './app-state'
+import {IAppState} from '../app-state'
 
 interface IDragNDropUploadState {
     visible: boolean

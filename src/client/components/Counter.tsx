@@ -1,6 +1,6 @@
 import * as React from 'react'
 import {inject, observer} from 'mobx-react'
-import {IAppState} from './app-state'
+import {IAppState} from '../app-state'
 
 @inject('appState')
 @observer

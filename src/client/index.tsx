@@ -1,6 +1,6 @@
 import * as React from 'react'
 import {isDev} from '../common/lib'
-import {App} from './App'
+import {App} from './components/App'
 import {render} from 'react-dom'
 
 require('./client.less')

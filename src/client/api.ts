@@ -6,12 +6,12 @@ export async function logout() {
     return logoutRes.success
 }
 
-export async function authenticate({userName, password}): Promise<{ userName?: string, success: boolean }> {
+export async function authenticate({userName, password}): Promise<{userName?: string; success: boolean}> {
     const loginRequestObj = await fetch('/api/v1/login', {
         method: 'POST',
         // https://stackoverflow.com/a/29823632
         headers: {
-            'Accept': 'application/json',
+            Accept: 'application/json',
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({
