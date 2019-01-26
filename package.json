@@ -46,6 +46,7 @@
     "parcel-bundler": "^1.10.3",
     "passport": "^0.4.0",
     "passport-local": "^1.0.0",
+    "prettier": "^1.16.1",
     "pug": "^2.0.3",
     "react": "^16.7.0",
     "react-dom": "^16.7.0",

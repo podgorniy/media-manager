@@ -1,7 +1,7 @@
 require('./DragNDropUpload.less')
-import * as React from 'react';
-import {inject, observer} from 'mobx-react';
-import {IAppState} from './app-state';
+import * as React from 'react'
+import {inject, observer} from 'mobx-react'
+import {IAppState} from './app-state'
 
 interface IDragNDropUploadState {
     visible: boolean
@@ -55,18 +55,20 @@ export class DragNDropUpload extends React.Component<{} & IAppState, IDragNDropU
         console.log('remove dnd events')
         document.removeEventListener('dragenter', this._dragEnter, false)
         document.removeEventListener('dragleave', this._dragLeave, false)
-        document.removeEventListener('dragend', this._dragEnd, false)  // TODO: review if needed
+        document.removeEventListener('dragend', this._dragEnd, false) // TODO: review if needed
     }
 
     render() {
-        return (<div
-            style={{
-                display: this.state.visible ? 'block' : 'none'
-            }}
-            ref={this.ref}
-            className='DragNDropUpload'
-        >
-            <h1>Heya</h1>
-        </div>)
+        return (
+            <div
+                style={{
+                    display: this.state.visible ? 'block' : 'none'
+                }}
+                ref={this.ref}
+                className='DragNDropUpload'
+            >
+                <h1>Heya</h1>
+            </div>
+        )
     }
 }

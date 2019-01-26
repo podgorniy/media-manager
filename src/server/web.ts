@@ -1,4 +1,4 @@
-import express = require('express');
+import express = require('express')
 import {initMiddleware} from './middleware'
 import {initRoutes} from './routes'
 import * as path from 'path'
@@ -9,9 +9,12 @@ export async function startServer() {
     const app = express()
     app.set('view engine', 'pug')
     app.set('views', path.resolve(__dirname, 'views'))
-    await connect(MONGO_URL, {
-        useNewUrlParser: true
-    })
+    await connect(
+        MONGO_URL,
+        {
+            useNewUrlParser: true
+        }
+    )
     initMiddleware(app)
     initRoutes(app)
     app.listen(WEB_PORT)

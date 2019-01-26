@@ -1,9 +1,17 @@
 import * as os from 'os'
+import {getExtension} from 'mime'
 import multer = require('multer')
-import {getExtension} from 'mime';
 
 function genRandomName(ext) {
-    return Math.random().toString().split('.')[1] + '-' + Date.now() + '.' + ext
+    return (
+        Math.random()
+            .toString()
+            .split('.')[1] +
+        '-' +
+        Date.now() +
+        '.' +
+        ext
+    )
 }
 
 const multerDiskStorage = multer.diskStorage({

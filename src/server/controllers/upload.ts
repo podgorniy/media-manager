@@ -1,6 +1,6 @@
 import {asyncHandler, filePathForPersistence} from '../utils'
-import {MediaModel} from '../models/media';
-import * as path from 'path';
+import {MediaModel} from '../models/media'
+import * as path from 'path'
 
 const md5file = require('md5-file/promise')
 const uuidv4 = require('uuid/v4')
@@ -31,9 +31,11 @@ async function registerFile(sourcePath: string, ownerId: string) {
 }
 
 export const upload = asyncHandler(async (req, res) => {
-    let filesMongoDocs = await Promise.all((req.files as Array<{path: string}>).map((file) => {
-        return registerFile(file.path, req.user._id)
-    }))
+    let filesMongoDocs = await Promise.all(
+        (req.files as Array<{path: string}>).map((file) => {
+            return registerFile(file.path, req.user._id)
+        })
+    )
     res.json({
         success: true,
         files: filesMongoDocs

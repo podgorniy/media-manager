@@ -4,7 +4,7 @@ import * as React from 'react'
 export class UploadForm extends React.Component<{}, {}> {
     private _fileInputRef = React.createRef<HTMLInputElement>()
 
-    private _handlerSubmit = async event => {
+    private _handlerSubmit = async (event) => {
         event.preventDefault()
         const filesField: HTMLInputElement = this._fileInputRef.current
         const formData = new FormData()

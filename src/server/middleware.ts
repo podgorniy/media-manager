@@ -1,9 +1,9 @@
+import * as express from 'express'
 import {Express} from 'express'
 import {isDev} from '../common/lib'
-import * as express from 'express'
-import session = require('express-session')
 import {SESSION_SECRET} from './env'
 import {configurePassport} from './passport'
+import session = require('express-session')
 import bodyParser = require('body-parser')
 
 const mongoose = require('mongoose')
@@ -20,18 +20,20 @@ export function initMiddleware(app: Express) {
     })
     app.use(bundler.middleware())
     app.use(express.static('static'))
-    app.use(session({
-        secret: SESSION_SECRET,
-        store: new MongoStore({
-            mongooseConnection: mongoose.connection,
-            collection: 'sessions'
-        }),
-        resave: false,
-        saveUninitialized: false,
-        cookie: {
-            secure: !isDev()
-        }
-    }))
+    app.use(
+        session({
+            secret: SESSION_SECRET,
+            store: new MongoStore({
+                mongooseConnection: mongoose.connection,
+                collection: 'sessions'
+            }),
+            resave: false,
+            saveUninitialized: false,
+            cookie: {
+                secure: !isDev()
+            }
+        })
+    )
     app.use(bodyParser.json())
     configurePassport(app)
 }

@@ -1,11 +1,11 @@
 import {action, computed, configure, observable} from 'mobx'
-import {IInitialState} from '../common/interfaces';
+import {IInitialState} from '../common/interfaces'
 
 configure({
     enforceActions: 'observed'
 })
 
-type ISetAuthenticatedParams = boolean | { userName: string }
+type ISetAuthenticatedParams = boolean | {userName: string}
 
 export class AppState {
     constructor(initialState: IInitialState) {
