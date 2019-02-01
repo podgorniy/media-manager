@@ -8,12 +8,9 @@ import {MONGO_URL, WEB_PORT} from './env'
 export async function startServer() {
     const app = express()
     app.set('view engine', 'pug')
-    app.set('views', path.resolve(__dirname, 'views'))
+    app.set('views', path.resolve(__dirname, '../', 'server-views'))
     await connect(
-        MONGO_URL,
-        {
-            useNewUrlParser: true
-        }
+        MONGO_URL
     )
     initMiddleware(app)
     initRoutes(app)

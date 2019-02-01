@@ -1,5 +1,5 @@
 require('dotenv').config()
-import {startServer} from './server/web'
+import {startServer} from './web'
 
 startServer().catch((err) => {
     console.error(err)
