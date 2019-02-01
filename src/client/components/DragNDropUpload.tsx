@@ -1,6 +1,6 @@
 require('dropzone/dist/min/basic.min.css')
 require('dropzone/dist/min/dropzone.min.css')
-require('./DragNDropUpload.less')
+require('./DragNDropUpload.css')
 import Dropzone = require('dropzone')
 import * as React from 'react'
 import {inject, observer} from 'mobx-react'

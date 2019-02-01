@@ -1,4 +1,4 @@
-require('./UploadForm.less')
+require('./UploadForm.css')
 import * as React from 'react'
 
 export class UploadForm extends React.Component<{}, {}> {
