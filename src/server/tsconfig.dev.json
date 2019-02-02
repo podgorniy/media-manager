@@ -1,0 +1,7 @@
+{
+  "extends": "./tsconfig.prod",
+  "compilerOptions": {
+    "outDir": "../../.dev/",
+    "sourceMap": true
+  }
+}
