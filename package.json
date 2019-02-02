@@ -15,7 +15,7 @@
     "_build-server": "tsc --project ./src/server/tsconfig.json",
     "_watch-server": "tsc --watch --project ./src/server/tsconfig.json",
     "_build-client": "parcel build --no-source-maps ./src/client/index.tsx --out-dir ./dist/static/client",
-    "_watch-client": "parcel watch ./src/client/index.tsx --out-dir ./dist/static/client",
+    "_watch-client": "parcel watch ./src/client/index.tsx --out-dir ./dist/static/client --public-url ./",
     "_watch-server-run": "nodemon -w ./dist/server -w ./dist/server-views ./dist/server/index.js"
   },
   "license": "MIT",
