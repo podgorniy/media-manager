@@ -57,7 +57,9 @@ function startServer() {
                     app = express();
                     app.set('view engine', 'pug');
                     app.set('views', path.resolve(__dirname, '../', 'server-views'));
-                    return [4 /*yield*/, mongoose_1.connect(env_1.MONGO_URL)];
+                    return [4 /*yield*/, mongoose_1.connect(env_1.MONGO_URL, 
+                        // @ts-ignore
+                        { useNewUrlParser: true })];
                 case 1:
                     _a.sent();
                     middleware_1.initMiddleware(app);
