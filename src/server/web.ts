@@ -10,7 +10,9 @@ export async function startServer() {
     app.set('view engine', 'pug')
     app.set('views', path.resolve(__dirname, '../', 'server-views'))
     await connect(
-        MONGO_URL
+        MONGO_URL,
+        // @ts-ignore
+        {useNewUrlParser: true}
     )
     initMiddleware(app)
     initRoutes(app)
