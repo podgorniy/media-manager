@@ -35,10 +35,6 @@ function isAuthenticated(req, res, next) {
 }
 
 export function initRoutes(app: Express) {
-    app.post('/api/v1/login', (req, res, next) => {
-        console.log(req.body)
-        next()
-    })
     app.post('/api/v1/login', passport.authenticate('local'), (req, res) => {
         res.send({
             success: true,
