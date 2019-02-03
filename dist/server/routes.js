@@ -69,10 +69,6 @@ function isAuthenticated(req, res, next) {
 }
 function initRoutes(app) {
     var _this = this;
-    app.post('/api/v1/login', function (req, res, next) {
-        console.log(req.body);
-        next();
-    });
     app.post('/api/v1/login', passport.authenticate('local'), function (req, res) {
         res.send({
             success: true,
