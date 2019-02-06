@@ -31,3 +31,4 @@ var multerDiskStorage = multer.diskStorage({
 exports.uploader = multer({
     storage: multerDiskStorage
 });
+//# sourceMappingURL=uploader.js.map

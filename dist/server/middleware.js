@@ -35,3 +35,4 @@ function initMiddleware(app) {
     passport_1.configurePassport(app);
 }
 exports.initMiddleware = initMiddleware;
+//# sourceMappingURL=middleware.js.map

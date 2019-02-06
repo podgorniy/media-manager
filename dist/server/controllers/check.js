@@ -6,3 +6,4 @@ function check(req, res) {
     });
 }
 exports.check = check;
+//# sourceMappingURL=check.js.map

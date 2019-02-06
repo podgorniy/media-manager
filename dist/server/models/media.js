@@ -27,3 +27,4 @@ var MediaSchema = new mongoose_1.Schema({
     collection: 'media'
 });
 exports.MediaModel = mongoose_1.model('media', MediaSchema);
+//# sourceMappingURL=media.js.map

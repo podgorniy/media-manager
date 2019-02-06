@@ -15,3 +15,4 @@ var UserSchema = new mongoose_1.Schema({
     collection: 'users'
 });
 exports.UserModel = mongoose_1.model('user', UserSchema);
+//# sourceMappingURL=user.js.map

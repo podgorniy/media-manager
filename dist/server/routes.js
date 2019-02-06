@@ -41,6 +41,7 @@ var uploader_1 = require("./uploader");
 var send_media_1 = require("./controllers/send-media");
 var logout_1 = require("./controllers/logout");
 var check_1 = require("./controllers/check");
+var media_1 = require("./models/media");
 var passport = require('passport');
 // https://stackoverflow.com/a/47448486
 // declare global {
@@ -80,15 +81,34 @@ function initRoutes(app) {
     app.get('/api/v1/check', isAuthenticated, check_1.check);
     app.get('/m/:fileName', send_media_1.sendMedia);
     app.get('*', utils_1.asyncHandler(function (req, res) { return __awaiter(_this, void 0, void 0, function () {
-        return __generator(this, function (_a) {
-            res.locals.initialState = {};
-            req.session.visits = (req.session.visits || 0) + 1;
-            res.locals.visits = req.session.visits;
-            res.locals.isLoggedIn = !!req.user;
-            res.locals.initialState.userName = req.user ? req.user.name : '';
-            res.render('default');
-            return [2 /*return*/];
+        var _a, _b;
+        return __generator(this, function (_c) {
+            switch (_c.label) {
+                case 0:
+                    res.locals.initialState = {};
+                    req.session.visits = (req.session.visits || 0) + 1;
+                    res.locals.visits = req.session.visits;
+                    res.locals.isLoggedIn = !!req.user;
+                    res.locals.initialState.userName = req.user ? req.user.name : '';
+                    _a = res.locals.initialState;
+                    if (!req.user) return [3 /*break*/, 2];
+                    return [4 /*yield*/, media_1.MediaModel.find({ owner: req.user._id })];
+                case 1:
+                    _b = (_c.sent()).map(function (_a) {
+                        var tags = _a.tags, fileName = _a.fileName;
+                        return { tags: tags, fileName: fileName, url: "/m/" + fileName };
+                    });
+                    return [3 /*break*/, 3];
+                case 2:
+                    _b = [];
+                    _c.label = 3;
+                case 3:
+                    _a.userMedia = _b;
+                    res.render('default');
+                    return [2 /*return*/];
+            }
         });
     }); }));
 }
 exports.initRoutes = initRoutes;
+//# sourceMappingURL=routes.js.map

@@ -12,7 +12,7 @@
     "_watch-static": "sync-files --watch ./src/static ./.dev/static",
     "_build-server-views": "sync-files ./src/server-views ./dist/server-views",
     "_watch-server-views": "sync-files --watch ./src/server-views ./.dev/server-views",
-    "_build-server": "tsc --project ./src/server/tsconfig.prod.json",
+    "_build-server": "tsc --project ./src/server/tsconfig.json",
     "_watch-server": "tsc --watch --project ./src/server/tsconfig.dev.json",
     "_build-client": "parcel build --no-source-maps --experimental-scope-hoisting ./src/client/index.tsx --out-dir ./dist/static/client",
     "_watch-client": "parcel watch ./src/client/index.tsx --out-dir ./.dev/static/client --public-url ./",
@@ -34,6 +34,7 @@
     "passport": "^0.4.0",
     "passport-local": "^1.0.0",
     "pug": "^2.0.3",
+    "source-map-support": "^0.5.10",
     "uuid": "^3.3.2"
   },
   "devDependencies": {
@@ -64,6 +65,7 @@
     "prettier": "^1.16.1",
     "react": "^16.7.0",
     "react-dom": "^16.7.0",
+    "shufflejs": "^5.2.1",
     "sync-files": "^1.0.3",
     "typescript": "^3.1.6"
   }

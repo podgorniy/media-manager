@@ -3,6 +3,7 @@ import {inject, observer} from 'mobx-react'
 import {IAppState} from '../app-state'
 import {LoginForm} from './LoginForm'
 import {DragNDropUpload} from './DragNDropUpload'
+import {UserMedia} from './UserMedia'
 
 @inject('appState')
 @observer
@@ -15,8 +16,12 @@ export class MainView extends React.Component<{} & IAppState, {}> {
         const {appState} = this.props
         return (
             <div>
-                {!appState.isAuthenticated && <LoginForm />}
-                {appState.isAuthenticated && <DragNDropUpload />}
+                {appState.isAuthenticated ? <UserMedia /> : <LoginForm />}
+                {appState.isAuthenticated && (
+                    <>
+                        <DragNDropUpload />
+                    </>
+                )}
             </div>
         )
     }

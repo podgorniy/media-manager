@@ -5,3 +5,4 @@ function isDev() {
     return env_1.NODE_ENV !== 'production';
 }
 exports.isDev = isDev;
+//# sourceMappingURL=lib.js.map

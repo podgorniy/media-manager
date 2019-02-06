@@ -7,3 +7,4 @@ function logout(req, res) {
     });
 }
 exports.logout = logout;
+//# sourceMappingURL=logout.js.map
