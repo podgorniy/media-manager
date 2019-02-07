@@ -3,5 +3,5 @@
 .cache
 .history
 .vscode
+.dev
 node_modules
-static/client
