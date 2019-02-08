@@ -8,10 +8,6 @@ import {UserMedia} from './UserMedia'
 @inject('appState')
 @observer
 export class MainView extends React.Component<{} & IAppState, {}> {
-    constructor(props) {
-        super(props)
-    }
-
     render() {
         const {appState} = this.props
 
