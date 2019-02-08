@@ -18,10 +18,6 @@ export class UserMedia extends React.Component<{} & IAppState, {}> {
     listRef = React.createRef<HTMLUListElement>()
     shuffle: any
 
-    constructor(props) {
-        super(props)
-    }
-
     componentDidMount(): void {
         const node = this.listRef.current
         if (this.shuffle) {
@@ -30,6 +26,10 @@ export class UserMedia extends React.Component<{} & IAppState, {}> {
         this.shuffle = new Shuffle(node, {
             isCentered: true
         })
+    }
+
+    componentWillUnmount(): void {
+        this.shuffle.destroy()
     }
 
     componentDidUpdate(prevProps: Readonly<{} & IAppState>, prevState: Readonly<{}>, snapshot?: any): void {
