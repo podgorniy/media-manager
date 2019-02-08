@@ -14,14 +14,15 @@ export class MainView extends React.Component<{} & IAppState, {}> {
 
     render() {
         const {appState} = this.props
+
+        if (!appState.isAuthenticated) {
+            return <LoginForm />
+        }
+
         return (
             <div>
-                {appState.isAuthenticated ? <UserMedia /> : <LoginForm />}
-                {appState.isAuthenticated && (
-                    <>
-                        <DragNDropUpload />
-                    </>
-                )}
+                <UserMedia />
+                <DragNDropUpload />
             </div>
         )
     }
