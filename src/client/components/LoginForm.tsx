@@ -11,12 +11,9 @@ interface ILoginFormState {
 @inject('appState')
 @observer
 export class LoginForm extends React.Component<{} & IAppState, ILoginFormState> {
-    constructor(props) {
-        super(props)
-        this.state = {
-            userName: '',
-            password: ''
-        }
+    state: ILoginFormState = {
+        userName: '',
+        password: ''
     }
 
     render() {

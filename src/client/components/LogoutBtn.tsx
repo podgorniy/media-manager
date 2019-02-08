@@ -6,10 +6,6 @@ import {logout} from '../api'
 @inject('appState')
 @observer
 export class LogoutBtn extends React.Component<{} & IAppState, {}> {
-    constructor(props) {
-        super(props)
-    }
-
     render() {
         const {appState} = this.props
         return (
