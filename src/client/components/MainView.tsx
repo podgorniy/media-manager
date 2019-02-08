@@ -8,20 +8,17 @@ import {UserMedia} from './UserMedia'
 @inject('appState')
 @observer
 export class MainView extends React.Component<{} & IAppState, {}> {
-    constructor(props) {
-        super(props)
-    }
-
     render() {
         const {appState} = this.props
+
+        if (!appState.isAuthenticated) {
+            return <LoginForm />
+        }
+
         return (
             <div>
-                {appState.isAuthenticated ? <UserMedia /> : <LoginForm />}
-                {appState.isAuthenticated && (
-                    <>
-                        <DragNDropUpload />
-                    </>
-                )}
+                <UserMedia />
+                <DragNDropUpload />
             </div>
         )
     }
