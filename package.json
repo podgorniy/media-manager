@@ -35,7 +35,6 @@
     "passport-local": "^1.0.0",
     "pug": "^2.0.3",
     "source-map-support": "^0.5.10",
-    "tslint": "^5.12.1",
     "uuid": "^3.3.2"
   },
   "devDependencies": {
