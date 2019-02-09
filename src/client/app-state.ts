@@ -2,7 +2,7 @@ import {action, computed, configure, observable} from 'mobx'
 import {IInitialState, IUserMediaItem} from '../common/interfaces'
 
 configure({
-    enforceActions: 'observed'
+    enforceActions: 'observed' // https://github.com/mobxjs/mobx/blob/gh-pages/docs/refguide/api.md#actions
 })
 
 type ISetAuthenticatedParams = boolean | {userName: string}
