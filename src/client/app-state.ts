@@ -17,7 +17,8 @@ export class AppState {
     @observable
     userMedia: Array<IUserMediaItem>
 
-    @observable userName: string
+    @observable
+    userName: string
 
     @action.bound
     setAuthenticated(params: ISetAuthenticatedParams) {
@@ -33,7 +34,8 @@ export class AppState {
         return !!this.userName
     }
 
-    @observable count = 0
+    @observable
+    count = 0
 
     @action.bound
     changeCount(newVal: number) {
