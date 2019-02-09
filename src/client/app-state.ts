@@ -14,6 +14,7 @@ export class AppState {
         this.setAuthenticated({userName: initialState.userName})
     }
 
+    @observable
     userMedia: Array<IUserMediaItem>
 
     @observable userName: string
