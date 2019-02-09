@@ -23,17 +23,16 @@ export class UserMedia extends React.Component<{} & IAppState, {}> {
         if (this.shuffle) {
             return
         }
-        this.shuffle = new Shuffle(node, {
-            isCentered: true
-        })
+        this.shuffle = new Shuffle(node, {})
     }
 
     componentWillUnmount(): void {
         this.shuffle.destroy()
+        this.shuffle = null
     }
 
     componentDidUpdate(prevProps: Readonly<{} & IAppState>, prevState: Readonly<{}>, snapshot?: any): void {
-        this.shuffle.update()
+        this.shuffle.resetItems()
     }
 
     render() {
