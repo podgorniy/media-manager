@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "description": "",
   "scripts": {
-    "_hack-first-run": "mkdir -p touch ./.dev/server/ && touch ./.dev/server/index.js",
+    "_hack-first-run": "mkdir -p ./.dev/server/ && touch ./.dev/server/index.js",
     "dev": "export NODE_ENV=development && npm run _hack-first-run && concurrently npm:_watch-server-run npm:_watch-server npm:_watch-static npm:_watch-server-views npm:_watch-client",
     "build": "export NODE_ENV=production && npm run _clean && npm run _build-server && npm run _build-server-views && npm run _build-static && npm run _build-client",
     "prod": "export NODE_ENV=production && node ./dist/server/index.js",
