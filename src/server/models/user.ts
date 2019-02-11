@@ -1,4 +1,6 @@
 import {Document, model, Model, Schema} from 'mongoose'
+import {hashString} from '../utils'
+import {isDev} from '../../common/lib'
 
 export interface IUserFields {
     _id: any
@@ -29,3 +31,21 @@ const UserSchema = new Schema(
 )
 
 export const UserModel = model<IUser, IUserModel>('user', UserSchema)
+
+async function createDemoUser() {
+    const DEMO_USERNAME = 'demo'
+    const DEMO_USERNAME_PASSWORD = '123'
+    const defaultUser = await UserModel.findOne({name: DEMO_USERNAME})
+    if (!defaultUser) {
+        return new UserModel({
+            name: DEMO_USERNAME,
+            password: await hashString(DEMO_USERNAME_PASSWORD)
+        }).save()
+    }
+}
+
+;(async function() {
+    if (isDev()) {
+        await createDemoUser()
+    }
+})()

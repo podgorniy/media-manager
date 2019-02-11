@@ -20,7 +20,8 @@ export class UserMedia extends React.Component<{} & IAppState, {}> {
 
     componentDidMount(): void {
         const node = this.listRef.current
-        if (this.shuffle) { // is relevant as we will null value on unmount?
+        if (this.shuffle) {
+            // is relevant as we will null value on unmount?
             throw Error('Shuffle already instantiated') // Should never throw
         }
         this.shuffle = new Shuffle(node, {})

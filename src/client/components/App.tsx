@@ -3,7 +3,7 @@ import {AppState} from '../app-state'
 import {Provider} from 'mobx-react'
 import {Navigation} from './Navigation'
 import {MainView} from './MainView'
-import { isDev } from '../../common/lib'
+import {isDev} from '../../common/lib'
 
 const appState = new AppState(window['initialState'])
 if (isDev()) {

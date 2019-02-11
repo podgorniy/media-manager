@@ -54,9 +54,11 @@ export function initRoutes(app: Express) {
             res.locals.visits = req.session.visits
             res.locals.isLoggedIn = !!req.user
             res.locals.initialState.userName = req.user ? req.user.name : ''
-            res.locals.initialState.userMedia = req.user ? (await MediaModel.find({owner: req.user._id})).map(({tags, fileName}) => {
-                    return {tags, fileName, url: `/m/${fileName}`}
-                }) : []
+            res.locals.initialState.userMedia = req.user
+                ? (await MediaModel.find({owner: req.user._id})).map(({tags, fileName}) => {
+                      return {tags, fileName, url: `/m/${fileName}`}
+                  })
+                : []
             res.render('default')
         })
     )

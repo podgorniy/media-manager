@@ -48,33 +48,6 @@ var routes_1 = require("./routes");
 var path = __importStar(require("path"));
 var mongoose_1 = require("mongoose");
 var env_1 = require("./env");
-var utils_1 = require("./utils");
-var user_1 = require("./models/user");
-var lib_1 = require("../common/lib");
-function createDefaultUser() {
-    return __awaiter(this, void 0, void 0, function () {
-        var DEFAULT_USERNAME, DEFAULT_PASSWORD, defaultUser, _a, _b;
-        return __generator(this, function (_c) {
-            switch (_c.label) {
-                case 0:
-                    DEFAULT_USERNAME = 'user';
-                    DEFAULT_PASSWORD = '123';
-                    return [4 /*yield*/, user_1.UserModel.findOne({ name: DEFAULT_USERNAME })];
-                case 1:
-                    defaultUser = _c.sent();
-                    if (!!defaultUser) return [3 /*break*/, 3];
-                    _a = user_1.UserModel.bind;
-                    _b = {
-                        name: DEFAULT_USERNAME
-                    };
-                    return [4 /*yield*/, utils_1.hashString(DEFAULT_PASSWORD)];
-                case 2: return [2 /*return*/, new (_a.apply(user_1.UserModel, [void 0, (_b.password = _c.sent(),
-                            _b)]))().save()];
-                case 3: return [2 /*return*/];
-            }
-        });
-    });
-}
 function startServer() {
     return __awaiter(this, void 0, void 0, function () {
         var app;
@@ -86,17 +59,9 @@ function startServer() {
                     app.set('views', path.resolve(__dirname, '../', 'server-views'));
                     return [4 /*yield*/, mongoose_1.connect(env_1.MONGO_URL, 
                         // @ts-ignore
-                        { useNewUrlParser: true })
-                        // Create user
-                    ];
+                        { useNewUrlParser: true })];
                 case 1:
                     _a.sent();
-                    if (!lib_1.isDev()) return [3 /*break*/, 3];
-                    return [4 /*yield*/, createDefaultUser()];
-                case 2:
-                    _a.sent();
-                    _a.label = 3;
-                case 3:
                     middleware_1.initMiddleware(app);
                     routes_1.initRoutes(app);
                     app.listen(env_1.WEB_PORT);
