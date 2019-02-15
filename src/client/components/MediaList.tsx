@@ -3,14 +3,8 @@ import {observer} from 'mobx-react'
 import {inject} from 'mobx-react'
 import {IAppState} from '../app-state'
 import Shuffle from 'shufflejs'
-
-function getType(url: string): string {
-    if (/mp4|qt/.test(url)) {
-        return 'video'
-    } else {
-        return 'img'
-    }
-}
+import {MediaListItem} from './MediaListItem'
+import {getType} from '../../common/lib'
 
 @inject('appState')
 @observer
@@ -41,10 +35,10 @@ export class MediaList extends React.Component<{} & IAppState, {}> {
         return (
             <div>
                 <ul ref={this.listRef} className='media-items'>
-                    {appState.media.map(({url, fileName}, i) => {
+                    {appState.media.map(({url, fileName, selected}, i) => {
                         return (
-                            <li key={i} className='media-item-wrapper'>
-                                {getType(url) === 'img' ? <img src={url} className='media-image' /> : <video width='' src={url} className='media-video' controls />}
+                            <li key={url} className='media-item-wrapper'>
+                                <MediaListItem fileName={fileName} url={url} selected={selected} type={getType(url)} />
                             </li>
                         )
                     })}
