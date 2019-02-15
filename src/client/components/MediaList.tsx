@@ -4,7 +4,7 @@ import {inject} from 'mobx-react'
 import {IAppState} from '../app-state'
 import Shuffle from 'shufflejs'
 import {MediaListItem} from './MediaListItem'
-import {getType} from '../../common/lib'
+import {getType, isDev} from '../../common/lib'
 
 @inject('appState')
 @observer
@@ -19,6 +19,9 @@ export class MediaList extends React.Component<{} & IAppState, {}> {
             throw Error('Shuffle already instantiated') // Should never throw
         }
         this.shuffle = new Shuffle(node, {})
+        if (isDev()) {
+            window['s'] = this.shuffle
+        }
     }
 
     componentWillUnmount(): void {
@@ -26,14 +29,18 @@ export class MediaList extends React.Component<{} & IAppState, {}> {
         this.shuffle = null
     }
 
-    componentDidUpdate(prevProps: Readonly<{} & IAppState>, prevState: Readonly<{}>, snapshot?: any): void {
+    componentDidUpdate(): void {
+        // update due to change of list items should reset items
         this.shuffle.resetItems()
+        // update due to change of layout should just update
+        this.shuffle.update()
     }
 
     render() {
         const {appState} = this.props
+        const widthClass = 'media-items-columns-' + appState.columnsCount
         return (
-            <ul ref={this.listRef} className='media-items'>
+            <ul ref={this.listRef} className={`media-items ${widthClass}`}>
                 {appState.media.map(({url, fileName, selected}, i) => {
                     return (
                         <li key={url} className='media-item-wrapper-outer'>

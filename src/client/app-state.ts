@@ -49,11 +49,11 @@ export class AppState {
     }
 
     @observable
-    count = 0
+    columnsCount: number = 3
 
     @action.bound
-    changeCount(newVal: number) {
-        this.count += newVal
+    setColumnsCount(n: number) {
+        this.columnsCount = n
     }
 }
 

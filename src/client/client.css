@@ -146,7 +146,16 @@ body {
     list-style: none;
 }
 
-.media-item-wrapper-outer {
+.media-items-columns-1 .media-item-wrapper-outer {
+    width: 100%;
+}
+.media-items-columns-2 .media-item-wrapper-outer {
+    width: 50%;
+}
+.media-items-columns-3 .media-item-wrapper-outer {
+    width: 33%;
+}
+.media-items-columns-4 .media-item-wrapper-outer {
     width: 25%;
 }
 
