@@ -1,5 +1,3 @@
-import {NODE_ENV} from './env'
-
 export function isDev() {
-    return NODE_ENV !== 'production'
+    return process.env.NODE_ENV !== 'production'
 }
