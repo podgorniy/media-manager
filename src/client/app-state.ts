@@ -1,5 +1,5 @@
 import {action, computed, configure, observable} from 'mobx'
-import {IInitialState, IUserMediaItem} from '../common/interfaces'
+import {IAppInitialState, IUserMediaItem} from '../common/interfaces'
 
 configure({
     enforceActions: 'observed' // https://github.com/mobxjs/mobx/blob/gh-pages/docs/refguide/api.md#actions
@@ -8,14 +8,14 @@ configure({
 type ISetAuthenticatedParams = boolean | {userName: string}
 
 export class AppState {
-    constructor(initialState: IInitialState) {
+    constructor(initialState: IAppInitialState) {
         console.log(`initialState`, initialState)
-        this.userMedia = initialState.userMedia
+        this.media = initialState.userMedia
         this.setAuthenticated({userName: initialState.userName})
     }
 
     @observable
-    userMedia: Array<IUserMediaItem>
+    media: Array<IUserMediaItem>
 
     @observable
     userName: string

@@ -52,7 +52,7 @@ var passport = require('passport');
 //
 //         interface Response {
 //             locals: {
-//                 initialState: IInitialState
+//                 initialState: IAppInitialState
 //             }
 //         }
 //     }
@@ -81,7 +81,7 @@ function initRoutes(app) {
     app.get('/api/v1/check', isAuthenticated, check_1.check);
     app.get('/m/:fileName', send_media_1.sendMedia);
     app.get('*', utils_1.asyncHandler(function (req, res) { return __awaiter(_this, void 0, void 0, function () {
-        var _a, _b;
+        var appInitialState, _a, _b;
         return __generator(this, function (_c) {
             switch (_c.label) {
                 case 0:
@@ -89,9 +89,8 @@ function initRoutes(app) {
                     req.session.visits = (req.session.visits || 0) + 1;
                     res.locals.visits = req.session.visits;
                     res.locals.isLoggedIn = !!req.user;
-                    res.locals.initialState.userName = req.user ? req.user.name : '';
-                    _a = res.locals.initialState;
-                    if (!req.user) return [3 /*break*/, 2];
+                    _a = {};
+                    if (!res.locals.isLoggedIn) return [3 /*break*/, 2];
                     return [4 /*yield*/, media_1.MediaModel.find({ owner: req.user._id })];
                 case 1:
                     _b = (_c.sent()).map(function (_a) {
@@ -103,7 +102,10 @@ function initRoutes(app) {
                     _b = [];
                     _c.label = 3;
                 case 3:
-                    _a.userMedia = _b;
+                    appInitialState = (_a.userMedia = _b,
+                        _a.userName = req.user ? req.user.name : '',
+                        _a);
+                    res.locals.initialState = appInitialState;
                     res.render('default');
                     return [2 /*return*/];
             }

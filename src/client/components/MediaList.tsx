@@ -14,7 +14,7 @@ function getType(url: string): string {
 
 @inject('appState')
 @observer
-export class UserMedia extends React.Component<{} & IAppState, {}> {
+export class MediaList extends React.Component<{} & IAppState, {}> {
     listRef = React.createRef<HTMLUListElement>()
     shuffle: any
 
@@ -41,7 +41,7 @@ export class UserMedia extends React.Component<{} & IAppState, {}> {
         return (
             <div>
                 <ul ref={this.listRef} className='media-items'>
-                    {appState.userMedia.map(({url, fileName}, i) => {
+                    {appState.media.map(({url, fileName}, i) => {
                         return (
                             <li key={i} className='media-item-wrapper'>
                                 {getType(url) === 'img' ? <img src={url} className='media-image' /> : <video width='' src={url} className='media-video' controls />}

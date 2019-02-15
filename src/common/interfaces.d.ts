@@ -4,7 +4,7 @@ export interface IUserMediaItem {
     fileName: string
 }
 
-export interface IInitialState {
+export interface IAppInitialState {
     userName: string
     userMedia: Array<IUserMediaItem>
 }

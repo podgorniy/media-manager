@@ -6,6 +6,7 @@ import {sendMedia} from './controllers/send-media'
 import {logout} from './controllers/logout'
 import {check} from './controllers/check'
 import {MediaModel} from './models/media'
+import {IAppInitialState} from '../common/interfaces'
 
 const passport = require('passport')
 
@@ -18,7 +19,7 @@ const passport = require('passport')
 //
 //         interface Response {
 //             locals: {
-//                 initialState: IInitialState
+//                 initialState: IAppInitialState
 //             }
 //         }
 //     }
@@ -49,16 +50,19 @@ export function initRoutes(app: Express) {
     app.get(
         '*',
         asyncHandler(async (req, res) => {
-            res.locals.initialState = {}
+            res.locals.initialState = {} as IAppInitialState
             req.session.visits = (req.session.visits || 0) + 1
             res.locals.visits = req.session.visits
             res.locals.isLoggedIn = !!req.user
-            res.locals.initialState.userName = req.user ? req.user.name : ''
-            res.locals.initialState.userMedia = req.user
-                ? (await MediaModel.find({owner: req.user._id})).map(({tags, fileName}) => {
-                      return {tags, fileName, url: `/m/${fileName}`}
-                  })
-                : []
+            const appInitialState: IAppInitialState = {
+                userMedia: res.locals.isLoggedIn
+                    ? (await MediaModel.find({owner: req.user._id})).map(({tags, fileName}) => {
+                          return {tags, fileName, url: `/m/${fileName}`}
+                      })
+                    : [],
+                userName: req.user ? req.user.name : ''
+            }
+            res.locals.initialState = appInitialState
             res.render('default')
         })
     )

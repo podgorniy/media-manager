@@ -3,7 +3,7 @@ import {inject, observer} from 'mobx-react'
 import {IAppState} from '../app-state'
 import {LoginForm} from './LoginForm'
 import {DragNDropUpload} from './DragNDropUpload'
-import {UserMedia} from './UserMedia'
+import {MediaList} from './MediaList'
 
 @inject('appState')
 @observer
@@ -17,7 +17,7 @@ export class MainView extends React.Component<{} & IAppState, {}> {
 
         return (
             <div>
-                <UserMedia />
+                <MediaList />
                 <DragNDropUpload />
             </div>
         )
