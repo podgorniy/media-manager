@@ -6,7 +6,6 @@ import {mediaTypes} from '../../common/lib'
 interface IMediaListItemProps {
     url: string
     fileName: string
-    selected: boolean
     type: mediaTypes
 }
 
@@ -18,13 +17,16 @@ export class MediaListItem extends React.Component<IMediaListItemProps & IAppSta
     }
 
     render() {
-        const {appState, selected, type, url, fileName} = this.props
-        const extraClasses = `media-item ${selected ? 'selected' : ''}`
+        const {appState, type, url, fileName} = this.props
+        const extraClasses = `media-item`
+        const clickHandler = () => {
+            appState.toggleSelected(fileName)
+        }
         switch (type) {
             case 'img':
-                return <img src={url} className={`media-image ${extraClasses}`} alt={fileName} />
+                return <img onClick={clickHandler} src={url} className={`media-image ${extraClasses}`} alt={fileName} />
             case 'video':
-                return <video src={url} className={`media-video ${extraClasses}`} controls />
+                return <video onClick={clickHandler} src={url} className={`media-video ${extraClasses}`} controls />
             default:
                 throw new Error(`Unknown media type ${type} in MediaListItem`)
         }

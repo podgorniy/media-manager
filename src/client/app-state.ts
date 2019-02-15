@@ -34,6 +34,15 @@ export class AppState {
         }
     }
 
+    @action.bound
+    toggleSelected(fileName: string) {
+        this.media.forEach((mediaItem) => {
+            if (mediaItem.fileName === fileName) {
+                mediaItem.selected = !mediaItem.selected
+            }
+        })
+    }
+
     @computed
     get isAuthenticated() {
         return !!this.userName

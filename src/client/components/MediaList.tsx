@@ -37,8 +37,10 @@ export class MediaList extends React.Component<{} & IAppState, {}> {
                 <ul ref={this.listRef} className='media-items'>
                     {appState.media.map(({url, fileName, selected}, i) => {
                         return (
-                            <li key={url} className='media-item-wrapper'>
-                                <MediaListItem fileName={fileName} url={url} selected={selected} type={getType(url)} />
+                            <li key={url} className='media-item-wrapper-outer'>
+                                <div className={`media-item-wrapper-inner ${selected ? 'selected' : ''}`}>
+                                    <MediaListItem fileName={fileName} url={url} type={getType(url)} />
+                                </div>
                             </li>
                         )
                     })}
