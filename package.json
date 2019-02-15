@@ -58,7 +58,6 @@
     "@types/uuid": "^3.4.4",
     "concurrently": "^4.1.0",
     "dropzone": "^5.5.1",
-    "husky": "^1.3.1",
     "mobx": "^5.8.0",
     "mobx-react": "^5.4.3",
     "nodemon": "^1.18.6",
@@ -69,10 +68,5 @@
     "shufflejs": "^5.2.1",
     "sync-files": "^1.0.3",
     "typescript": "^3.1.6"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "prettier --config ./.prettierrc --write src/**/*.*s && npm run build"
-    }
   }
 }
