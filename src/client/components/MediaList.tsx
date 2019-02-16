@@ -31,7 +31,7 @@ export class MediaList extends React.Component<{} & IAppState, {}> {
 
     componentDidUpdate(): void {
         // update due to change of list items should reset items
-        this.shuffle.resetItems()
+        // this.shuffle.resetItems()
         // update due to change of layout should just update
         this.shuffle.update()
     }

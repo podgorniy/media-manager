@@ -85,7 +85,6 @@ function initRoutes(app) {
         return __generator(this, function (_c) {
             switch (_c.label) {
                 case 0:
-                    res.locals.initialState = {};
                     req.session.visits = (req.session.visits || 0) + 1;
                     res.locals.visits = req.session.visits;
                     res.locals.isLoggedIn = !!req.user;

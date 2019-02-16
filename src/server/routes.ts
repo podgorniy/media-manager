@@ -50,7 +50,6 @@ export function initRoutes(app: Express) {
     app.get(
         '*',
         asyncHandler(async (req, res) => {
-            res.locals.initialState = {} as IAppInitialState
             req.session.visits = (req.session.visits || 0) + 1
             res.locals.visits = req.session.visits
             res.locals.isLoggedIn = !!req.user
