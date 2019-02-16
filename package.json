@@ -58,6 +58,7 @@
     "@types/uuid": "^3.4.4",
     "concurrently": "^4.1.0",
     "dropzone": "^5.5.1",
+    "less": "^3.9.0",
     "mobx": "^5.8.0",
     "mobx-react": "^5.4.3",
     "nodemon": "^1.18.6",
