@@ -34,25 +34,29 @@ export class Layout extends React.Component<{} & IAppState, {}> {
                 <div className='layout__navigation'>
                     <Navigation />
                 </div>
-                <div className='layout__content'>
-                    <div
-                        className='layout__side'
-                        style={{
-                            width: appState.sideWidth + 'px'
-                        }}
-                    >
-                        <ToggleSidebar />
-                    </div>
-                    <div
-                        className='layout__main'
-                        style={{
-                            marginLeft: appState.sideWidth + 'px'
-                        }}
-                    >
-                        <MediaList />
-                    </div>
-                </div>
-                <DragNDropUpload />
+                {appState.isAuthenticated ? (
+                    <>
+                        <div className='layout__content'>
+                            <div
+                                className='layout__side'
+                                style={{
+                                    width: appState.sideWidth + 'px'
+                                }}
+                            >
+                                <ToggleSidebar />
+                            </div>
+                            <div
+                                className='layout__main'
+                                style={{
+                                    marginLeft: appState.sideWidth + 'px'
+                                }}
+                            >
+                                <MediaList />
+                            </div>
+                        </div>
+                        <DragNDropUpload />
+                    </>
+                ) : null}
             </div>
         )
     }
