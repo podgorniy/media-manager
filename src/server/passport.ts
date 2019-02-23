@@ -1,5 +1,5 @@
 import {Express} from 'express'
-import {IUserFields, UserModel} from './models/user'
+import {IUserFields, UserModel} from './user'
 import {compareHashed} from './utils'
 
 const passport = require('passport')

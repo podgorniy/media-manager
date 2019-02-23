@@ -1,6 +1,6 @@
 import {Document, model, Model, Schema} from 'mongoose'
-import {hashString} from '../utils'
-import {isDev} from '../../common/lib'
+import {hashString} from './utils'
+import {isDev} from '../common/lib'
 
 export interface IUserFields {
     _id: any

@@ -1,3 +1,6 @@
+import {objToQueryString} from './lib'
+import {IMediaResponse, IProvideMediaParams} from '../common/interfaces'
+
 export async function logout() {
     const logoutRespObj = await fetch('/api/v1/logout', {
         method: 'POST'
@@ -30,4 +33,18 @@ export async function authenticate({userName, password}): Promise<{userName?: st
             success: false
         }
     }
+}
+
+interface IFetchMediaParams {
+    skip?: number
+    limit?: number
+}
+
+export async function fetchMedia(params: IFetchMediaParams): Promise<IMediaResponse> {
+    const requestQueryParams: IProvideMediaParams = {
+        limit: params.limit,
+        skip: params.limit
+    }
+    const reqObj = await fetch(`/api/v1/media?${objToQueryString(requestQueryParams)}`)
+    return await reqObj.json()
 }

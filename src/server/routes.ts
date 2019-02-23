@@ -5,8 +5,9 @@ import {uploader} from './uploader'
 import {sendMedia} from './controllers/send-media'
 import {logout} from './controllers/logout'
 import {check} from './controllers/check'
-import {MediaModel} from './models/media'
+import {MediaModel} from './media'
 import {IAppInitialState} from '../common/interfaces'
+import {provideMedia} from './controllers/provide-media'
 
 const passport = require('passport')
 
@@ -46,6 +47,7 @@ export function initRoutes(app: Express) {
     app.post('/api/v1/logout', logout)
     app.post('/api/v1/upload', isAuthenticated, uploader.array('uploads'), upload)
     app.get('/api/v1/check', isAuthenticated, check)
+    app.get('/api/v1/media', isAuthenticated, provideMedia)
     app.get('/m/:fileName', sendMedia)
     app.get(
         '*',

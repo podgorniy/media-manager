@@ -1,5 +1,5 @@
 import {asyncHandler, filePathForPersistence} from '../utils'
-import {MediaModel} from '../models/media'
+import {MediaModel} from '../media'
 
 export const sendMedia = asyncHandler(async (req, res) => {
     const userId = req.user && req.user._id

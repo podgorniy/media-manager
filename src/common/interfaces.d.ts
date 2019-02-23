@@ -13,3 +13,12 @@ export interface IAppInitialState {
 export interface IAppMediaItem extends IUserMediaItem {
     selected: boolean
 }
+
+export interface IMediaResponse {
+    items: Array<IUserMediaItem>
+}
+
+export interface IProvideMediaParams {
+    skip?: number
+    limit?: number
+}

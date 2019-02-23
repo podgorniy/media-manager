@@ -1,5 +1,5 @@
 import {asyncHandler, filePathForPersistence} from '../utils'
-import {MediaModel} from '../models/media'
+import {MediaModel} from '../media'
 import * as path from 'path'
 
 const md5file = require('md5-file/promise')
