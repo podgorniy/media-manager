@@ -1,6 +1,6 @@
 import {asyncHandler} from '../utils'
-import {IMediaResponse, IProvideMediaParams} from '../../common/interfaces'
-import {MediaModel} from '../media'
+import {IMediaResponse} from '../../common/interfaces'
+import {MediaModel, toClientSideRepresentation} from '../media'
 import {IUserFields} from '../user'
 
 const DEFAULT_LIMIT = 20
@@ -25,13 +25,7 @@ export const provideMedia = asyncHandler(async (req, res) => {
     )
 
     const respData: IMediaResponse = {
-        items: userMediaItems.map(({tags, fileName}) => {
-            return {
-                tags,
-                fileName,
-                url: `/m/${fileName}`
-            }
-        })
+        items: userMediaItems.map(toClientSideRepresentation)
     }
     res.send(respData)
 })

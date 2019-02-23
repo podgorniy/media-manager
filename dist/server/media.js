@@ -6,9 +6,13 @@ var MediaSchema = new mongoose_1.Schema({
         type: String,
         required: true
     },
-    fileName: {
+    uuid: {
         type: String,
         unique: true,
+        required: true
+    },
+    fileExtension: {
+        type: String,
         required: true
     },
     md5: {
@@ -27,4 +31,18 @@ var MediaSchema = new mongoose_1.Schema({
     collection: 'media'
 });
 exports.MediaModel = mongoose_1.model('media', MediaSchema);
+function getFileName(_a) {
+    var fileExtension = _a.fileExtension, uuid = _a.uuid;
+    return uuid + '.' + fileExtension;
+}
+exports.getFileName = getFileName;
+function toClientSideRepresentation(mediaDoc) {
+    return {
+        url: "/m/" + getFileName(mediaDoc),
+        uuid: mediaDoc.uuid,
+        tags: mediaDoc.tags,
+        selected: false
+    };
+}
+exports.toClientSideRepresentation = toClientSideRepresentation;
 //# sourceMappingURL=media.js.map

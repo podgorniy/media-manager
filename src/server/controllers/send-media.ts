@@ -1,5 +1,5 @@
-import {asyncHandler, filePathForPersistence} from '../utils'
-import {MediaModel} from '../media'
+import {asyncHandler, filePathForPersistence, getExtension, getName} from '../utils'
+import {getFileName, MediaModel} from '../media'
 
 export const sendMedia = asyncHandler(async (req, res) => {
     const userId = req.user && req.user._id
@@ -8,13 +8,17 @@ export const sendMedia = asyncHandler(async (req, res) => {
         return
     }
     const fileName = req.params.fileName
+    const fileUUID = getName(fileName)
+    const fileExtension = getExtension(fileName)
+    // not handled by type system
     const fileDoc = await MediaModel.findOne({
-        fileName: fileName,
+        uuid: fileUUID,
+        fileExtension: fileExtension,
         owner: req.user._id
     })
     if (!fileDoc) {
         res.status(404).send(`Not found or don't have permissions to view`)
         return
     }
-    res.sendFile(filePathForPersistence(fileName))
+    res.sendFile(filePathForPersistence(getFileName(fileDoc)))
 })

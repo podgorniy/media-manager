@@ -15,13 +15,7 @@ const COLUMNS_COUNT_WHEN_SIDE_EXPANDED = 3
 
 export class AppState {
     constructor(initialState: IAppInitialState) {
-        this.media = initialState.userMedia.map((item) => {
-            let appMediaItem: IAppMediaItem = {
-                ...item,
-                selected: false
-            }
-            return appMediaItem
-        })
+        this.media = initialState.userMedia
         this.setAuthenticated({userName: initialState.userName})
     }
 
@@ -41,12 +35,17 @@ export class AppState {
     }
 
     @action.bound
-    toggleSelected(fileName: string) {
+    toggleSelected(uuid: string) {
         this.media.forEach((mediaItem) => {
-            if (mediaItem.fileName === fileName) {
+            if (mediaItem.uuid === uuid) {
                 mediaItem.selected = !mediaItem.selected
             }
         })
+    }
+
+    @action.bound
+    unselectAll() {
+        this.media.forEach((mediaItem) => (mediaItem.selected = false))
     }
 
     @computed
@@ -89,6 +88,11 @@ export class AppState {
     @action.bound
     incLayoutRerenderCount() {
         this.layoutRerenderCount += 1
+    }
+
+    @computed
+    get selected(): Array<IAppMediaItem> {
+        return this.media.filter((item) => item.selected)
     }
 }
 

@@ -41,7 +41,8 @@ var uploader_1 = require("./uploader");
 var send_media_1 = require("./controllers/send-media");
 var logout_1 = require("./controllers/logout");
 var check_1 = require("./controllers/check");
-var media_1 = require("./models/media");
+var media_1 = require("./media");
+var provide_media_1 = require("./controllers/provide-media");
 var passport = require('passport');
 // https://stackoverflow.com/a/47448486
 // declare global {
@@ -79,6 +80,7 @@ function initRoutes(app) {
     app.post('/api/v1/logout', logout_1.logout);
     app.post('/api/v1/upload', isAuthenticated, uploader_1.uploader.array('uploads'), upload_1.upload);
     app.get('/api/v1/check', isAuthenticated, check_1.check);
+    app.get('/api/v1/media', isAuthenticated, provide_media_1.provideMedia);
     app.get('/m/:fileName', send_media_1.sendMedia);
     app.get('*', utils_1.asyncHandler(function (req, res) { return __awaiter(_this, void 0, void 0, function () {
         var appInitialState, _a, _b;
@@ -92,10 +94,7 @@ function initRoutes(app) {
                     if (!res.locals.isLoggedIn) return [3 /*break*/, 2];
                     return [4 /*yield*/, media_1.MediaModel.find({ owner: req.user._id })];
                 case 1:
-                    _b = (_c.sent()).map(function (_a) {
-                        var tags = _a.tags, fileName = _a.fileName;
-                        return { tags: tags, fileName: fileName, url: "/m/" + fileName };
-                    });
+                    _b = (_c.sent()).map(media_1.toClientSideRepresentation);
                     return [3 /*break*/, 3];
                 case 2:
                     _b = [];

@@ -34,62 +34,36 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
-    result["default"] = mod;
-    return result;
-};
+var _this = this;
 Object.defineProperty(exports, "__esModule", { value: true });
-var path = __importStar(require("path"));
-var env_1 = require("./env");
-var bcrypt_1 = require("bcrypt");
-function asyncHandler(fn) {
-    return function (req, res, next) {
-        return Promise.resolve(fn(req, res, next)).catch(next);
-    };
-}
-exports.asyncHandler = asyncHandler;
-function filePathForPersistence(fileName) {
-    return path.join(env_1.UPLOADS_DIR, fileName);
-}
-exports.filePathForPersistence = filePathForPersistence;
-function hashString(password) {
-    return __awaiter(this, void 0, void 0, function () {
-        return __generator(this, function (_a) {
-            return [2 /*return*/, bcrypt_1.hash(password, 10)];
-        });
+var utils_1 = require("../utils");
+var media_1 = require("../media");
+var DEFAULT_LIMIT = 20;
+var MAX_LIMIT = 100;
+exports.provideMedia = utils_1.asyncHandler(function (req, res) { return __awaiter(_this, void 0, void 0, function () {
+    var _a, skip, limit, intLimit, normalizedCount, normalizedSkip, user, userMediaItems, respData;
+    return __generator(this, function (_b) {
+        switch (_b.label) {
+            case 0:
+                _a = req.query, skip = _a.skip, limit = _a.limit;
+                intLimit = parseInt(limit);
+                normalizedCount = !intLimit || intLimit <= 0 ? DEFAULT_LIMIT : intLimit;
+                normalizedSkip = parseInt(skip) || 0;
+                user = req.user;
+                return [4 /*yield*/, media_1.MediaModel.find({
+                        owner: user._id
+                    }, null, {
+                        skip: normalizedSkip,
+                        limit: normalizedCount > MAX_LIMIT ? MAX_LIMIT : normalizedCount
+                    })];
+            case 1:
+                userMediaItems = _b.sent();
+                respData = {
+                    items: userMediaItems.map(media_1.toClientSideRepresentation)
+                };
+                res.send(respData);
+                return [2 /*return*/];
+        }
     });
-}
-exports.hashString = hashString;
-function compareHashed(str, hash) {
-    return __awaiter(this, void 0, void 0, function () {
-        return __generator(this, function (_a) {
-            return [2 /*return*/, bcrypt_1.compare(str, hash)];
-        });
-    });
-}
-exports.compareHashed = compareHashed;
-function trimDot(s) {
-    return s.replace(/(^\.*)|(\.*$)/g, '');
-}
-exports.trimDot = trimDot;
-function getName(fileName) {
-    var sections = fileName.split('.');
-    sections.pop();
-    if (!sections.length) {
-        throw Error("Failed to extract name from fileName " + fileName);
-    }
-    return sections.join('.');
-}
-exports.getName = getName;
-function getExtension(fileName) {
-    var sections = fileName.split('.');
-    if (sections.length === 1) {
-        throw Error("Failed to extract extension from fileName " + fileName);
-    }
-    return sections[sections.length - 1];
-}
-exports.getExtension = getExtension;
-//# sourceMappingURL=utils.js.map
+}); });
+//# sourceMappingURL=provide-media.js.map

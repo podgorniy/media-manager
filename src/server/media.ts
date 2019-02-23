@@ -1,11 +1,17 @@
-import {Document, model, Schema} from 'mongoose'
+import {Document, Model, model, Schema} from 'mongoose'
+import {IAppMediaItem} from '../common/interfaces'
 
-interface IMedia extends Document {
+export interface IMediaDoc {
     owner: string
-    fileName: string
+    uuid: string
+    fileExtension: string
     md5: string
     tags: Array<string>
 }
+
+interface IMedia extends Document, IMediaDoc {}
+
+interface IMediaModel extends Model<IMedia> {}
 
 const MediaSchema = new Schema(
     {
@@ -13,9 +19,13 @@ const MediaSchema = new Schema(
             type: String,
             required: true
         },
-        fileName: {
+        uuid: {
             type: String,
             unique: true,
+            required: true
+        },
+        fileExtension: {
+            type: String,
             required: true
         },
         md5: {
@@ -36,4 +46,17 @@ const MediaSchema = new Schema(
     }
 )
 
-export const MediaModel = model<IMedia>('media', MediaSchema)
+export const MediaModel = model<IMedia, IMediaModel>('media', MediaSchema)
+
+export function getFileName({fileExtension, uuid}: IMediaDoc): string {
+    return uuid + '.' + fileExtension
+}
+
+export function toClientSideRepresentation(mediaDoc: IMediaDoc): IAppMediaItem {
+    return {
+        url: `/m/${getFileName(mediaDoc)}`,
+        uuid: mediaDoc.uuid,
+        tags: mediaDoc.tags,
+        selected: false
+    }
+}

@@ -5,7 +5,7 @@ import {mediaTypes} from '../../common/lib'
 
 interface IMediaListItemProps {
     url: string
-    fileName: string
+    uuid: string
     type: mediaTypes
 }
 
@@ -17,14 +17,14 @@ export class MediaListItem extends React.Component<IMediaListItemProps & IAppSta
     }
 
     render() {
-        const {appState, type, url, fileName} = this.props
+        const {appState, type, url, uuid} = this.props
         const extraClasses = `media-item`
         const clickHandler = () => {
-            appState.toggleSelected(fileName)
+            appState.toggleSelected(uuid)
         }
         switch (type) {
             case 'img':
-                return <img onClick={clickHandler} src={url} className={`media-image ${extraClasses}`} alt={fileName} />
+                return <img onClick={clickHandler} src={url} className={`media-image ${extraClasses}`} alt={uuid} />
             case 'video':
                 return <video onClick={clickHandler} src={url} className={`media-video ${extraClasses}`} controls />
             default:

@@ -4,7 +4,7 @@ import {inject, observer} from 'mobx-react'
 import {IAppState} from '../app-state'
 import {Navigation} from './Navigation'
 import {DragNDropUpload} from './DragNDropUpload'
-import {ToggleSidebar} from './ToggleSidebar'
+import {ContextualActions} from './ContextualActions'
 
 require('./Layout.less')
 
@@ -43,7 +43,7 @@ export class Layout extends React.Component<{} & IAppState, {}> {
                                     width: appState.sideWidth + 'px'
                                 }}
                             >
-                                <ToggleSidebar />
+                                <ContextualActions />
                             </div>
                             <div
                                 className='layout__main'

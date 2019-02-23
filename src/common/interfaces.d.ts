@@ -1,12 +1,12 @@
 export interface IUserMediaItem {
     url: string
     tags: Array<string>
-    fileName: string
+    uuid: string
 }
 
 export interface IAppInitialState {
     userName: string
-    userMedia: Array<IUserMediaItem>
+    userMedia: Array<IAppMediaItem>
 }
 
 // Client side representation of media item

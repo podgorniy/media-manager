@@ -50,11 +50,11 @@ export class MediaList extends React.Component<{} & IAppState, {}> {
         const widthClass = 'media-items-columns-' + appState.columnsCount
         return (
             <ul ref={this.listRef} className={`media-items ${widthClass}`}>
-                {appState.media.map(({url, fileName, selected}) => {
+                {appState.media.map(({url, uuid, selected}) => {
                     return (
-                        <li key={url} className='media-item-wrapper-outer'>
+                        <li key={uuid} className='media-item-wrapper-outer'>
                             <div className={`media-item-wrapper-inner ${selected ? 'selected' : ''}`}>
-                                <MediaListItem fileName={fileName} url={url} type={getType(url)} />
+                                <MediaListItem uuid={uuid} url={url} type={getType(url)} />
                             </div>
                         </li>
                     )

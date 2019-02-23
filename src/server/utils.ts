@@ -20,3 +20,24 @@ export async function hashString(password) {
 export async function compareHashed(str, hash) {
     return compare(str, hash)
 }
+
+export function trimDot(s: string): string {
+    return s.replace(/(^\.*)|(\.*$)/g, '')
+}
+
+export function getName(fileName: string): string {
+    let sections = fileName.split('.')
+    sections.pop()
+    if (!sections.length) {
+        throw Error(`Failed to extract name from fileName ${fileName}`)
+    }
+    return sections.join('.')
+}
+
+export function getExtension(fileName: string): string {
+    let sections = fileName.split('.')
+    if (sections.length === 1) {
+        throw Error(`Failed to extract extension from fileName ${fileName}`)
+    }
+    return sections[sections.length - 1]
+}

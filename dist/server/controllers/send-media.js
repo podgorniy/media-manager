@@ -37,9 +37,9 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 var _this = this;
 Object.defineProperty(exports, "__esModule", { value: true });
 var utils_1 = require("../utils");
-var media_1 = require("../models/media");
+var media_1 = require("../media");
 exports.sendMedia = utils_1.asyncHandler(function (req, res) { return __awaiter(_this, void 0, void 0, function () {
-    var userId, fileName, fileDoc;
+    var userId, fileName, fileUUID, fileExtension, fileDoc;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -49,8 +49,11 @@ exports.sendMedia = utils_1.asyncHandler(function (req, res) { return __awaiter(
                     return [2 /*return*/];
                 }
                 fileName = req.params.fileName;
+                fileUUID = utils_1.getName(fileName);
+                fileExtension = utils_1.getExtension(fileName);
                 return [4 /*yield*/, media_1.MediaModel.findOne({
-                        fileName: fileName,
+                        uuid: fileUUID,
+                        fileExtension: fileExtension,
                         owner: req.user._id
                     })];
             case 1:
@@ -59,7 +62,7 @@ exports.sendMedia = utils_1.asyncHandler(function (req, res) { return __awaiter(
                     res.status(404).send("Not found or don't have permissions to view");
                     return [2 /*return*/];
                 }
-                res.sendFile(utils_1.filePathForPersistence(fileName));
+                res.sendFile(utils_1.filePathForPersistence(media_1.getFileName(fileDoc)));
                 return [2 /*return*/];
         }
     });

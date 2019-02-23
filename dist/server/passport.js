@@ -35,7 +35,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var user_1 = require("./models/user");
+var user_1 = require("./user");
 var utils_1 = require("./utils");
 var passport = require('passport');
 var Strategy = require('passport-local');

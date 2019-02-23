@@ -36,8 +36,8 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var mongoose_1 = require("mongoose");
-var utils_1 = require("../utils");
-var lib_1 = require("../../common/lib");
+var utils_1 = require("./utils");
+var lib_1 = require("../common/lib");
 var UserSchema = new mongoose_1.Schema({
     name: {
         type: String,

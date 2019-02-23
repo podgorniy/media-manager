@@ -1,4 +1,4 @@
-import {asyncHandler, filePathForPersistence} from '../utils'
+import {asyncHandler, filePathForPersistence, trimDot} from '../utils'
 import {MediaModel} from '../media'
 import * as path from 'path'
 
@@ -17,13 +17,15 @@ async function registerFile(sourcePath: string, ownerId: string) {
         return sameFileForCurrentUser
     }
     const uuid = uuidv4()
-    const fileExtension = path.extname(sourcePath) // with dot
-    const fileName = uuid + fileExtension
+    const fileExtensionWithDot = path.extname(sourcePath) // with dot
+    const fileExtensionWithoutDot = trimDot(fileExtensionWithDot)
+    const fileName = uuid + fileExtensionWithDot
     const fileTargetPath = filePathForPersistence(fileName)
     await fs.copy(sourcePath, fileTargetPath)
     const res = new MediaModel({
         owner: ownerId,
-        fileName: fileName,
+        uuid: uuid,
+        fileExtension: fileExtensionWithoutDot,
         md5: md5
     })
     await res.save()
