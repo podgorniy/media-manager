@@ -41,9 +41,10 @@ interface IFetchMediaParams {
 }
 
 export async function fetchMedia(params: IFetchMediaParams): Promise<IMediaResponse> {
+    const {skip, limit} = params
     const requestQueryParams: IProvideMediaParams = {
-        limit: params.limit,
-        skip: params.limit
+        limit: limit,
+        skip: skip
     }
     const reqObj = await fetch(`/api/v1/media?${objToQueryString(requestQueryParams)}`)
     return await reqObj.json()

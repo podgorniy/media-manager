@@ -5,8 +5,8 @@ import {fetchMedia} from './api'
 
 async function main() {
     let res = await fetchMedia({
-        limit: 10,
-        skip: 5
+        limit: 6,
+        skip: 20
     })
     console.log('res', res)
 }

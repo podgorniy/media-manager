@@ -16,6 +16,8 @@ export interface IAppMediaItem extends IUserMediaItem {
 
 export interface IMediaResponse {
     items: Array<IUserMediaItem>
+    success: boolean
+    hasMore: boolean
 }
 
 export interface IProvideMediaParams {
