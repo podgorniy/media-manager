@@ -13,6 +13,14 @@ export class ToggleSelection extends React.Component<{} & IAppState, {}> {
         const {appState} = this.props
         const {selected} = appState
         const totalItemsSelected = selected.length
-        return <div>{totalItemsSelected ? <button onClick={appState.unselectAll}>Убрать выделение {totalItemsSelected} элементов</button> : 'Ничего не выбрано'}</div>
+        return (
+            <div>
+                {totalItemsSelected ? (
+                    <button onClick={appState.unselectAll}>Убрать выделение {totalItemsSelected} элементов</button>
+                ) : (
+                    'Ничего не выбрано'
+                )}
+            </div>
+        )
     }
 }

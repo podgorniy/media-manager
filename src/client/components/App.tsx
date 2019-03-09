@@ -11,6 +11,8 @@ if (isDev()) {
     window['a'] = appState
 }
 
+appState.loadMore()
+
 export class App extends React.Component<{}, {}> {
     render() {
         return (

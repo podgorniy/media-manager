@@ -36,13 +36,12 @@ function getFileName(_a) {
     return uuid + '.' + fileExtension;
 }
 exports.getFileName = getFileName;
-function toClientSideRepresentation(mediaDoc) {
+function toApiRepresentation(doc) {
     return {
-        url: "/m/" + getFileName(mediaDoc),
-        uuid: mediaDoc.uuid,
-        tags: mediaDoc.tags,
-        selected: false
+        uuid: doc.uuid,
+        tags: doc.tags,
+        url: "/m/" + getFileName(doc)
     };
 }
-exports.toClientSideRepresentation = toClientSideRepresentation;
+exports.toApiRepresentation = toApiRepresentation;
 //# sourceMappingURL=media.js.map

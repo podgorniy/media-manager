@@ -1,6 +1,6 @@
 import {asyncHandler} from '../utils'
 import {IMediaResponse} from '../../common/interfaces'
-import {MediaModel, toClientSideRepresentation} from '../media'
+import {MediaModel, toApiRepresentation} from '../media'
 import {IUserFields} from '../user'
 
 const DEFAULT_LIMIT = 20
@@ -23,7 +23,7 @@ export const provideMedia = asyncHandler(async (req, res) => {
             limit: queryLimitItems
         })
         const respData: IMediaResponse = {
-            items: userMediaItems.map(toClientSideRepresentation),
+            items: userMediaItems.map(toApiRepresentation),
             success: true,
             hasMore: canProvideMoreItems
         }

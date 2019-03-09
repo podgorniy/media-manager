@@ -41,28 +41,44 @@ var media_1 = require("../media");
 var DEFAULT_LIMIT = 20;
 var MAX_LIMIT = 100;
 exports.provideMedia = utils_1.asyncHandler(function (req, res) { return __awaiter(_this, void 0, void 0, function () {
-    var _a, skip, limit, intLimit, normalizedCount, normalizedSkip, user, userMediaItems, respData;
+    var _a, skip, limit, intLimit, normalizedCount, querySkipItems, queryLimitItems, query, itemsCountForQuery, canProvideMoreItems, userMediaItems, respData, err_1;
     return __generator(this, function (_b) {
         switch (_b.label) {
             case 0:
+                _b.trys.push([0, 3, , 4]);
                 _a = req.query, skip = _a.skip, limit = _a.limit;
                 intLimit = parseInt(limit);
                 normalizedCount = !intLimit || intLimit <= 0 ? DEFAULT_LIMIT : intLimit;
-                normalizedSkip = parseInt(skip) || 0;
-                user = req.user;
-                return [4 /*yield*/, media_1.MediaModel.find({
-                        owner: user._id
-                    }, null, {
-                        skip: normalizedSkip,
-                        limit: normalizedCount > MAX_LIMIT ? MAX_LIMIT : normalizedCount
-                    })];
+                querySkipItems = parseInt(skip) || 0;
+                queryLimitItems = normalizedCount > MAX_LIMIT ? MAX_LIMIT : normalizedCount;
+                query = {
+                    owner: req.user._id
+                };
+                return [4 /*yield*/, media_1.MediaModel.find(query).count()];
             case 1:
+                itemsCountForQuery = _b.sent();
+                canProvideMoreItems = querySkipItems + queryLimitItems < itemsCountForQuery;
+                return [4 /*yield*/, media_1.MediaModel.find(query, null, {
+                        skip: querySkipItems,
+                        limit: queryLimitItems
+                    })];
+            case 2:
                 userMediaItems = _b.sent();
                 respData = {
-                    items: userMediaItems.map(media_1.toClientSideRepresentation)
+                    items: userMediaItems.map(media_1.toApiRepresentation),
+                    success: true,
+                    hasMore: canProvideMoreItems
                 };
                 res.send(respData);
-                return [2 /*return*/];
+                return [3 /*break*/, 4];
+            case 3:
+                err_1 = _b.sent();
+                res.send({
+                    success: false
+                });
+                console.error(err_1);
+                return [3 /*break*/, 4];
+            case 4: return [2 /*return*/];
         }
     });
 }); });

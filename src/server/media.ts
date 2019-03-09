@@ -1,5 +1,5 @@
 import {Document, Model, model, Schema} from 'mongoose'
-import {IAppMediaItem} from '../common/interfaces'
+import {IUserMediaItem} from '../common/interfaces'
 
 export interface IMediaDoc {
     owner: string
@@ -52,11 +52,10 @@ export function getFileName({fileExtension, uuid}: IMediaDoc): string {
     return uuid + '.' + fileExtension
 }
 
-export function toClientSideRepresentation(mediaDoc: IMediaDoc): IAppMediaItem {
+export function toApiRepresentation(doc: IMediaDoc): IUserMediaItem {
     return {
-        url: `/m/${getFileName(mediaDoc)}`,
-        uuid: mediaDoc.uuid,
-        tags: mediaDoc.tags,
-        selected: false
+        uuid: doc.uuid,
+        tags: doc.tags,
+        url: `/m/${getFileName(doc)}`
     }
 }

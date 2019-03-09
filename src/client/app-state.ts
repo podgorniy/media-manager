@@ -1,5 +1,6 @@
 import {action, computed, configure, observable} from 'mobx'
-import {IAppInitialState, IAppMediaItem} from '../common/interfaces'
+import {fetchMedia} from './api'
+import {IAppInitialState, IAppMediaItem, IMediaResponse, IUserMediaItem} from '../common/interfaces'
 
 configure({
     enforceActions: 'observed' // https://github.com/mobxjs/mobx/blob/gh-pages/docs/refguide/api.md#actions
@@ -13,14 +14,23 @@ const SIDE_WIDTH_COLLAPSED = 50
 const COLUMNS_COUNT_WHEN_SIDE_COLLAPSED = 4
 const COLUMNS_COUNT_WHEN_SIDE_EXPANDED = 3
 
+const ITEMS_COUNT_TO_QUERY = 5
+
+function toClientSideRepresentation(mediaDoc: IUserMediaItem): IAppMediaItem {
+    return {
+        ...mediaDoc,
+        selected: false
+    }
+}
+
 export class AppState {
     constructor(initialState: IAppInitialState) {
-        this.media = initialState.userMedia
+        // this.media = initialState.userMedia.map(toClientSideRepresentation)
         this.setAuthenticated({userName: initialState.userName})
     }
 
     @observable
-    media: Array<IAppMediaItem>
+    media: Array<IAppMediaItem> = []
 
     @observable
     userName: string
@@ -93,6 +103,51 @@ export class AppState {
     @computed
     get selected(): Array<IAppMediaItem> {
         return this.media.filter((item) => item.selected)
+    }
+
+    /**
+     * Load media items
+     */
+    @observable
+    isLoading: boolean = false
+
+    @observable
+    canLoadMore: boolean = true
+
+    @computed
+    get loadedItemsCount() {
+        return this.media.length
+    }
+
+    @action.bound
+    async loadMore() {
+        if (this.isLoading) {
+            return
+        }
+        if (!this.canLoadMore) {
+            return
+        }
+        this.isLoading = true
+        const response = await fetchMedia({
+            limit: ITEMS_COUNT_TO_QUERY,
+            skip: this.loadedItemsCount
+        })
+        this.processLoadMoreResponse(response)
+    }
+
+    @action.bound
+    processLoadMoreResponse(response: IMediaResponse) {
+        const {success, items, hasMore} = response
+        if (success) {
+            for (let i = 0; i < items.length; i += 1) {
+                this.media.push(toClientSideRepresentation(items[i]))
+            }
+            this.canLoadMore = hasMore
+        } else {
+            this.canLoadMore = true
+            alert(`Failed to load media items`)
+        }
+        this.isLoading = false
     }
 }
 

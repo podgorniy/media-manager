@@ -7,6 +7,7 @@ interface IMediaListItemProps {
     url: string
     uuid: string
     type: mediaTypes
+    onLoad: () => void
 }
 
 @inject('appState')
@@ -17,16 +18,32 @@ export class MediaListItem extends React.Component<IMediaListItemProps & IAppSta
     }
 
     render() {
-        const {appState, type, url, uuid} = this.props
+        const {appState, type, url, uuid, onLoad} = this.props
         const extraClasses = `media-item`
         const clickHandler = () => {
             appState.toggleSelected(uuid)
         }
         switch (type) {
             case 'img':
-                return <img onClick={clickHandler} src={url} className={`media-image ${extraClasses}`} alt={uuid} />
+                return (
+                    <img
+                        onClick={clickHandler}
+                        src={url}
+                        className={`media-image ${extraClasses}`}
+                        alt={uuid}
+                        onLoad={onLoad}
+                    />
+                )
             case 'video':
-                return <video onClick={clickHandler} src={url} className={`media-video ${extraClasses}`} controls />
+                return (
+                    <video
+                        controls
+                        onClick={clickHandler}
+                        src={url}
+                        className={`media-video ${extraClasses}`}
+                        onLoad={onLoad}
+                    />
+                )
             default:
                 throw new Error(`Unknown media type ${type} in MediaListItem`)
         }

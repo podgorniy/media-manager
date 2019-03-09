@@ -13,8 +13,20 @@ export class MediaList extends React.Component<{} & IAppState, {}> {
     shuffle: Shuffle
     layoutWatcher: Disposer
 
+    private _onWindowScroll = (event) => {
+        console.log(event)
+    }
+
+    private addWindowsScrollHandlers() {
+        window.addEventListener('scroll', this._onWindowScroll, false)
+    }
+
+    private removeWindowsScrollHandlers() {
+        window.removeEventListener('scroll', this._onWindowScroll, false)
+    }
+
     componentDidMount(): void {
-        const {appState} = this.props
+        this.addWindowsScrollHandlers()
         const node = this.listRef.current
         if (this.shuffle) {
             // is relevant as we will null value on unmount?
@@ -24,6 +36,7 @@ export class MediaList extends React.Component<{} & IAppState, {}> {
         if (isDev()) {
             window['s'] = this.shuffle
         }
+        const {appState} = this.props
         this.layoutWatcher = autorun(() => {
             if (appState.layoutRerenderCount) {
                 this.shuffle.update()
@@ -32,6 +45,7 @@ export class MediaList extends React.Component<{} & IAppState, {}> {
     }
 
     componentWillUnmount(): void {
+        this.removeWindowsScrollHandlers()
         this.shuffle.destroy()
         this.shuffle = null
         this.layoutWatcher()
@@ -39,8 +53,9 @@ export class MediaList extends React.Component<{} & IAppState, {}> {
     }
 
     componentDidUpdate(): void {
+        // TODO: optimize
         // update due to change of list items should reset items
-        // this.shuffle.resetItems()
+        this.shuffle.resetItems()
         // update due to change of layout should just update
         this.shuffle.update()
     }
@@ -49,12 +64,22 @@ export class MediaList extends React.Component<{} & IAppState, {}> {
         const {appState} = this.props
         const widthClass = 'media-items-columns-' + appState.columnsCount
         return (
-            <ul ref={this.listRef} className={`media-items ${widthClass}`}>
+            <ul
+                ref={this.listRef}
+                className={`media-items ${widthClass}`}
+            >
                 {appState.media.map(({url, uuid, selected}) => {
                     return (
                         <li key={uuid} className='media-item-wrapper-outer'>
                             <div className={`media-item-wrapper-inner ${selected ? 'selected' : ''}`}>
-                                <MediaListItem uuid={uuid} url={url} type={getType(url)} />
+                                <MediaListItem
+                                    uuid={uuid}
+                                    url={url}
+                                    type={getType(url)}
+                                    onLoad={() => {
+                                        this.componentDidUpdate()
+                                    }}
+                                />
                             </div>
                         </li>
                     )

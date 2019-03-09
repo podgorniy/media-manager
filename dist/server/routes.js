@@ -94,7 +94,7 @@ function initRoutes(app) {
                     if (!res.locals.isLoggedIn) return [3 /*break*/, 2];
                     return [4 /*yield*/, media_1.MediaModel.find({ owner: req.user._id })];
                 case 1:
-                    _b = (_c.sent()).map(media_1.toClientSideRepresentation);
+                    _b = (_c.sent()).map(media_1.toApiRepresentation);
                     return [3 /*break*/, 3];
                 case 2:
                     _b = [];

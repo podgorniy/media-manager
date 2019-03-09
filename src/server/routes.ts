@@ -5,7 +5,7 @@ import {uploader} from './uploader'
 import {sendMedia} from './controllers/send-media'
 import {logout} from './controllers/logout'
 import {check} from './controllers/check'
-import {MediaModel, toClientSideRepresentation} from './media'
+import {MediaModel, toApiRepresentation} from './media'
 import {IAppInitialState} from '../common/interfaces'
 import {provideMedia} from './controllers/provide-media'
 
@@ -56,7 +56,9 @@ export function initRoutes(app: Express) {
             res.locals.visits = req.session.visits
             res.locals.isLoggedIn = !!req.user
             const appInitialState: IAppInitialState = {
-                userMedia: res.locals.isLoggedIn ? (await MediaModel.find({owner: req.user._id})).map(toClientSideRepresentation) : [],
+                userMedia: res.locals.isLoggedIn
+                    ? (await MediaModel.find({owner: req.user._id})).map(toApiRepresentation)
+                    : [],
                 userName: req.user ? req.user.name : ''
             }
             res.locals.initialState = appInitialState

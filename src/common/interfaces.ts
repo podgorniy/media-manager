@@ -1,3 +1,6 @@
+// Keep .ts extension. Otherwise parcel bundler fails to find this file dependency
+// TODO: try to rename to d.ts after parcel version update from 1.10.3
+
 export interface IUserMediaItem {
     url: string
     tags: Array<string>
@@ -6,7 +9,7 @@ export interface IUserMediaItem {
 
 export interface IAppInitialState {
     userName: string
-    userMedia: Array<IAppMediaItem>
+    userMedia: Array<IUserMediaItem>
 }
 
 // Client side representation of media item
