@@ -1,7 +1,7 @@
 import * as React from 'react'
 import {inject, observer} from 'mobx-react'
 import {IAppState} from '../app-state'
-import {mediaTypes} from '../../common/lib'
+import {mediaTypes} from '../../common/interfaces'
 
 interface IMediaListItemProps {
     url: string

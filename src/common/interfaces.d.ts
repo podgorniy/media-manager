@@ -22,3 +22,5 @@ export interface IProvideMediaParams {
     skip?: number
     limit?: number
 }
+
+export type mediaTypes = 'img' | 'video'
