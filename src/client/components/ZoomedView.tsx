@@ -12,7 +12,7 @@ export class ZoomedView extends React.Component<{} & IAppState, {}> {
         super(props)
     }
 
-    earlyKeyDown = (event) => {
+    keyDown = (event) => {
         const {appState} = this.props
         if (event.code === 'Space') {
             // In zoomed view. Exit zoomed view
@@ -56,12 +56,12 @@ export class ZoomedView extends React.Component<{} & IAppState, {}> {
     }
 
     componentDidMount(): void {
-        document.documentElement.addEventListener('keydown', this.earlyKeyDown)
+        document.documentElement.addEventListener('keydown', this.keyDown)
         document.documentElement.addEventListener('keyup', this.keyup)
     }
 
     componentWillUnmount(): void {
-        document.documentElement.removeEventListener('keydown', this.earlyKeyDown)
+        document.documentElement.removeEventListener('keydown', this.keyDown)
         document.documentElement.removeEventListener('keyup', this.keyup)
     }
 

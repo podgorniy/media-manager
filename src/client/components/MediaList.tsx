@@ -7,6 +7,9 @@ import {MediaListItem} from './MediaListItem'
 import {getTypeOfDoc, isDev} from '../../common/lib'
 import {autorun} from 'mobx'
 
+const SHUFFLE_ANIMATION_DURATION = 250
+const SCREEN_FRAME_DURATION = 17
+
 @inject('appState')
 @observer
 export class MediaList extends React.Component<{} & IAppState, {}> {
@@ -14,26 +17,19 @@ export class MediaList extends React.Component<{} & IAppState, {}> {
     shuffle: Shuffle
     disposeLayoutWatcher: Disposer
 
-    private _onWindowScroll = (event) => {
-        console.log(event)
-    }
-
-    private addWindowsScrollHandlers() {
-        window.addEventListener('scroll', this._onWindowScroll, false)
-    }
-
-    private removeWindowsScrollHandlers() {
-        window.removeEventListener('scroll', this._onWindowScroll, false)
+    private _calcComponentHeight() {
+        this.props.appState.setMediaListFullHeight(this.listRef.current.offsetHeight)
     }
 
     componentDidMount(): void {
-        this.addWindowsScrollHandlers()
         const node = this.listRef.current
         if (this.shuffle) {
             // is relevant as we will null value on unmount?
             throw Error('Shuffle already instantiated') // Should never throw
         }
-        this.shuffle = new Shuffle(node, {})
+        this.shuffle = new Shuffle(node, {
+            speed: SHUFFLE_ANIMATION_DURATION
+        })
         if (isDev()) {
             window['s'] = this.shuffle
         }
@@ -43,10 +39,15 @@ export class MediaList extends React.Component<{} & IAppState, {}> {
                 this.shuffle.update()
             }
         })
+        this.shuffle['on'](Shuffle.EventType.LAYOUT, () => {
+            // Component height is available only after shuffle completes layout animation
+            setTimeout(() => {
+                this._calcComponentHeight()
+            }, SHUFFLE_ANIMATION_DURATION + SCREEN_FRAME_DURATION * 2)
+        })
     }
 
     componentWillUnmount(): void {
-        this.removeWindowsScrollHandlers()
         this.shuffle.destroy()
         this.shuffle = null
         this.disposeLayoutWatcher()
@@ -59,6 +60,7 @@ export class MediaList extends React.Component<{} & IAppState, {}> {
         this.shuffle.resetItems()
         // update due to change of layout should just update
         this.shuffle.update()
+        this._calcComponentHeight()
     }
 
     render() {

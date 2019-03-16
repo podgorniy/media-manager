@@ -215,6 +215,27 @@ export class AppState {
     setFocusedId(id: string) {
         this.focusedId = id
     }
+
+    @observable
+    viewportHeight: number
+    @action.bound
+    calcViewPortHeight() {
+        this.viewportHeight = window.innerHeight
+    }
+
+    @observable
+    pageScrolled: number
+    @action.bound
+    calcPageScrolled() {
+        this.pageScrolled = document.body.scrollTop
+    }
+
+    @observable
+    mediaListFullHeight: number = 0
+    @action.bound
+    setMediaListFullHeight(newValue: number) {
+        this.mediaListFullHeight = newValue
+    }
 }
 
 export interface IAppState {
