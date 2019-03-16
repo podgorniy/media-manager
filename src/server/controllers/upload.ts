@@ -1,6 +1,7 @@
-import {asyncHandler, filePathForPersistence, trimDot} from '../utils'
+import {asyncHandler, filePathForPersistence} from '../utils'
 import {MediaModel} from '../media'
 import * as path from 'path'
+import {getExtension, getType} from 'mime'
 
 const md5file = require('md5-file/promise')
 const uuidv4 = require('uuid/v4')
@@ -18,15 +19,17 @@ async function registerFile(sourcePath: string, ownerId: string) {
     }
     const uuid = uuidv4()
     const fileExtensionWithDot = path.extname(sourcePath) // with dot
-    const fileExtensionWithoutDot = trimDot(fileExtensionWithDot)
+    const fileMimeType = getType(fileExtensionWithDot)
+    const extension = getExtension(fileMimeType)
     const fileName = uuid + fileExtensionWithDot
     const fileTargetPath = filePathForPersistence(fileName)
     await fs.copy(sourcePath, fileTargetPath)
     const res = new MediaModel({
         owner: ownerId,
         uuid: uuid,
-        fileExtension: fileExtensionWithoutDot,
-        md5: md5
+        fileExtension: extension,
+        md5: md5,
+        type: fileMimeType
     })
     await res.save()
     return res

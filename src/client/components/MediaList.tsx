@@ -1,9 +1,10 @@
+require('./MediaList.less')
 import * as React from 'react'
 import {Disposer, inject, observer} from 'mobx-react'
 import {IAppState} from '../app-state'
 import Shuffle from 'shufflejs'
 import {MediaListItem} from './MediaListItem'
-import {getType, isDev} from '../../common/lib'
+import {getTypeOfDoc, isDev} from '../../common/lib'
 import {autorun} from 'mobx'
 
 @inject('appState')
@@ -64,18 +65,21 @@ export class MediaList extends React.Component<{} & IAppState, {}> {
         const {appState} = this.props
         const widthClass = 'media-items-columns-' + appState.columnsCount
         return (
-            <ul
-                ref={this.listRef}
-                className={`media-items ${widthClass}`}
-            >
-                {appState.media.map(({url, uuid, selected}) => {
+            <ul ref={this.listRef} className={`media-items ${widthClass}`}>
+                {appState.media.map(({url, uuid, selected, type}) => {
                     return (
                         <li key={uuid} className='media-item-wrapper-outer'>
-                            <div className={`media-item-wrapper-inner ${selected ? 'selected' : ''}`}>
+                            <div
+                                className={`
+                                        media-item-wrapper-inner
+                                        ${selected ? 'selected' : ''}
+                                        ${appState.focusedId === uuid ? 'focused' : ''}
+                                    `}
+                            >
                                 <MediaListItem
                                     uuid={uuid}
                                     url={url}
-                                    type={getType(url)}
+                                    type={getTypeOfDoc(type)}
                                     onLoad={() => {
                                         this.componentDidUpdate()
                                     }}

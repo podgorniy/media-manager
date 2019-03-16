@@ -46,13 +46,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var utils_1 = require("../utils");
 var media_1 = require("../media");
 var path = __importStar(require("path"));
+var mime_1 = require("mime");
 var md5file = require('md5-file/promise');
 var uuidv4 = require('uuid/v4');
 var fs = require('fs-extra');
 // Returns mongo doc of corresponding file
 function registerFile(sourcePath, ownerId) {
     return __awaiter(this, void 0, void 0, function () {
-        var md5, sameFileForCurrentUser, uuid, fileExtensionWithDot, fileExtensionWithoutDot, fileName, fileTargetPath, res;
+        var md5, sameFileForCurrentUser, uuid, fileExtensionWithDot, fileMimeType, extension, fileName, fileTargetPath, res;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0: return [4 /*yield*/, md5file(sourcePath)];
@@ -70,7 +71,8 @@ function registerFile(sourcePath, ownerId) {
                     uuid = uuidv4();
                     fileExtensionWithDot = path.extname(sourcePath) // with dot
                     ;
-                    fileExtensionWithoutDot = utils_1.trimDot(fileExtensionWithDot);
+                    fileMimeType = mime_1.getType(fileExtensionWithDot);
+                    extension = mime_1.getExtension(fileMimeType);
                     fileName = uuid + fileExtensionWithDot;
                     fileTargetPath = utils_1.filePathForPersistence(fileName);
                     return [4 /*yield*/, fs.copy(sourcePath, fileTargetPath)];
@@ -79,8 +81,9 @@ function registerFile(sourcePath, ownerId) {
                     res = new media_1.MediaModel({
                         owner: ownerId,
                         uuid: uuid,
-                        fileExtension: fileExtensionWithoutDot,
-                        md5: md5
+                        fileExtension: extension,
+                        md5: md5,
+                        type: fileMimeType
                     });
                     return [4 /*yield*/, res.save()];
                 case 4:

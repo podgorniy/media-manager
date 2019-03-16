@@ -5,6 +5,7 @@ export interface IUserMediaItem {
     url: string
     tags: Array<string>
     uuid: string
+    type: MediaType
 }
 
 export interface IAppInitialState {
@@ -13,7 +14,7 @@ export interface IAppInitialState {
 }
 
 // Client side representation of media item
-export interface IAppMediaItem extends IUserMediaItem {
+export interface IClientMediaItem extends IUserMediaItem {
     selected: boolean
 }
 
@@ -28,4 +29,4 @@ export interface IProvideMediaParams {
     limit?: number
 }
 
-export type mediaTypes = 'img' | 'video'
+export type MediaType = 'img' | 'video'

@@ -1,5 +1,5 @@
 import {Document, Model, model, Schema} from 'mongoose'
-import {IUserMediaItem} from '../common/interfaces'
+import {IUserMediaItem, MediaType} from '../common/interfaces'
 
 export interface IMediaDoc {
     owner: string
@@ -7,6 +7,7 @@ export interface IMediaDoc {
     fileExtension: string
     md5: string
     tags: Array<string>
+    type: MediaType
 }
 
 interface IMedia extends Document, IMediaDoc {}
@@ -39,6 +40,10 @@ const MediaSchema = new Schema(
         tags: {
             type: [String],
             default: []
+        },
+        type: {
+            type: String,
+            default: null
         }
     },
     {
@@ -56,6 +61,7 @@ export function toApiRepresentation(doc: IMediaDoc): IUserMediaItem {
     return {
         uuid: doc.uuid,
         tags: doc.tags,
-        url: `/m/${getFileName(doc)}`
+        url: `/m/${getFileName(doc)}`,
+        type: doc.type
     }
 }

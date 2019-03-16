@@ -26,6 +26,10 @@ var MediaSchema = new mongoose_1.Schema({
     tags: {
         type: [String],
         default: []
+    },
+    type: {
+        type: String,
+        default: null
     }
 }, {
     collection: 'media'
@@ -40,7 +44,8 @@ function toApiRepresentation(doc) {
     return {
         uuid: doc.uuid,
         tags: doc.tags,
-        url: "/m/" + getFileName(doc)
+        url: "/m/" + getFileName(doc),
+        type: doc.type
     };
 }
 exports.toApiRepresentation = toApiRepresentation;

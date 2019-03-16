@@ -5,6 +5,7 @@ import {IAppState} from '../app-state'
 import {Navigation} from './Navigation'
 import {DragNDropUpload} from './DragNDropUpload'
 import {ContextualActions} from './ContextualActions'
+import {ZoomedView} from './ZoomedView'
 
 require('./Layout.less')
 
@@ -55,6 +56,7 @@ export class Layout extends React.Component<{} & IAppState, {}> {
                             </div>
                         </div>
                         <DragNDropUpload />
+                        {<ZoomedView />}
                     </>
                 ) : null}
             </div>

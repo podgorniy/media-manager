@@ -1,12 +1,13 @@
+require('./MediaListItem.less')
 import * as React from 'react'
 import {inject, observer} from 'mobx-react'
 import {IAppState} from '../app-state'
-import {mediaTypes} from '../../common/interfaces'
+import {MediaType} from '../../common/interfaces'
 
 interface IMediaListItemProps {
     url: string
     uuid: string
-    type: mediaTypes
+    type: MediaType
     onLoad: () => void
 }
 
@@ -17,35 +18,48 @@ export class MediaListItem extends React.Component<IMediaListItemProps & IAppSta
         super(props)
     }
 
+    clickHandler = (event) => {
+        const {appState, uuid} = this.props
+        if (event.shiftKey) {
+            appState.toggleSelected(this.props.uuid)
+        } else {
+            appState.setZoomed(uuid)
+        }
+    }
+
     render() {
         const {appState, type, url, uuid, onLoad} = this.props
         const extraClasses = `media-item`
-        const clickHandler = () => {
-            appState.toggleSelected(uuid)
-        }
-        switch (type) {
-            case 'img':
-                return (
+        return (
+            <div
+                className={appState.focusedId === uuid ? 'focused' : ''}
+                onMouseEnter={() => {
+                    appState.setHoveredId(uuid)
+                }}
+                onMouseLeave={() => {
+                    appState.setHoveredId(null)
+                }}
+            >
+                {type === 'img' && (
                     <img
-                        onClick={clickHandler}
+                        onClick={this.clickHandler}
                         src={url}
-                        className={`media-image ${extraClasses}`}
+                        className={`MediaListItem ${extraClasses}`}
                         alt={uuid}
                         onLoad={onLoad}
                     />
-                )
-            case 'video':
-                return (
+                )}
+
+                {type === 'video' && (
                     <video
                         controls
-                        onClick={clickHandler}
+                        onClick={this.clickHandler}
                         src={url}
-                        className={`media-video ${extraClasses}`}
+                        className={`MediaListItem ${extraClasses}`}
                         onLoad={onLoad}
                     />
-                )
-            default:
-                throw new Error(`Unknown media type ${type} in MediaListItem`)
-        }
+                )}
+            </div>
+        )
     }
 }

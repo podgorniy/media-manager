@@ -1,6 +1,6 @@
 import {action, computed, configure, observable} from 'mobx'
 import {fetchMedia} from './api'
-import {IAppInitialState, IAppMediaItem, IMediaResponse, IUserMediaItem} from '../common/interfaces'
+import {IAppInitialState, IClientMediaItem, IMediaResponse, IUserMediaItem} from '../common/interfaces'
 
 configure({
     enforceActions: 'observed' // https://github.com/mobxjs/mobx/blob/gh-pages/docs/refguide/api.md#actions
@@ -16,7 +16,7 @@ const COLUMNS_COUNT_WHEN_SIDE_EXPANDED = 3
 
 const ITEMS_COUNT_TO_QUERY = 5
 
-function toClientSideRepresentation(mediaDoc: IUserMediaItem): IAppMediaItem {
+function toClientSideRepresentation(mediaDoc: IUserMediaItem): IClientMediaItem {
     return {
         ...mediaDoc,
         selected: false
@@ -30,7 +30,7 @@ export class AppState {
     }
 
     @observable
-    media: Array<IAppMediaItem> = []
+    media: Array<IClientMediaItem> = []
 
     @observable
     userName: string
@@ -101,7 +101,7 @@ export class AppState {
     }
 
     @computed
-    get selected(): Array<IAppMediaItem> {
+    get selected(): Array<IClientMediaItem> {
         return this.media.filter((item) => item.selected)
     }
 
@@ -148,6 +148,72 @@ export class AppState {
             alert(`Failed to load media items`)
         }
         this.isLoading = false
+    }
+
+    /**
+     * Item id for zoomed view
+     */
+    @observable
+    zoomedItemId: string = null
+
+    @computed
+    get zoomedItem() {
+        const zoomedIndex = this.media.findIndex((item) => item.uuid === this.zoomedItemId)
+        return this.media[zoomedIndex]
+    }
+
+    @action.bound
+    setZoomed(uuid: string | null) {
+        if (uuid) {
+            this.setFocusedId(uuid)
+        }
+        this.zoomedItemId = uuid
+    }
+
+    /**
+     * Select next, prev or n item for zoomed view
+     * @param indexShift
+     */
+    @action.bound
+    shiftZoomed(indexShift: number) {
+        const zoomedIndex = this.media.findIndex((item) => item.uuid === this.zoomedItemId)
+        const newZoomedIndex = zoomedIndex + indexShift
+        const lastItemIndex = this.media.length - 1
+        if (newZoomedIndex > lastItemIndex) {
+            return (this.zoomedItemId = this.media[lastItemIndex].uuid)
+        }
+        if (newZoomedIndex < 0) {
+            return (this.zoomedItemId = this.media[0].uuid)
+        } else {
+            return (this.zoomedItemId = this.media[newZoomedIndex].uuid)
+        }
+    }
+
+    /**
+     * Item which is hovered at the moment
+     */
+    @observable
+    hoveredId: string = null
+    @action.bound
+    setHoveredId(id) {
+        // don't process hovered state if zoomed state is set
+        if (!this.zoomedItemId) {
+            this.setFocusedId(id)
+        }
+        this.hoveredId = id
+    }
+
+    /**
+     * One item that currently has focus
+     * Focus will be assigned on hover
+     * Zoomed item is also a focused item
+     */
+    @observable
+    focusedId: string = null
+
+    @action.bound
+    setFocusedId(id: string) {
+        this.focusedId = id
     }
 }
 
