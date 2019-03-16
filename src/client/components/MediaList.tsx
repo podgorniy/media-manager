@@ -12,7 +12,7 @@ import {autorun} from 'mobx'
 export class MediaList extends React.Component<{} & IAppState, {}> {
     listRef = React.createRef<HTMLUListElement>()
     shuffle: Shuffle
-    layoutWatcher: Disposer
+    disposeLayoutWatcher: Disposer
 
     private _onWindowScroll = (event) => {
         console.log(event)
@@ -38,7 +38,7 @@ export class MediaList extends React.Component<{} & IAppState, {}> {
             window['s'] = this.shuffle
         }
         const {appState} = this.props
-        this.layoutWatcher = autorun(() => {
+        this.disposeLayoutWatcher = autorun(() => {
             if (appState.layoutRerenderCount) {
                 this.shuffle.update()
             }
@@ -49,8 +49,8 @@ export class MediaList extends React.Component<{} & IAppState, {}> {
         this.removeWindowsScrollHandlers()
         this.shuffle.destroy()
         this.shuffle = null
-        this.layoutWatcher()
-        this.layoutWatcher = null
+        this.disposeLayoutWatcher()
+        this.disposeLayoutWatcher = null
     }
 
     componentDidUpdate(): void {
