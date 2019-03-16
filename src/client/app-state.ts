@@ -180,12 +180,11 @@ export class AppState {
         const newZoomedIndex = zoomedIndex + indexShift
         const lastItemIndex = this.media.length - 1
         if (newZoomedIndex > lastItemIndex) {
-            return (this.zoomedItemId = this.media[lastItemIndex].uuid)
-        }
-        if (newZoomedIndex < 0) {
-            return (this.zoomedItemId = this.media[0].uuid)
+            this.setZoomed(this.media[lastItemIndex].uuid)
+        } else if (newZoomedIndex < 0) {
+            this.setZoomed(this.media[0].uuid)
         } else {
-            return (this.zoomedItemId = this.media[newZoomedIndex].uuid)
+            this.setZoomed(this.media[newZoomedIndex].uuid)
         }
     }
 

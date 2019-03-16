@@ -18,7 +18,8 @@ export class MediaList extends React.Component<{} & IAppState, {}> {
     disposeLayoutWatcher: Disposer
 
     private _calcComponentHeight() {
-        this.props.appState.setMediaListFullHeight(this.listRef.current.offsetHeight)
+        const componentHeight = this.listRef.current ? this.listRef.current.offsetHeight : 0
+        this.props.appState.setMediaListFullHeight(componentHeight)
     }
 
     componentDidMount(): void {
