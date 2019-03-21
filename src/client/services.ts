@@ -4,8 +4,9 @@ import {autorun} from 'mobx'
 const VIEW_PORTS_BELOW_SCREEN_TO_TRIGGER_LOADING = 1.5
 
 function initLoadMoreService(appState: AppState) {
-    autorun(function(r) {
-        const {viewportHeight, pageScrolled, mediaListFullHeight} = appState
+    autorun(function() {
+        const {viewportHeight, pageScrolled, mediaListFullHeight, userName} = appState
+        userName // keep
         if (
             mediaListFullHeight - pageScrolled - viewportHeight <
             viewportHeight * VIEW_PORTS_BELOW_SCREEN_TO_TRIGGER_LOADING

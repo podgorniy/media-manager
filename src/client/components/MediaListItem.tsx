@@ -1,8 +1,10 @@
-require('./MediaListItem.less')
+import {autorun} from 'mobx'
 import * as React from 'react'
 import {inject, observer} from 'mobx-react'
 import {IAppState} from '../app-state'
 import {MediaType} from '../../common/interfaces'
+
+require('./MediaListItem.less')
 
 interface IMediaListItemProps {
     url: string
@@ -18,6 +20,30 @@ export class MediaListItem extends React.Component<IMediaListItemProps & IAppSta
         super(props)
     }
 
+    private ref = React.createRef<HTMLDivElement>()
+    private stopAutoscrollIntoView
+
+    componentDidMount() {
+        const {appState, uuid} = this.props
+        let self = this
+        this.stopAutoscrollIntoView = autorun(
+            function() {
+                const current: HTMLElement = self.ref.current.parentNode.parentNode as HTMLElement
+                if (appState.zoomedItemId === uuid) {
+                    const {top} = current.getBoundingClientRect()
+                    const isInViewport = top < appState.pageScrolled + window.innerHeight
+                    if (isInViewport) {
+                        current.scrollIntoView(true)
+                    }
+                }
+            }.bind(this)
+        )
+    }
+
+    componentWillUnmount() {
+        this.stopAutoscrollIntoView()
+    }
+
     clickHandler = (event) => {
         const {appState, uuid} = this.props
         if (event.shiftKey) {
@@ -30,9 +56,12 @@ export class MediaListItem extends React.Component<IMediaListItemProps & IAppSta
     render() {
         const {appState, type, url, uuid, onLoad} = this.props
         const extraClasses = `media-item`
+        const itemIsFocused = appState.focusedId === uuid
+
         return (
             <div
-                className={appState.focusedId === uuid ? 'focused' : ''}
+                ref={this.ref}
+                className={`${uuid} ${itemIsFocused ? 'focused' : ''} media-item-wrapper-ppp`}
                 onMouseEnter={() => {
                     appState.setHoveredId(uuid)
                 }}
