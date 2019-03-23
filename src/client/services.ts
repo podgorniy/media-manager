@@ -6,7 +6,7 @@ const VIEW_PORTS_BELOW_SCREEN_TO_TRIGGER_LOADING = 1.5
 function initLoadMoreService(appState: AppState) {
     autorun(function() {
         const {viewportHeight, pageScrolled, mediaListFullHeight, userName} = appState
-        userName // keep
+        userName // keep. Should react if username changed (i.e. user logged-in, logged-out)
         if (
             mediaListFullHeight - pageScrolled - viewportHeight <
             viewportHeight * VIEW_PORTS_BELOW_SCREEN_TO_TRIGGER_LOADING
