@@ -30,9 +30,9 @@ export class MediaListItem extends React.Component<IMediaListItemProps & IAppSta
             function() {
                 const current: HTMLElement = self.ref.current.parentNode.parentNode as HTMLElement
                 if (appState.zoomedItemId === uuid) {
-                    const {top} = current.getBoundingClientRect()
-                    const isInViewport = top < appState.pageScrolled + window.innerHeight
-                    if (isInViewport) {
+                    const {top, height} = current.getBoundingClientRect()
+                    const isInViewport = top + height > 0 && top < appState.pageScrolled + window.innerHeight
+                    if (!isInViewport) {
                         current.scrollIntoView(true)
                     }
                 }
