@@ -4,7 +4,7 @@ import {Disposer, inject, observer} from 'mobx-react'
 import {IAppState} from '../app-state'
 import Shuffle from 'shufflejs'
 import {MediaListItem} from './MediaListItem'
-import {getTypeOfDoc, isDev} from '../../common/lib'
+import {isDev} from '../../common/lib'
 import {autorun} from 'mobx'
 
 const SHUFFLE_ANIMATION_DURATION = 250
@@ -69,25 +69,15 @@ export class MediaList extends React.Component<{} & IAppState, {}> {
         const widthClass = 'media-items-columns-' + appState.columnsCount
         return (
             <ul ref={this.listRef} className={`media-items ${widthClass}`}>
-                {appState.media.map(({url, uuid, selected, type}) => {
+                {appState.media.map(({uuid}) => {
                     return (
                         <li key={uuid} className='media-item-wrapper-outer'>
-                            <div
-                                className={`
-                                        media-item-wrapper-inner
-                                        ${selected ? 'selected' : ''}
-                                        ${appState.focusedId === uuid ? 'focused' : ''}
-                                    `}
-                            >
-                                <MediaListItem
-                                    uuid={uuid}
-                                    url={url}
-                                    type={getTypeOfDoc(type)}
-                                    onLoad={() => {
-                                        this.componentDidUpdate()
-                                    }}
-                                />
-                            </div>
+                            <MediaListItem
+                                uuid={uuid}
+                                onLoad={() => {
+                                    this.componentDidUpdate()
+                                }}
+                            />
                         </li>
                     )
                 })}

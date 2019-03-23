@@ -2,14 +2,12 @@ import {autorun} from 'mobx'
 import * as React from 'react'
 import {inject, observer} from 'mobx-react'
 import {IAppState} from '../app-state'
-import {MediaType} from '../../common/interfaces'
+import {getTypeOfDoc} from '../../common/lib'
 
 require('./MediaListItem.less')
 
 interface IMediaListItemProps {
-    url: string
     uuid: string
-    type: MediaType
     onLoad: () => void
 }
 
@@ -54,14 +52,14 @@ export class MediaListItem extends React.Component<IMediaListItemProps & IAppSta
     }
 
     render() {
-        const {appState, type, url, uuid, onLoad} = this.props
-        const extraClasses = `media-item`
-        const itemIsFocused = appState.focusedId === uuid
+        const {appState, uuid, onLoad} = this.props
+        const mediaItem = appState.media.find((item) => item.uuid === uuid)
+        const type = getTypeOfDoc(mediaItem.type)
+        const {selected, url, focused} = mediaItem
 
         return (
             <div
                 ref={this.ref}
-                className={`${uuid} ${itemIsFocused ? 'focused' : ''} media-item-wrapper-ppp`}
                 onMouseEnter={() => {
                     appState.setHoveredId(uuid)
                 }}
@@ -69,25 +67,33 @@ export class MediaListItem extends React.Component<IMediaListItemProps & IAppSta
                     appState.setHoveredId(null)
                 }}
             >
-                {type === 'img' && (
-                    <img
-                        onClick={this.clickHandler}
-                        src={url}
-                        className={`MediaListItem ${extraClasses}`}
-                        alt={uuid}
-                        onLoad={onLoad}
-                    />
-                )}
+                <div
+                    className={`
+                                MediaListItem__outer
+                                ${selected ? 'selected' : ''}
+                                ${focused ? 'focused' : ''}
+                            `}
+                >
+                    {type === 'img' && (
+                        <img
+                            onClick={this.clickHandler}
+                            src={url}
+                            className={`MediaListItem`}
+                            alt={uuid}
+                            onLoad={onLoad}
+                        />
+                    )}
 
-                {type === 'video' && (
-                    <video
-                        controls
-                        onClick={this.clickHandler}
-                        src={url}
-                        className={`MediaListItem ${extraClasses}`}
-                        onLoad={onLoad}
-                    />
-                )}
+                    {type === 'video' && (
+                        <video
+                            controls
+                            onClick={this.clickHandler}
+                            src={url}
+                            className={`MediaListItem`}
+                            onLoad={onLoad}
+                        />
+                    )}
+                </div>
             </div>
         )
     }

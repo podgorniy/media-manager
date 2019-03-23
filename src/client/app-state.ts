@@ -19,7 +19,8 @@ const ITEMS_COUNT_TO_QUERY = 5
 function toClientSideRepresentation(mediaDoc: IUserMediaItem): IClientMediaItem {
     return {
         ...mediaDoc,
-        selected: false
+        selected: false,
+        focused: false
     }
 }
 
@@ -165,7 +166,7 @@ export class AppState {
     @action.bound
     setZoomed(uuid: string | null) {
         if (uuid) {
-            this.setFocusedId(uuid)
+            this.setFocused(uuid)
         }
         this.zoomedItemId = uuid
     }
@@ -197,7 +198,7 @@ export class AppState {
     setHoveredId(id) {
         // don't process hovered state if zoomed state is set
         if (!this.zoomedItemId) {
-            this.setFocusedId(id)
+            this.setFocused(id)
         }
         this.hoveredId = id
     }
@@ -207,12 +208,20 @@ export class AppState {
      * Focus will be assigned on hover
      * Zoomed item is also a focused item
      */
-    @observable
-    focusedId: string = null
+    @computed
+    get focusedId(): null | string {
+        const focusedItem = this.media.find((item) => item.focused)
+        if (!focusedItem) {
+            return null
+        }
+        return focusedItem.uuid
+    }
 
     @action.bound
-    setFocusedId(id: string) {
-        this.focusedId = id
+    setFocused(id: string) {
+        this.media.forEach((mediaItem) => {
+            mediaItem.focused = mediaItem.uuid === id
+        })
     }
 
     @observable
