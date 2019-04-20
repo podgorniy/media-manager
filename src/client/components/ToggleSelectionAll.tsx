@@ -4,15 +4,15 @@ import {IAppState} from '../app-state'
 
 @inject('appState')
 @observer
-export class ToggleSelection extends React.Component<{} & IAppState, {}> {
+export class ToggleSelectionAll extends React.Component<{} & IAppState, {}> {
     constructor(props) {
         super(props)
     }
 
     render() {
         const {appState} = this.props
-        const {selected} = appState
-        const totalItemsSelected = selected.length
+        const {selectedUUIDs} = appState
+        const totalItemsSelected = selectedUUIDs.length
         return (
             <div>
                 {totalItemsSelected ? (

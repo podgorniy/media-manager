@@ -1,7 +1,8 @@
-import { action, computed, configure, IObservableArray, observable } from 'mobx'
+import {action, computed, configure, IObservableArray, observable} from 'mobx'
 import {fetchMedia, IFetchMediaHandler} from './api'
 import {IAppInitialState, IClientMediaItem, IMediaResponse, IUserMediaItem} from '../common/interfaces'
 import {AppRouter} from './app-router'
+
 const axios = require('axios')
 
 configure({
@@ -21,7 +22,6 @@ const ITEMS_COUNT_TO_QUERY = 5
 function toClientSideRepresentation(mediaDoc: IUserMediaItem): IClientMediaItem {
     return {
         ...mediaDoc,
-        selected: false,
         focused: false
     }
 }
@@ -64,18 +64,41 @@ export class AppState {
         }
     }
 
-    @action.bound
-    toggleSelected(uuid: string) {
-        this.media.forEach((mediaItem) => {
-            if (mediaItem.uuid === uuid) {
-                mediaItem.selected = !mediaItem.selected
-            }
+    @observable
+    selectedUUIDs: IObservableArray<string> = [] as IObservableArray<string>
+
+    @computed
+    get selectedVisibleUUIDs() {
+        return this.selectedUUIDs.filter((itemUUID) => {
+            return this.media.some(({uuid}) => {
+                return itemUUID === uuid
+            })
         })
     }
 
     @action.bound
+    toggleSelected(uuid: string) {
+        const itemIndex = this.selectedUUIDs.indexOf(uuid)
+        if (itemIndex === -1) {
+            this.selectedUUIDs.push(uuid)
+        } else {
+            this.selectedUUIDs.splice(itemIndex, 1)
+        }
+    }
+
+    @action.bound
     unselectAll() {
-        this.media.forEach((mediaItem) => (mediaItem.selected = false))
+        this.selectedUUIDs.clear()
+    }
+
+    @action.bound
+    unselectVisibleOnly() {
+        this.media.forEach(({uuid}) => {
+            const currentItemSelectedIndex = this.selectedUUIDs.indexOf(uuid)
+            if (currentItemSelectedIndex !== -1) {
+                this.selectedUUIDs.splice(currentItemSelectedIndex, 1)
+            }
+        })
     }
 
     @computed
@@ -118,11 +141,6 @@ export class AppState {
     @action.bound
     incLayoutRerenderCount() {
         this.layoutRerenderCount += 1
-    }
-
-    @computed
-    get selected(): Array<IClientMediaItem> {
-        return this.media.filter((item) => item.selected)
     }
 
     /**

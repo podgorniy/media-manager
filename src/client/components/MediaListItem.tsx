@@ -55,8 +55,10 @@ export class MediaListItem extends React.Component<IMediaListItemProps & IAppSta
 
     render() {
         const {appState, uuid, onLoad} = this.props
+        const {selectedUUIDs} = appState
         const mediaItem = appState.media.find((item) => item.uuid === uuid)
-        const {selected, url, focused, type} = mediaItem
+        const {url, focused, type} = mediaItem
+        const selected = selectedUUIDs.indexOf(uuid) !== -1
 
         return (
             <div

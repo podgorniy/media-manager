@@ -16,7 +16,6 @@ export interface IAppInitialState {
 
 // Client side representation of media item
 export interface IClientMediaItem extends IUserMediaItem {
-    selected: boolean
     focused: boolean
 }
 
