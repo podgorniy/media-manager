@@ -43,6 +43,7 @@ var logout_1 = require("./controllers/logout");
 var check_1 = require("./controllers/check");
 var media_1 = require("./media");
 var provide_media_1 = require("./controllers/provide-media");
+var provide_tags_1 = require("./controllers/provide-tags");
 var passport = require('passport');
 // https://stackoverflow.com/a/47448486
 // declare global {
@@ -81,6 +82,7 @@ function initRoutes(app) {
     app.post('/api/v1/upload', isAuthenticated, uploader_1.uploader.array('uploads'), upload_1.upload);
     app.get('/api/v1/check', isAuthenticated, check_1.check);
     app.get('/api/v1/media', isAuthenticated, provide_media_1.provideMedia);
+    app.get('/api/v1/tags', isAuthenticated, provide_tags_1.provideTags);
     app.get('/m/:fileName', send_media_1.sendMedia);
     app.get('*', utils_1.asyncHandler(function (req, res) { return __awaiter(_this, void 0, void 0, function () {
         var appInitialState, _a, _b;

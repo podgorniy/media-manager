@@ -50,10 +50,26 @@ var mime_1 = require("mime");
 var md5file = require('md5-file/promise');
 var uuidv4 = require('uuid/v4');
 var fs = require('fs-extra');
+var KNOWN_TYPES = {
+    img: ['image/gif', 'image/jpeg', 'image/png', 'image/svg+xml'],
+    video: ['video/x-ms-wmv', 'video/x-msvideo', 'video/mp4', 'video/x-flv']
+};
+function getTypeOfDoc(mimeType) {
+    var i;
+    for (i in KNOWN_TYPES) {
+        if (KNOWN_TYPES[i].some(function (s) { return s === mimeType; })) {
+            return i;
+        }
+    }
+    console.error("Unknown mime type " + mimeType);
+}
+function getTags(extension) {
+    return ['new', extension];
+}
 // Returns mongo doc of corresponding file
 function registerFile(sourcePath, ownerId) {
     return __awaiter(this, void 0, void 0, function () {
-        var md5, sameFileForCurrentUser, uuid, fileExtensionWithDot, fileMimeType, extension, fileName, fileTargetPath, res;
+        var md5, sameFileForCurrentUser, uuid, fileExtensionWithDot, fileMimeType, fileType, extension, fileName, fileTargetPath, tags, docObj, res;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0: return [4 /*yield*/, md5file(sourcePath)];
@@ -72,19 +88,23 @@ function registerFile(sourcePath, ownerId) {
                     fileExtensionWithDot = path.extname(sourcePath) // with dot
                     ;
                     fileMimeType = mime_1.getType(fileExtensionWithDot);
+                    fileType = getTypeOfDoc(fileMimeType);
                     extension = mime_1.getExtension(fileMimeType);
                     fileName = uuid + fileExtensionWithDot;
                     fileTargetPath = utils_1.filePathForPersistence(fileName);
                     return [4 /*yield*/, fs.copy(sourcePath, fileTargetPath)];
                 case 3:
                     _a.sent();
-                    res = new media_1.MediaModel({
+                    tags = getTags(extension);
+                    docObj = {
                         owner: ownerId,
                         uuid: uuid,
                         fileExtension: extension,
                         md5: md5,
-                        type: fileMimeType
-                    });
+                        type: fileType,
+                        tags: tags
+                    };
+                    res = new media_1.MediaModel(docObj);
                     return [4 /*yield*/, res.save()];
                 case 4:
                     _a.sent();

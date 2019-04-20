@@ -19,13 +19,21 @@ var connectMongo = require('connect-mongo');
 var MongoStore = connectMongo(session);
 function initMiddleware(app) {
     app.use(express.static(path.resolve(__dirname, '../static')));
+    app.use(function (req, res, next) {
+        if (lib_1.isDev()) {
+            setTimeout(next, Math.random() * 999 + 500); // 500 - 1500ms of delay
+        }
+        else {
+            next();
+        }
+    });
     app.use(session({
         secret: env_1.SESSION_SECRET,
         store: new MongoStore({
             mongooseConnection: mongoose.connection,
             collection: 'sessions'
         }),
-        resave: false,
+        resave: true,
         saveUninitialized: false,
         cookie: {
             secure: !lib_1.isDev()

@@ -38,51 +38,47 @@ var _this = this;
 Object.defineProperty(exports, "__esModule", { value: true });
 var utils_1 = require("../utils");
 var media_1 = require("../media");
-var DEFAULT_LIMIT = 20;
-var MAX_LIMIT = 100;
-exports.provideMedia = utils_1.asyncHandler(function (req, res) { return __awaiter(_this, void 0, void 0, function () {
-    var _a, skip, limit, tags, intLimit, normalizedCount, querySkipItems, queryLimitItems, query, itemsCountForQuery, canProvideMoreItems, userMediaItems, respData, err_1;
-    return __generator(this, function (_b) {
-        switch (_b.label) {
+exports.provideTags = utils_1.asyncHandler(function (req, res) { return __awaiter(_this, void 0, void 0, function () {
+    var tagsSet_1, tagsArr, responseData, err_1;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
             case 0:
-                _b.trys.push([0, 3, , 4]);
-                _a = req.query, skip = _a.skip, limit = _a.limit, tags = _a.tags;
-                intLimit = parseInt(limit);
-                normalizedCount = !intLimit || intLimit <= 0 ? DEFAULT_LIMIT : intLimit;
-                querySkipItems = parseInt(skip) || 0;
-                queryLimitItems = normalizedCount > MAX_LIMIT ? MAX_LIMIT : normalizedCount;
-                query = {
-                    owner: req.user._id
-                };
-                if (tags && tags.length) {
-                    query.tags = { $all: tags };
-                }
-                return [4 /*yield*/, media_1.MediaModel.find(query).count()];
-            case 1:
-                itemsCountForQuery = _b.sent();
-                canProvideMoreItems = querySkipItems + queryLimitItems < itemsCountForQuery;
-                return [4 /*yield*/, media_1.MediaModel.find(query, null, {
-                        skip: querySkipItems,
-                        limit: queryLimitItems
+                _a.trys.push([0, 2, , 3]);
+                tagsSet_1 = new Set();
+                return [4 /*yield*/, media_1.MediaModel.find({
+                        owner: req.user._id
+                    })
+                        .cursor()
+                        .eachAsync(function (mediaItem) {
+                        var tagsList = mediaItem.tags;
+                        for (var i = 0; i < tagsList.length; i += 1) {
+                            tagsSet_1.add(tagsList[i]);
+                        }
                     })];
-            case 2:
-                userMediaItems = _b.sent();
-                respData = {
-                    items: userMediaItems.map(media_1.toApiRepresentation),
+            case 1:
+                _a.sent();
+                tagsArr = Array.from(tagsSet_1);
+                tagsArr.sort();
+                responseData = void 0;
+                responseData = tagsArr.map(function (tagName) {
+                    return {
+                        name: tagName
+                    };
+                });
+                res.send({
                     success: true,
-                    hasMore: canProvideMoreItems
-                };
-                res.send(respData);
-                return [3 /*break*/, 4];
-            case 3:
-                err_1 = _b.sent();
+                    tags: responseData
+                });
+                return [3 /*break*/, 3];
+            case 2:
+                err_1 = _a.sent();
                 res.send({
                     success: false
                 });
                 console.error(err_1);
-                return [3 /*break*/, 4];
-            case 4: return [2 /*return*/];
+                return [3 /*break*/, 3];
+            case 3: return [2 /*return*/];
         }
     });
 }); });
-//# sourceMappingURL=provide-media.js.map
+//# sourceMappingURL=provide-tags.js.map
