@@ -3,12 +3,15 @@ import {autorun} from 'mobx'
 
 const VIEW_PORTS_BELOW_SCREEN_TO_TRIGGER_LOADING = 1.5
 
-function initLoadMoreService(appState: AppState) {
+function initLoadingMoreService(appState: AppState) {
     autorun(function() {
-        const {viewportHeight, pageScrolled, mediaListFullHeight, userName} = appState
+        const {viewportHeight, pageScrolled, mediaListFullHeight, isAuthenticated, canLoadMore, isLoading} = appState
         if (
+            isAuthenticated &&
+            !isLoading &&
+            canLoadMore &&
             mediaListFullHeight - pageScrolled - viewportHeight <
-            viewportHeight * VIEW_PORTS_BELOW_SCREEN_TO_TRIGGER_LOADING
+                viewportHeight * VIEW_PORTS_BELOW_SCREEN_TO_TRIGGER_LOADING
         ) {
             appState.loadMore()
         }
@@ -25,7 +28,16 @@ function initLoadMoreService(appState: AppState) {
     })
 }
 
+function initResettingService(appState: AppState) {
+    autorun(function() {
+        if (appState.filters.tags.length >= 0) {
+            appState.resetMedia()
+        }
+    })
+}
+
 // Reacts to state changes
 export function initServices(appState: AppState) {
-    initLoadMoreService(appState)
+    initResettingService(appState) // 1. Order matters
+    initLoadingMoreService(appState) // 2. Order matters
 }

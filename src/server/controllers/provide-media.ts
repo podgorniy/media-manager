@@ -8,13 +8,16 @@ const MAX_LIMIT = 100
 
 export const provideMedia = asyncHandler(async (req, res) => {
     try {
-        const {skip, limit} = req.query
+        const {skip, limit, tags} = req.query
         const intLimit = parseInt(limit)
         const normalizedCount = !intLimit || intLimit <= 0 ? DEFAULT_LIMIT : intLimit
         const querySkipItems = parseInt(skip) || 0
         const queryLimitItems = normalizedCount > MAX_LIMIT ? MAX_LIMIT : normalizedCount
-        const query = {
+        const query: {tags?: object; owner: object} = {
             owner: (req.user as IUserFields)._id
+        }
+        if (tags && tags.length) {
+            query.tags = {$all: tags}
         }
         const itemsCountForQuery = await MediaModel.find(query).count()
         const canProvideMoreItems = querySkipItems + queryLimitItems < itemsCountForQuery

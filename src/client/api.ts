@@ -1,5 +1,7 @@
-import {objToQueryString} from './lib'
-import {IMediaResponse, IProvideMediaParams} from '../common/interfaces'
+import {IMediaResponse, IProvideMediaParams, ITagsListItem} from '../common/interfaces'
+import {stringify} from 'qs'
+
+const axios = require('axios')
 
 export async function logout() {
     const logoutRespObj = await fetch('/api/v1/logout', {
@@ -38,14 +40,41 @@ export async function authenticate({userName, password}): Promise<{userName?: st
 interface IFetchMediaParams {
     skip?: number
     limit?: number
+    tags?: Array<string>
 }
 
-export async function fetchMedia(params: IFetchMediaParams): Promise<IMediaResponse> {
-    const {skip, limit} = params
+export interface IFetchMediaHandler {
+    response: Promise<IMediaResponse>
+    cancel: Function
+}
+
+export function fetchMedia(params: IFetchMediaParams): IFetchMediaHandler {
+    const {skip, limit, tags} = params
     const requestQueryParams: IProvideMediaParams = {
         limit: limit,
-        skip: skip
+        skip: skip,
+        tags: tags
     }
-    const reqObj = await fetch(`/api/v1/media?${objToQueryString(requestQueryParams)}`)
+    let cancel
+    const cancelToken = new axios.CancelToken((c) => {
+        cancel = c
+    })
+    return {
+        response: new Promise(async (resolve, reject) => {
+            try {
+                let res = await axios.get(`/api/v1/media?${stringify(requestQueryParams)}`, {
+                    cancelToken: cancelToken
+                })
+                resolve(res.data)
+            } catch (err) {
+                reject(err)
+            }
+        }),
+        cancel: cancel
+    }
+}
+
+export async function fetchTags(): Promise<{success: boolean; tags: Array<ITagsListItem>}> {
+    const reqObj = await fetch(`/api/v1/tags`)
     return await reqObj.json()
 }

@@ -11,6 +11,7 @@ export interface IUserMediaItem {
 export interface IAppInitialState {
     userName: string
     userMedia: Array<IUserMediaItem>
+    url?: string // TODO: validate with server side rendering
 }
 
 // Client side representation of media item
@@ -28,6 +29,11 @@ export interface IMediaResponse {
 export interface IProvideMediaParams {
     skip?: number
     limit?: number
+    tags?: Array<string>
 }
 
 export type MediaType = 'img' | 'video'
+
+export interface ITagsListItem {
+    name: string
+}

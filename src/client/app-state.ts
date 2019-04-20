@@ -1,6 +1,8 @@
-import {action, computed, configure, observable} from 'mobx'
-import {fetchMedia} from './api'
+import { action, computed, configure, IObservableArray, observable } from 'mobx'
+import {fetchMedia, IFetchMediaHandler} from './api'
 import {IAppInitialState, IClientMediaItem, IMediaResponse, IUserMediaItem} from '../common/interfaces'
+import {AppRouter} from './app-router'
+const axios = require('axios')
 
 configure({
     enforceActions: 'observed' // https://github.com/mobxjs/mobx/blob/gh-pages/docs/refguide/api.md#actions
@@ -24,14 +26,31 @@ function toClientSideRepresentation(mediaDoc: IUserMediaItem): IClientMediaItem 
     }
 }
 
+interface ITagItem {
+    name: string
+}
+
 export class AppState {
     constructor(initialState: IAppInitialState) {
-        // this.media = initialState.userMedia.map(toClientSideRepresentation)
+        this.router = new AppRouter(initialState.url || location.href)
         this.setAuthenticated({userName: initialState.userName})
     }
 
+    router: AppRouter
+
     @observable
-    media: Array<IClientMediaItem> = []
+    media: IObservableArray<IClientMediaItem> = [] as IObservableArray<IClientMediaItem>
+
+    @action.bound
+    resetMedia() {
+        if (this.loadMoreHandler) {
+            this.loadMoreHandler.cancel()
+            this.isLoading = false
+            this.canLoadMore = true
+            this.loadMoreHandler = null
+        }
+        this.media.clear()
+    }
 
     @observable
     userName: string
@@ -122,22 +141,33 @@ export class AppState {
 
     @action.bound
     async loadMore() {
-        if (this.isLoading) {
-            return
+        try {
+            this.isLoading = true
+            this.loadMoreHandler = fetchMedia({
+                limit: ITEMS_COUNT_TO_QUERY,
+                skip: this.loadedItemsCount,
+                tags: this.filters.tags
+            })
+            let res = await this.loadMoreHandler.response
+            this.processLoadResponse(res)
+        } catch (err) {
+            if (!axios.isCancel(err)) {
+                console.error(err)
+            }
         }
-        if (!this.canLoadMore) {
-            return
+    }
+
+    loadMoreHandler: IFetchMediaHandler
+
+    @computed
+    get filters() {
+        return {
+            tags: this.router.queryParams.tags || []
         }
-        this.isLoading = true
-        const response = await fetchMedia({
-            limit: ITEMS_COUNT_TO_QUERY,
-            skip: this.loadedItemsCount
-        })
-        this.processLoadMoreResponse(response)
     }
 
     @action.bound
-    processLoadMoreResponse(response: IMediaResponse) {
+    processLoadResponse(response: IMediaResponse) {
         const {success, items, hasMore} = response
         if (success) {
             for (let i = 0; i < items.length; i += 1) {
@@ -196,7 +226,6 @@ export class AppState {
     hoveredId: string = null
     @action.bound
     setHoveredId(id) {
-        // don't process hovered state if zoomed state is set
         if (!this.zoomedItemId) {
             this.setFocused(id)
         }
@@ -243,6 +272,14 @@ export class AppState {
     @action.bound
     setMediaListFullHeight(newValue: number) {
         this.mediaListFullHeight = newValue
+    }
+
+    @observable
+    tags: Array<ITagItem> = []
+
+    @action.bound
+    setTags(newTags: Array<ITagItem>): void {
+        this.tags = newTags
     }
 }
 

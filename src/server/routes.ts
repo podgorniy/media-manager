@@ -8,6 +8,7 @@ import {check} from './controllers/check'
 import {MediaModel, toApiRepresentation} from './media'
 import {IAppInitialState} from '../common/interfaces'
 import {provideMedia} from './controllers/provide-media'
+import {provideTags} from './controllers/provide-tags'
 
 const passport = require('passport')
 
@@ -48,6 +49,7 @@ export function initRoutes(app: Express) {
     app.post('/api/v1/upload', isAuthenticated, uploader.array('uploads'), upload)
     app.get('/api/v1/check', isAuthenticated, check)
     app.get('/api/v1/media', isAuthenticated, provideMedia)
+    app.get('/api/v1/tags', isAuthenticated, provideTags)
     app.get('/m/:fileName', sendMedia)
     app.get(
         '*',

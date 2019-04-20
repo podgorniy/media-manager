@@ -13,6 +13,13 @@ const MongoStore = connectMongo(session)
 
 export function initMiddleware(app: Express) {
     app.use(express.static(path.resolve(__dirname, '../static')))
+    app.use((req, res, next) => {
+        if (isDev()) {
+            setTimeout(next, Math.random() * 999 + 500) // 500 - 1500ms of delay
+        } else {
+            next()
+        }
+    })
     app.use(
         session({
             secret: SESSION_SECRET,
@@ -20,7 +27,7 @@ export function initMiddleware(app: Express) {
                 mongooseConnection: mongoose.connection,
                 collection: 'sessions'
             }),
-            resave: false,
+            resave: true,
             saveUninitialized: false,
             cookie: {
                 secure: !isDev()

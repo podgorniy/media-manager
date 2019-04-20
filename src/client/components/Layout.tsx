@@ -6,6 +6,7 @@ import {Navigation} from './Navigation'
 import {DragNDropUpload} from './DragNDropUpload'
 import {ContextualActions} from './ContextualActions'
 import {ZoomedView} from './ZoomedView'
+import {IsLoading} from './IsLoading'
 
 require('./Layout.less')
 
@@ -35,6 +36,7 @@ export class Layout extends React.Component<{} & IAppState, {}> {
                 <div className='layout__navigation'>
                     <Navigation />
                 </div>
+                <IsLoading />
                 {appState.isAuthenticated ? (
                     <>
                         <div className='layout__content'>

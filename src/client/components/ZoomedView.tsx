@@ -1,7 +1,6 @@
 import * as React from 'react'
 import {inject, observer} from 'mobx-react'
 import {IAppState} from '../app-state'
-import {getTypeOfDoc} from '../../common/lib'
 
 require('./ZoomedView.css')
 
@@ -75,7 +74,7 @@ export class ZoomedView extends React.Component<{} & IAppState, {}> {
         let type
         let url
         if (zoomedItem) {
-            type = getTypeOfDoc(zoomedItem.type)
+            type = zoomedItem.type
             url = zoomedItem.url
         }
         return (

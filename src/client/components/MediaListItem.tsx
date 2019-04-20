@@ -2,7 +2,6 @@ import {autorun} from 'mobx'
 import * as React from 'react'
 import {inject, observer} from 'mobx-react'
 import {IAppState} from '../app-state'
-import {getTypeOfDoc} from '../../common/lib'
 
 require('./MediaListItem.less')
 
@@ -26,12 +25,15 @@ export class MediaListItem extends React.Component<IMediaListItemProps & IAppSta
         let self = this
         this.stopAutoscrollIntoView = autorun(
             function() {
-                const current: HTMLElement = self.ref.current.parentNode.parentNode as HTMLElement
+                const current: HTMLElement = self.ref.current
                 if (appState.zoomedItemId === uuid) {
                     const {top, height} = current.getBoundingClientRect()
-                    const isInViewport = top + height > 0 && top < appState.pageScrolled + window.innerHeight
+                    const isInViewport = top + height * 0.3 > 0 && top + window.innerHeight < appState.pageScrolled
                     if (!isInViewport) {
-                        current.scrollIntoView(true)
+                        current.scrollIntoView({
+                            behavior: 'smooth',
+                            inline: 'nearest'
+                        })
                     }
                 }
             }.bind(this)
@@ -54,8 +56,7 @@ export class MediaListItem extends React.Component<IMediaListItemProps & IAppSta
     render() {
         const {appState, uuid, onLoad} = this.props
         const mediaItem = appState.media.find((item) => item.uuid === uuid)
-        const type = getTypeOfDoc(mediaItem.type)
-        const {selected, url, focused} = mediaItem
+        const {selected, url, focused, type} = mediaItem
 
         return (
             <div
