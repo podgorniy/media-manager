@@ -22,9 +22,9 @@ function initLoadingMoreService(appState: AppState) {
         appState.calcPageScrolled()
     })
 
-    appState.calcViewPortHeight()
+    appState.updateViewPortHeight()
     window.addEventListener('resize', () => {
-        appState.calcViewPortHeight()
+        appState.updateViewPortHeight()
     })
 }
 

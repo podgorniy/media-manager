@@ -20,13 +20,11 @@ export class ToggleSelectionVisible extends React.Component<IProps & IAppState, 
 
         return (
             <div>
-                {visibleItemsSelected ? (
+                {visibleItemsSelected && visibleItemsSelected !== appState.selectedUUIDs.length ? (
                     <button onClick={appState.unselectVisibleOnly}>
-                        Убрать выделение {visibleItemsSelected} подгруженных элементов
+                        Убрать выделение c {visibleItemsSelected} подгруженных элементов
                     </button>
-                ) : (
-                    'Ничего не выбрано'
-                )}
+                ) : null}
             </div>
         )
     }

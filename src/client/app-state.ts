@@ -274,7 +274,7 @@ export class AppState {
     @observable
     viewportHeight: number
     @action.bound
-    calcViewPortHeight() {
+    updateViewPortHeight() {
         this.viewportHeight = window.innerHeight
     }
 

@@ -18,17 +18,17 @@ export class MediaListItem extends React.Component<IMediaListItemProps & IAppSta
     }
 
     private ref = React.createRef<HTMLDivElement>()
-    private stopAutoscrollIntoView
+    private stopAutoScrollIntoView
 
     componentDidMount() {
         const {appState, uuid} = this.props
         let self = this
-        this.stopAutoscrollIntoView = autorun(
-            function() {
+        this.stopAutoScrollIntoView = autorun(
+            () => {
                 const current: HTMLElement = self.ref.current
                 if (appState.zoomedItemId === uuid) {
-                    const {top, height} = current.getBoundingClientRect()
-                    const isInViewport = top + height * 0.3 > 0 && top + window.innerHeight < appState.pageScrolled
+                    const {height, bottom} = current.getBoundingClientRect()
+                    const isInViewport = (bottom > appState.pageScrolled + height * 0.3) && (bottom < appState.pageScrolled + window.innerHeight)
                     if (!isInViewport) {
                         current.scrollIntoView({
                             behavior: 'smooth',
@@ -36,12 +36,12 @@ export class MediaListItem extends React.Component<IMediaListItemProps & IAppSta
                         })
                     }
                 }
-            }.bind(this)
+            }
         )
     }
 
     componentWillUnmount() {
-        this.stopAutoscrollIntoView()
+        this.stopAutoScrollIntoView()
     }
 
     clickHandler = (event) => {
