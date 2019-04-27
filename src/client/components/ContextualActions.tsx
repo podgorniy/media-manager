@@ -6,6 +6,7 @@ import {ToggleSelectionAll} from './ToggleSelectionAll'
 import {TagsList} from './TagsList'
 import {ToggleSelectionVisible} from './ToggleSelectionVisible'
 import {UploadBtn} from './UploadBtn'
+import {TagsControls} from './TagsControls'
 
 @inject('appState')
 @observer
@@ -21,6 +22,7 @@ export class ContextualActions extends React.Component<{} & IAppState, {}> {
                 <ToggleSidebar />
                 <UploadBtn />
                 <ToggleSelectionAll />
+                <TagsControls />
                 <ToggleSelectionVisible />
                 <TagsList />
             </div>

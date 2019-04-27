@@ -311,6 +311,25 @@ export class AppState {
             this.uploadIsVisible = state
         }
     }
+
+    @computed
+    get selectedItemsTags() {
+        let tagsSet: Set<string> = this.media
+            .slice()
+            .filter((mediaItem) => {
+                return this.selectedUUIDs.indexOf(mediaItem.uuid) !== -1
+            })
+            .map((mediaItem) => {
+                return mediaItem.tags
+            })
+            .reduce((resSet, tagsArr) => {
+                tagsArr.forEach((tag) => resSet.add(tag))
+                return resSet
+            }, new Set<string>())
+        let tagsArr = [...tagsSet]
+        tagsArr.sort()
+        return tagsArr
+    }
 }
 
 export interface IAppState {

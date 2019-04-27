@@ -78,3 +78,21 @@ export async function fetchTags(): Promise<{success: boolean; tags: Array<ITagsL
     const reqObj = await fetch(`/api/v1/tags`)
     return await reqObj.json()
 }
+
+export async function addTags(tagsList: Array<string>, mediaUUIDs: Array<string>) {
+    try {
+        await axios({
+            method: 'POST',
+            url: '/api/v1/add-tags',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            data: JSON.stringify({
+                tags: tagsList,
+                media: mediaUUIDs
+            })
+        })
+    } catch (err) {
+        console.error(err)
+    }
+}
