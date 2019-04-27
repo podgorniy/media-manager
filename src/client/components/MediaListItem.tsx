@@ -23,21 +23,20 @@ export class MediaListItem extends React.Component<IMediaListItemProps & IAppSta
     componentDidMount() {
         const {appState, uuid} = this.props
         let self = this
-        this.stopAutoScrollIntoView = autorun(
-            () => {
-                const current: HTMLElement = self.ref.current
-                if (appState.zoomedItemId === uuid) {
-                    const {height, bottom} = current.getBoundingClientRect()
-                    const isInViewport = (bottom > appState.pageScrolled + height * 0.3) && (bottom < appState.pageScrolled + window.innerHeight)
-                    if (!isInViewport) {
-                        current.scrollIntoView({
-                            behavior: 'smooth',
-                            inline: 'nearest'
-                        })
-                    }
+        this.stopAutoScrollIntoView = autorun(() => {
+            const current: HTMLElement = self.ref.current
+            if (appState.zoomedItemId === uuid) {
+                const {height, bottom} = current.getBoundingClientRect()
+                const isInViewport =
+                    bottom > appState.pageScrolled + height * 0.3 && bottom < appState.pageScrolled + window.innerHeight
+                if (!isInViewport) {
+                    current.scrollIntoView({
+                        behavior: 'smooth',
+                        inline: 'nearest'
+                    })
                 }
             }
-        )
+        })
     }
 
     componentWillUnmount() {

@@ -299,6 +299,18 @@ export class AppState {
     setTags(newTags: Array<ITagItem>): void {
         this.tags = newTags
     }
+
+    @observable
+    uploadIsVisible = false
+
+    @action.bound
+    toggleUploadVisibility(state?: boolean) {
+        if (typeof state !== 'boolean') {
+            this.uploadIsVisible = !this.uploadIsVisible
+        } else {
+            this.uploadIsVisible = state
+        }
+    }
 }
 
 export interface IAppState {

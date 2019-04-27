@@ -46,7 +46,7 @@ export class TagLink extends React.Component<IProps & IAppState, IState> {
                 className={isSelected ? 'remove' : 'with'}
                 onClick={(event) => {
                     event.preventDefault()
-                    history.replaceState({}, document.title, (event.target as any).href)
+                    history.replaceState({}, document.title, href)
                 }}
             >
                 {tagName}
