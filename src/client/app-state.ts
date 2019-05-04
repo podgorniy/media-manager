@@ -1,5 +1,5 @@
 import {action, computed, configure, IObservableArray, observable} from 'mobx'
-import {fetchMedia, IFetchMediaHandler} from './api'
+import {fetchMedia, IFetchMediaHandler, removeTags} from './api'
 import {IAppInitialState, IClientMediaItem, IMediaResponse, IUserMediaItem} from '../common/interfaces'
 import {AppRouter} from './app-router'
 
@@ -329,6 +329,34 @@ export class AppState {
         let tagsArr = [...tagsSet]
         tagsArr.sort()
         return tagsArr
+    }
+
+    @action.bound
+    async APICallRemoveTagFromSelected(tagName: string) {
+        try {
+            await removeTags({
+                tags: [tagName],
+                media: this.selectedUUIDs
+            })
+            this.removeTagFromSelected([tagName])
+        } catch (err) {
+            console.error(err)
+        }
+    }
+
+    @action.bound
+    removeTagFromSelected(tagsList: Array<string>) {
+        this.media.forEach((mediaItem) => {
+            if (this.selectedUUIDs.indexOf(mediaItem.uuid) !== -1) {
+                mediaItem.tags = mediaItem.tags.filter((tagName) => {
+                    if (tagsList.indexOf(tagName) !== -1) {
+                        return false
+                    } else {
+                        return true
+                    }
+                })
+            }
+        })
     }
 }
 

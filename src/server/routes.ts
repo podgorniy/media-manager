@@ -10,6 +10,7 @@ import {IAppInitialState} from '../common/interfaces'
 import {provideMedia} from './controllers/provide-media'
 import {provideTags} from './controllers/provide-tags'
 import {addTags} from './controllers/add-tags'
+import {removeTags} from './controllers/remove-tags'
 
 const passport = require('passport')
 
@@ -52,6 +53,7 @@ export function initRoutes(app: Express) {
     app.get('/api/v1/media', isAuthenticated, provideMedia)
     app.get('/api/v1/tags', isAuthenticated, provideTags)
     app.post('/api/v1/add-tags', isAuthenticated, addTags)
+    app.patch('/api/v1/remove-tags', isAuthenticated, removeTags)
     app.get('/m/:fileName', sendMedia)
     app.get(
         '*',

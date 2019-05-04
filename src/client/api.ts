@@ -96,3 +96,21 @@ export async function addTags(tagsList: Array<string>, mediaUUIDs: Array<string>
         console.error(err)
     }
 }
+
+export async function removeTags(params: {tags: Array<string>; media: Array<string>}) {
+    try {
+        await axios({
+            method: 'patch',
+            url: '/api/v1/remove-tags',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            data: JSON.stringify({
+                tags: params.tags,
+                media: params.media
+            })
+        })
+    } catch (err) {
+        console.error(err)
+    }
+}

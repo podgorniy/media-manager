@@ -62,6 +62,14 @@ export class TagsControls extends React.Component<IProps & IAppState, IState> {
                         {appState.selectedItemsTags.map((tag) => {
                             return (
                                 <li key={tag}>
+                                    <button
+                                        onClick={(event) => {
+                                            event.preventDefault()
+                                            appState.APICallRemoveTagFromSelected(tag)
+                                        }}
+                                    >
+                                        ×
+                                    </button>
                                     <TagLink tagName={tag} />
                                 </li>
                             )
