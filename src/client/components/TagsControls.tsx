@@ -56,7 +56,15 @@ export class TagsControls extends React.Component<IProps & IAppState, IState> {
                         }
                     }}
                 />
-                <button disabled={this.state.submissionDisabled}>добавить</button>
+                <button
+                    onClick={(event) => {
+                        event.preventDefault()
+                        this._attemptSubmit()
+                    }}
+                    disabled={this.state.submissionDisabled}
+                >
+                    добавить
+                </button>
                 {appState.selectedItemsTags.length ? (
                     <ul>
                         {appState.selectedItemsTags.map((tag) => {
