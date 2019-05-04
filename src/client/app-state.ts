@@ -371,6 +371,15 @@ export class AppState {
             }
         })
     }
+
+    @action.bound
+    selectAllLoaded() {
+        this.media.forEach(({uuid}) => {
+            if (this.selectedUUIDs.indexOf(uuid) === -1) {
+                this.selectedUUIDs.push(uuid)
+            }
+        })
+    }
 }
 
 export interface IAppState {
