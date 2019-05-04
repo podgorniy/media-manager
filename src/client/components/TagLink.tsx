@@ -1,6 +1,7 @@
 import * as React from 'react'
 import {inject, observer} from 'mobx-react'
 import {IAppState} from '../app-state'
+import {RouterLink} from './RouterLink'
 
 require('./TagLink.less')
 
@@ -41,16 +42,9 @@ export class TagLink extends React.Component<IProps & IAppState, IState> {
             })
         }
         return (
-            <a
-                href={href}
-                className={isSelected ? 'remove' : 'with'}
-                onClick={(event) => {
-                    event.preventDefault()
-                    history.replaceState({}, document.title, href)
-                }}
-            >
+            <RouterLink url={href} className={isSelected ? 'remove' : 'with'}>
                 {tagName}
-            </a>
+            </RouterLink>
         )
     }
 }

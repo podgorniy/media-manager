@@ -43,6 +43,7 @@ export class TagsControls extends React.Component<IProps & IAppState, IState> {
             <div>
                 <input
                     type='text'
+                    placeholder='Тэг'
                     value={this.state.inputValue}
                     onChange={(event) => {
                         this.setState({

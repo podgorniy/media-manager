@@ -28,6 +28,11 @@ interface IModifiers {
             tags?: Array<string>
         }
     }
+    replace?: {
+        queryParams: {
+            tags?: Array<string>
+        }
+    }
 }
 
 export class AppRouter {
@@ -153,5 +158,9 @@ export class AppRouter {
             res += '#' + this.hash
         }
         return res
+    }
+
+    replaceUrl(newUrl: string) {
+        history.replaceState({}, document.title, newUrl)
     }
 }
