@@ -358,6 +358,19 @@ export class AppState {
             }
         })
     }
+
+    @action.bound
+    addTagForSelected(tagList: Array<string>) {
+        this.media.forEach((mediaItem) => {
+            if (this.selectedUUIDs.indexOf(mediaItem.uuid) !== -1) {
+                tagList.forEach((addedTagName) => {
+                    if (mediaItem.tags.indexOf(addedTagName) === -1) {
+                        mediaItem.tags.push(addedTagName)
+                    }
+                })
+            }
+        })
+    }
 }
 
 export interface IAppState {

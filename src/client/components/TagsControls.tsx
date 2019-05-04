@@ -30,7 +30,9 @@ export class TagsControls extends React.Component<IProps & IAppState, IState> {
         this.setState({
             submissionDisabled: true
         })
-        await addTags([this.state.inputValue], appState.selectedUUIDs)
+        const tagName = this.state.inputValue
+        await addTags([tagName], appState.selectedUUIDs)
+        appState.addTagForSelected([tagName])
         this.setState({
             inputValue: '',
             submissionDisabled: false
@@ -47,7 +49,7 @@ export class TagsControls extends React.Component<IProps & IAppState, IState> {
                     value={this.state.inputValue}
                     onChange={(event) => {
                         this.setState({
-                            inputValue: event.target.value.trim()
+                            inputValue: event.target.value.trim().toLowerCase()
                         })
                     }}
                     onKeyUp={(event) => {
