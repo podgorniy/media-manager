@@ -142,6 +142,10 @@ export class AppRouter {
             })
         }
 
+        if (modifiers.replace && modifiers.replace.queryParams) {
+            newQueryParams = Object.assign({}, newQueryParams, modifiers.replace.queryParams)
+        }
+
         let res = `${this.protocol}://${this.domain}`
         if (this.port !== 80 && this.port !== 443) {
             res += ':' + this.port
