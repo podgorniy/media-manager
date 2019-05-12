@@ -44,6 +44,8 @@ var check_1 = require("./controllers/check");
 var media_1 = require("./media");
 var provide_media_1 = require("./controllers/provide-media");
 var provide_tags_1 = require("./controllers/provide-tags");
+var add_tags_1 = require("./controllers/add-tags");
+var remove_tags_1 = require("./controllers/remove-tags");
 var passport = require('passport');
 // https://stackoverflow.com/a/47448486
 // declare global {
@@ -83,6 +85,8 @@ function initRoutes(app) {
     app.get('/api/v1/check', isAuthenticated, check_1.check);
     app.get('/api/v1/media', isAuthenticated, provide_media_1.provideMedia);
     app.get('/api/v1/tags', isAuthenticated, provide_tags_1.provideTags);
+    app.post('/api/v1/add-tags', isAuthenticated, add_tags_1.addTags);
+    app.patch('/api/v1/remove-tags', isAuthenticated, remove_tags_1.removeTags);
     app.get('/m/:fileName', send_media_1.sendMedia);
     app.get('*', utils_1.asyncHandler(function (req, res) { return __awaiter(_this, void 0, void 0, function () {
         var appInitialState, _a, _b;

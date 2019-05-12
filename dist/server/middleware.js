@@ -36,7 +36,9 @@ function initMiddleware(app) {
         resave: true,
         saveUninitialized: false,
         cookie: {
-            secure: !lib_1.isDev()
+            // TODO: figure out
+            // secure: !isDev()
+            secure: false
         }
     }));
     app.use(bodyParser.json());

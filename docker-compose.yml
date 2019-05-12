@@ -1,0 +1,35 @@
+version: '3'
+
+services:
+    app:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        restart: unless-stopped
+        container_name: webapp
+        volumes:
+            - /srv/media-manager/uploads:/var/uploads
+        env_file:
+          - .env
+        environment:
+            - NODE_ENV=production
+            - MONGO_URL=mongodb://mongodb/image-manager
+            - SESSION_SECRET
+        networks:
+            - webappnetwork
+        depends_on:
+            - mongodb
+        ports:
+            - '8088:8080'
+    mongodb:
+        image: mongo
+        restart: always
+        container_name: mongodb
+        volumes:
+            - /srv/media-manager/db:/data/db
+        command: mongod --noauth --smallfiles
+        networks:
+            - webappnetwork
+networks:
+    webappnetwork:
+        driver: bridge

@@ -30,7 +30,9 @@ export function initMiddleware(app: Express) {
             resave: true,
             saveUninitialized: false,
             cookie: {
-                secure: !isDev()
+                // TODO: figure out
+                // secure: !isDev()
+                secure: false
             }
         })
     )

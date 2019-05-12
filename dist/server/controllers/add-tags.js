@@ -34,63 +34,45 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var _this = this;
 Object.defineProperty(exports, "__esModule", { value: true });
-var mongoose_1 = require("mongoose");
-var utils_1 = require("./utils");
-var UserSchema = new mongoose_1.Schema({
-    name: {
-        type: String,
-        unique: true,
-        required: true
-    },
-    password: {
-        type: String,
-        required: true
-    }
-}, {
-    collection: 'users'
-});
-exports.UserModel = mongoose_1.model('user', UserSchema);
-function createDemoUser() {
-    return __awaiter(this, void 0, void 0, function () {
-        var DEMO_USERNAME, DEMO_USERNAME_PASSWORD, defaultUser, _a, _b;
-        return __generator(this, function (_c) {
-            switch (_c.label) {
-                case 0:
-                    DEMO_USERNAME = 'demo';
-                    DEMO_USERNAME_PASSWORD = '123';
-                    return [4 /*yield*/, exports.UserModel.findOne({ name: DEMO_USERNAME })];
-                case 1:
-                    defaultUser = _c.sent();
-                    if (!!defaultUser) return [3 /*break*/, 3];
-                    _a = exports.UserModel.bind;
-                    _b = {
-                        name: DEMO_USERNAME
-                    };
-                    return [4 /*yield*/, utils_1.hashString(DEMO_USERNAME_PASSWORD)];
-                case 2: return [2 /*return*/, new (_a.apply(exports.UserModel, [void 0, (_b.password = _c.sent(),
-                            _b)]))().save()];
-                case 3: return [2 /*return*/];
-            }
-        });
+var utils_1 = require("../utils");
+var media_1 = require("../media");
+exports.addTags = utils_1.asyncHandler(function (req, res) { return __awaiter(_this, void 0, void 0, function () {
+    var _a, tags, media, err_1;
+    return __generator(this, function (_b) {
+        switch (_b.label) {
+            case 0:
+                _a = req.body, tags = _a.tags, media = _a.media;
+                _b.label = 1;
+            case 1:
+                _b.trys.push([1, 3, , 4]);
+                return [4 /*yield*/, media_1.MediaModel.updateMany({
+                        uuid: {
+                            $in: media
+                        }
+                    }, {
+                        $addToSet: {
+                            tags: {
+                                $each: tags
+                            }
+                        }
+                    })];
+            case 2:
+                _b.sent();
+                res.send({
+                    success: true
+                });
+                return [3 /*break*/, 4];
+            case 3:
+                err_1 = _b.sent();
+                console.error(err_1);
+                res.send({
+                    success: false
+                });
+                return [3 /*break*/, 4];
+            case 4: return [2 /*return*/];
+        }
     });
-}
-;
-(function () {
-    return __awaiter(this, void 0, void 0, function () {
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0: 
-                // TODO: figure out
-                // Need user for demonstration, create it at all times
-                return [4 /*yield*/, createDemoUser()];
-                case 1:
-                    // TODO: figure out
-                    // Need user for demonstration, create it at all times
-                    _a.sent();
-                    return [2 /*return*/];
-            }
-        });
-    });
-})();
-//# sourceMappingURL=user.js.map
+}); });
+//# sourceMappingURL=add-tags.js.map

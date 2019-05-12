@@ -1,6 +1,5 @@
 import {Document, model, Model, Schema} from 'mongoose'
 import {hashString} from './utils'
-import {isDev} from '../common/lib'
 
 export interface IUserFields {
     _id: any
@@ -45,7 +44,7 @@ async function createDemoUser() {
 }
 
 ;(async function() {
-    if (isDev()) {
-        await createDemoUser()
-    }
+    // TODO: figure out
+    // Need user for demonstration, create it at all times
+    await createDemoUser()
 })()
