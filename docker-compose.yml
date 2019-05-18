@@ -13,7 +13,7 @@ services:
           - .env
         environment:
             - NODE_ENV=production
-            - MONGO_URL=mongodb://mongodb/image-manager
+            - MONGO_URL=mongodb://mongodb/media-manager
             - SESSION_SECRET
         networks:
             - webappnetwork
