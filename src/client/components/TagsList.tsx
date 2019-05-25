@@ -13,14 +13,7 @@ export class TagsList extends React.Component<{} & IAppState, {}> {
     }
 
     componentDidMount() {
-        const {appState} = this.props
-        fetchTags()
-            .then((res) => {
-                appState.setTags(res.tags)
-            })
-            .catch((err) => {
-                console.error(err)
-            })
+        this.props.appState.refreshTags()
     }
 
     render() {

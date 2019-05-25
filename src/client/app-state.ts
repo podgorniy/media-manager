@@ -1,5 +1,5 @@
 import {action, computed, configure, IObservableArray, observable} from 'mobx'
-import {fetchMedia, IFetchMediaHandler, removeTags} from './api'
+import {addTags, fetchMedia, fetchTags, IFetchMediaHandler, removeTags} from './api'
 import {IAppInitialState, IClientMediaItem, IMediaResponse, IUserMediaItem} from '../common/interfaces'
 import {AppRouter} from './app-router'
 
@@ -300,6 +300,35 @@ export class AppState {
         this.tags = newTags
     }
 
+    private removeUnexistingUrlTag(existingTags: Array<ITagItem>) {
+        const existingTagsNames = existingTags.map(({name}) => {
+            return name
+        })
+        const listUrlTags = this.router.queryParams.tags || []
+        const tagsToRemove = listUrlTags.filter((tag) => {
+            return existingTagsNames.indexOf(tag) === -1
+        })
+        this.router.replaceUrl(
+            this.router.getFullUrl({
+                without: {
+                    queryParams: {
+                        tags: tagsToRemove
+                    }
+                }
+            })
+        )
+    }
+
+    async refreshTags() {
+        try {
+            let resp = await fetchTags()
+            this.setTags(resp.tags)
+            this.removeUnexistingUrlTag(resp.tags)
+        } catch (err) {
+            console.error(err)
+        }
+    }
+
     @observable
     uploadIsVisible = false
 
@@ -332,20 +361,21 @@ export class AppState {
     }
 
     @action.bound
-    async APICallRemoveTagFromSelected(tagName: string) {
+    async removeTagFromSelectedRemotely(tagName: string) {
         try {
             await removeTags({
                 tags: [tagName],
                 media: this.selectedUUIDs
             })
-            this.removeTagFromSelected([tagName])
+            this.removeTagFromSelectedLocally([tagName])
+            this.refreshTags()
         } catch (err) {
             console.error(err)
         }
     }
 
     @action.bound
-    removeTagFromSelected(tagsList: Array<string>) {
+    removeTagFromSelectedLocally(tagsList: Array<string>) {
         this.media.forEach((mediaItem) => {
             if (this.selectedUUIDs.indexOf(mediaItem.uuid) !== -1) {
                 mediaItem.tags = mediaItem.tags.filter((tagName) => {
@@ -359,8 +389,14 @@ export class AppState {
         })
     }
 
+    async addTagForSelectedRemotely(tags: Array<string>) {
+        await addTags(tags, this.selectedUUIDs)
+        this.addTagForSelectedLocally(tags)
+        this.refreshTags()
+    }
+
     @action.bound
-    addTagForSelected(tagList: Array<string>) {
+    addTagForSelectedLocally(tagList: Array<string>) {
         this.media.forEach((mediaItem) => {
             if (this.selectedUUIDs.indexOf(mediaItem.uuid) !== -1) {
                 tagList.forEach((addedTagName) => {

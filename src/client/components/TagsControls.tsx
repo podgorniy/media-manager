@@ -30,9 +30,7 @@ export class TagsControls extends React.Component<IProps & IAppState, IState> {
         this.setState({
             submissionDisabled: true
         })
-        const tagName = this.state.inputValue
-        await addTags([tagName], appState.selectedUUIDs)
-        appState.addTagForSelected([tagName])
+        await appState.addTagForSelectedRemotely([this.state.inputValue])
         this.setState({
             inputValue: '',
             submissionDisabled: false
@@ -75,7 +73,7 @@ export class TagsControls extends React.Component<IProps & IAppState, IState> {
                                     <button
                                         onClick={(event) => {
                                             event.preventDefault()
-                                            appState.APICallRemoveTagFromSelected(tag)
+                                            appState.removeTagFromSelectedRemotely(tag)
                                         }}
                                     >
                                         ×
