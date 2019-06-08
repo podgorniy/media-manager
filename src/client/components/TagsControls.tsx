@@ -2,7 +2,6 @@ import * as React from 'react'
 import {inject, observer} from 'mobx-react'
 import {IAppState} from '../app-state'
 import {TagLink} from './TagLink'
-import {addTags} from '../api'
 
 interface IProps {}
 

@@ -2,9 +2,12 @@ import * as React from 'react'
 import {inject, observer} from 'mobx-react'
 import {IAppState} from '../app-state'
 
+type RouterLinkBehaviour = 'replace' | 'push'
+
 interface IProps {
     url: string
     className?: string
+    behaviour?: RouterLinkBehaviour
 }
 
 interface IState {}
@@ -25,7 +28,14 @@ export class RouterLink extends React.Component<IProps & IAppState, IState> {
                 onClick={(event) => {
                     event.preventDefault()
                     const linkTag = event.target as HTMLAnchorElement
-                    appState.router.replaceUrl(linkTag.href)
+                    const linkBehaviour: RouterLinkBehaviour = this.props.behaviour ? this.props.behaviour : 'push'
+                    if (linkBehaviour === 'push') {
+                        appState.router.pushUrl(linkTag.href)
+                    } else if (linkBehaviour === 'replace') {
+                        appState.router.replaceUrl(linkTag.href)
+                    } else {
+                        console.error('Unknown router link behaviour')
+                    }
                 }}
             >
                 {this.props.children}

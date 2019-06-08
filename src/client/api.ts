@@ -41,6 +41,7 @@ interface IFetchMediaParams {
     skip?: number
     limit?: number
     tags?: Array<string>
+    collectionUri?: string
 }
 
 export interface IFetchMediaHandler {
@@ -49,11 +50,12 @@ export interface IFetchMediaHandler {
 }
 
 export function fetchMedia(params: IFetchMediaParams): IFetchMediaHandler {
-    const {skip, limit, tags} = params
+    const {skip, limit, tags, collectionUri} = params
     const requestQueryParams: IProvideMediaParams = {
         limit: limit,
         skip: skip,
-        tags: tags
+        tags: tags,
+        collectionUri: collectionUri
     }
     let cancel
     const cancelToken = new axios.CancelToken((c) => {
@@ -74,9 +76,13 @@ export function fetchMedia(params: IFetchMediaParams): IFetchMediaHandler {
     }
 }
 
-export async function fetchTags(): Promise<{success: boolean; tags: Array<ITagsListItem>}> {
-    const reqObj = await fetch(`/api/v1/tags`)
-    return await reqObj.json()
+export async function fetchTags(params): Promise<{success: boolean; tags: Array<ITagsListItem>}> {
+    const reqObj = await axios({
+        method: 'GET',
+        url: '/api/v1/tags',
+        params: params
+    })
+    return reqObj.data
 }
 
 export async function addTags(tagsList: Array<string>, mediaUUIDs: Array<string>) {
@@ -112,5 +118,108 @@ export async function removeTags(params: {tags: Array<string>; media: Array<stri
         })
     } catch (err) {
         console.error(err)
+    }
+}
+
+export async function getCollectionsList(): Promise<Array<{uri: string; title: string}>> {
+    try {
+        const resp = await axios({
+            method: 'get',
+            url: '/api/v1/collections',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        if (resp.data.success && resp.data.collections) {
+            return resp.data.collections
+        } else {
+            console.error('Failed to fetch collections')
+            return []
+        }
+    } catch (err) {
+        console.error(err)
+    }
+}
+
+export async function createCollection(title): Promise<boolean> {
+    try {
+        const resp = await axios({
+            method: 'post',
+            url: '/api/v1/create-collection',
+            data: {
+                title: title
+            }
+        })
+        return resp.data.success || false
+    } catch (err) {
+        console.error(err)
+        return false
+    }
+}
+
+export async function addToCollection({collectionId, items}): Promise<boolean> {
+    try {
+        const resp = await axios({
+            method: 'post',
+            url: '/api/v1/add-to-collection',
+            data: {
+                collectionId,
+                items
+            }
+        })
+        return resp.data.success || false
+    } catch (err) {
+        console.error(err)
+        return false
+    }
+}
+
+export async function removeFromCollection({collectionId, items}): Promise<boolean> {
+    try {
+        const resp = await axios({
+            method: 'post',
+            url: '/api/v1/remove-from-collection',
+            data: {
+                collectionId,
+                items
+            }
+        })
+        return resp.data.success || false
+    } catch (err) {
+        console.error(err)
+        return false
+    }
+}
+
+export async function deleteCollection({collectionId}): Promise<boolean> {
+    try {
+        const resp = await axios({
+            method: 'post',
+            url: '/api/v1/delete-collection',
+            data: {
+                collectionId
+            }
+        })
+        return resp.data.success || false
+    } catch (err) {
+        console.error(err)
+        return false
+    }
+}
+
+export async function renameCollection({collectionId, newTitle}): Promise<boolean> {
+    try {
+        const resp = await axios({
+            method: 'post',
+            url: '/api/v1/rename-collection',
+            data: {
+                collectionId: collectionId,
+                title: newTitle
+            }
+        })
+        return resp.data.success || false
+    } catch (err) {
+        console.err(err)
+        return false
     }
 }

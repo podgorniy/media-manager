@@ -1,9 +1,9 @@
 import * as express from 'express'
 import {Express} from 'express'
 import * as path from 'path'
-import {isDev} from '../common/lib'
 import {SESSION_SECRET} from './env'
 import {configurePassport} from './passport'
+import {isDev} from '../common/lib'
 import session = require('express-session')
 import bodyParser = require('body-parser')
 

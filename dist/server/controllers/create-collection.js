@@ -37,67 +37,53 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 var _this = this;
 Object.defineProperty(exports, "__esModule", { value: true });
 var utils_1 = require("../utils");
-var media_1 = require("../media");
 var collection_1 = require("../collection");
-var DEFAULT_LIMIT = 20;
-var MAX_LIMIT = 100;
-exports.provideMedia = utils_1.asyncHandler(function (req, res) { return __awaiter(_this, void 0, void 0, function () {
-    var _a, skip, limit, tags, collectionUri, intLimit, normalizedCount, querySkipItems, queryLimitItems, query, userCollection, itemsCountForQuery, canProvideMoreItems, userMediaItems, respData, err_1;
-    return __generator(this, function (_b) {
-        switch (_b.label) {
+exports.createCollection = utils_1.asyncHandler(function (req, res) { return __awaiter(_this, void 0, void 0, function () {
+    var title, uri, instanceWithThatUri, record;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
             case 0:
-                _b.trys.push([0, 5, , 6]);
-                _a = req.query, skip = _a.skip, limit = _a.limit, tags = _a.tags, collectionUri = _a.collectionUri;
-                intLimit = parseInt(limit);
-                normalizedCount = !intLimit || intLimit <= 0 ? DEFAULT_LIMIT : intLimit;
-                querySkipItems = parseInt(skip) || 0;
-                queryLimitItems = normalizedCount > MAX_LIMIT ? MAX_LIMIT : normalizedCount;
-                query = {
-                    owner: req.user._id
-                };
-                if (tags && tags.length) {
-                    query.tags = { $all: tags };
-                }
-                if (!collectionUri) return [3 /*break*/, 2];
-                return [4 /*yield*/, collection_1.CollectionsModel.findOne({ uri: collectionUri })];
-            case 1:
-                userCollection = _b.sent();
-                if (!userCollection) {
-                    res.send({
-                        success: false,
-                        items: []
+                title = (req.body.title || '').trim();
+                if (!title) {
+                    res.status(406).send({
+                        success: false
                     });
+                    return [2 /*return*/];
                 }
-                query.uuid = {
-                    $in: userCollection.media
-                };
-                _b.label = 2;
-            case 2: return [4 /*yield*/, media_1.MediaModel.find(query).count()];
+                if (!req.user._id) {
+                    res.status(401).send({ success: false });
+                    return [2 /*return*/];
+                }
+                _a.label = 1;
+            case 1:
+                // https://stackoverflow.com/questions/1349404/generate-random-string-characters-in-javascript
+                uri = Math.random()
+                    .toString(36)
+                    .replace(/[^a-z]+/g, '')
+                    .substr(0, 6);
+                return [4 /*yield*/, collection_1.CollectionsModel.findOne({ uri: uri })];
+            case 2:
+                instanceWithThatUri = _a.sent();
+                _a.label = 3;
             case 3:
-                itemsCountForQuery = _b.sent();
-                canProvideMoreItems = querySkipItems + queryLimitItems < itemsCountForQuery;
-                return [4 /*yield*/, media_1.MediaModel.find(query, null, {
-                        skip: querySkipItems,
-                        limit: queryLimitItems
-                    })];
+                if (instanceWithThatUri) return [3 /*break*/, 1];
+                _a.label = 4;
             case 4:
-                userMediaItems = _b.sent();
-                respData = {
-                    items: userMediaItems.map(media_1.toApiRepresentation),
-                    success: true,
-                    hasMore: canProvideMoreItems
-                };
-                res.send(respData);
-                return [3 /*break*/, 6];
-            case 5:
-                err_1 = _b.sent();
-                res.send({
-                    success: false
+                record = new collection_1.CollectionsModel({
+                    uri: uri,
+                    media: [],
+                    public: false,
+                    title: title,
+                    owner: req.user._id
                 });
-                console.error(err_1);
-                return [3 /*break*/, 6];
-            case 6: return [2 /*return*/];
+                return [4 /*yield*/, record.save()];
+            case 5:
+                _a.sent();
+                res.send({
+                    success: true
+                });
+                return [2 /*return*/];
         }
     });
 }); });
-//# sourceMappingURL=provide-media.js.map
+//# sourceMappingURL=create-collection.js.map

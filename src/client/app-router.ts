@@ -29,9 +29,10 @@ interface IModifiers {
         }
     }
     replace?: {
-        queryParams: {
+        queryParams?: {
             tags?: Array<string>
         }
+        pathSegments?: Array<string>
     }
 }
 
@@ -76,7 +77,7 @@ export class AppRouter {
         this.assignIfNotEqual('domain', parsed.hostname)
         this.assignIfNotEqual('port', port)
         this.assignIfNotEqual('protocol', protocol)
-        this.assignIfNotEqual('path', parsed.pathname)
+        // this.assignIfNotEqual('path', parsed.pathname)
         this.assignIfNotEqual('queryString', queryString)
         this.assignIfNotEqual('hash', hash)
         this.assignIfNotEqual('pathSegments', getPathSegments(parsed.pathname))
@@ -98,9 +99,6 @@ export class AppRouter {
 
     @observable
     protocol: string = ''
-
-    @observable
-    path: string = ''
 
     @observable
     queryString: string = ''
@@ -146,11 +144,16 @@ export class AppRouter {
             newQueryParams = Object.assign({}, newQueryParams, modifiers.replace.queryParams)
         }
 
+        let urlPathSegments = this.pathSegments
+        if (modifiers.replace && modifiers.replace.pathSegments) {
+            urlPathSegments = modifiers.replace.pathSegments
+        }
+
         let res = `${this.protocol}://${this.domain}`
         if (this.port !== 80 && this.port !== 443) {
             res += ':' + this.port
         }
-        res += this.path
+        res = res + '/' + urlPathSegments.join('/')
         if (Object.keys(newQueryParams).length) {
             res +=
                 '?' +
@@ -166,5 +169,9 @@ export class AppRouter {
 
     replaceUrl(newUrl: string) {
         history.replaceState({}, document.title, newUrl)
+    }
+
+    pushUrl(newUrl: string) {
+        history.pushState({}, document.title, newUrl)
     }
 }

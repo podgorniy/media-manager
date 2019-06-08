@@ -46,6 +46,12 @@ var provide_media_1 = require("./controllers/provide-media");
 var provide_tags_1 = require("./controllers/provide-tags");
 var add_tags_1 = require("./controllers/add-tags");
 var remove_tags_1 = require("./controllers/remove-tags");
+var provide_collections_1 = require("./controllers/provide-collections");
+var add_to_collection_1 = require("./controllers/add-to-collection");
+var create_collection_1 = require("./controllers/create-collection");
+var remove_from_collection_1 = require("./controllers/remove-from-collection");
+var delete_collection_1 = require("./controllers/delete-collection");
+var rename_collection_1 = require("./controllers/rename-collection");
 var passport = require('passport');
 // https://stackoverflow.com/a/47448486
 // declare global {
@@ -87,6 +93,12 @@ function initRoutes(app) {
     app.get('/api/v1/tags', isAuthenticated, provide_tags_1.provideTags);
     app.post('/api/v1/add-tags', isAuthenticated, add_tags_1.addTags);
     app.patch('/api/v1/remove-tags', isAuthenticated, remove_tags_1.removeTags);
+    app.get('/api/v1/collections', isAuthenticated, provide_collections_1.provideCollections);
+    app.post('/api/v1/create-collection', isAuthenticated, create_collection_1.createCollection);
+    app.post('/api/v1/rename-collection', isAuthenticated, rename_collection_1.renameCollection);
+    app.post('/api/v1/delete-collection', isAuthenticated, delete_collection_1.deleteCollection);
+    app.post('/api/v1/add-to-collection', isAuthenticated, add_to_collection_1.addToCollection);
+    app.post('/api/v1/remove-from-collection', isAuthenticated, remove_from_collection_1.removeFromCollection);
     app.get('/m/:fileName', send_media_1.sendMedia);
     app.get('*', utils_1.asyncHandler(function (req, res) { return __awaiter(_this, void 0, void 0, function () {
         var appInitialState, _a, _b;

@@ -38,24 +38,39 @@ var _this = this;
 Object.defineProperty(exports, "__esModule", { value: true });
 var utils_1 = require("../utils");
 var media_1 = require("../media");
+var collection_1 = require("../collection");
 exports.provideTags = utils_1.asyncHandler(function (req, res) { return __awaiter(_this, void 0, void 0, function () {
-    var tagsSet_1, tagsArr, responseData, err_1;
+    var collectionId, tagsSet_1, queryMedia, matchedCollection, tagsArr, responseData, err_1;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                _a.trys.push([0, 2, , 3]);
+                _a.trys.push([0, 4, , 5]);
+                collectionId = req.query.collectionId;
                 tagsSet_1 = new Set();
-                return [4 /*yield*/, media_1.MediaModel.find({
-                        owner: req.user._id
-                    })
-                        .cursor()
-                        .eachAsync(function (mediaItem) {
-                        var tagsList = mediaItem.tags;
-                        for (var i = 0; i < tagsList.length; i += 1) {
-                            tagsSet_1.add(tagsList[i]);
-                        }
-                    })];
+                queryMedia = {
+                    owner: req.user._id
+                };
+                if (!collectionId) return [3 /*break*/, 2];
+                return [4 /*yield*/, collection_1.CollectionsModel.findOne({ _id: collectionId })];
             case 1:
+                matchedCollection = _a.sent();
+                if (!matchedCollection) {
+                    res.status(500).send({ success: false });
+                    return [2 /*return*/];
+                }
+                queryMedia['uuid'] = {
+                    $in: matchedCollection.media
+                };
+                _a.label = 2;
+            case 2: return [4 /*yield*/, media_1.MediaModel.find(queryMedia)
+                    .cursor()
+                    .eachAsync(function (mediaItem) {
+                    var tagsList = mediaItem.tags;
+                    for (var i = 0; i < tagsList.length; i += 1) {
+                        tagsSet_1.add(tagsList[i]);
+                    }
+                })];
+            case 3:
                 _a.sent();
                 tagsArr = Array.from(tagsSet_1);
                 tagsArr.sort();
@@ -69,15 +84,15 @@ exports.provideTags = utils_1.asyncHandler(function (req, res) { return __awaite
                     success: true,
                     tags: responseData
                 });
-                return [3 /*break*/, 3];
-            case 2:
+                return [3 /*break*/, 5];
+            case 4:
                 err_1 = _a.sent();
                 res.send({
                     success: false
                 });
                 console.error(err_1);
-                return [3 /*break*/, 3];
-            case 3: return [2 /*return*/];
+                return [3 /*break*/, 5];
+            case 5: return [2 /*return*/];
         }
     });
 }); });

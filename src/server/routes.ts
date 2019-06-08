@@ -11,6 +11,12 @@ import {provideMedia} from './controllers/provide-media'
 import {provideTags} from './controllers/provide-tags'
 import {addTags} from './controllers/add-tags'
 import {removeTags} from './controllers/remove-tags'
+import {provideCollections} from './controllers/provide-collections'
+import {addToCollection} from './controllers/add-to-collection'
+import {createCollection} from './controllers/create-collection'
+import {removeFromCollection} from './controllers/remove-from-collection'
+import {deleteCollection} from './controllers/delete-collection'
+import {renameCollection} from './controllers/rename-collection'
 
 const passport = require('passport')
 
@@ -54,6 +60,12 @@ export function initRoutes(app: Express) {
     app.get('/api/v1/tags', isAuthenticated, provideTags)
     app.post('/api/v1/add-tags', isAuthenticated, addTags)
     app.patch('/api/v1/remove-tags', isAuthenticated, removeTags)
+    app.get('/api/v1/collections', isAuthenticated, provideCollections)
+    app.post('/api/v1/create-collection', isAuthenticated, createCollection)
+    app.post('/api/v1/rename-collection', isAuthenticated, renameCollection)
+    app.post('/api/v1/delete-collection', isAuthenticated, deleteCollection)
+    app.post('/api/v1/add-to-collection', isAuthenticated, addToCollection)
+    app.post('/api/v1/remove-from-collection', isAuthenticated, removeFromCollection)
     app.get('/m/:fileName', sendMedia)
     app.get(
         '*',

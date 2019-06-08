@@ -1,7 +1,6 @@
 import * as React from 'react'
 import {inject, observer} from 'mobx-react'
 import {IAppState} from '../app-state'
-import {fetchTags} from '../api'
 import {TagLink} from './TagLink'
 import {RouterLink} from './RouterLink'
 
@@ -23,7 +22,12 @@ export class TagsList extends React.Component<{} & IAppState, {}> {
         return (
             <div>
                 <h4>
-                    Теги {anyTagsSelected ? <RouterLink url={urlWithoutTags}>не выделить ни одного</RouterLink> : null}
+                    Теги
+                    {anyTagsSelected ? (
+                        <RouterLink behaviour='replace' url={urlWithoutTags}>
+                            не выделить ни одного
+                        </RouterLink>
+                    ) : null}
                 </h4>
                 <ul>
                     {appState.tags.map(({name}) => {

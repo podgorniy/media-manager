@@ -1,6 +1,14 @@
 import {action, computed, configure, IObservableArray, observable} from 'mobx'
-import {addTags, fetchMedia, fetchTags, IFetchMediaHandler, removeTags} from './api'
-import {IAppInitialState, IClientMediaItem, IMediaResponse, IUserMediaItem} from '../common/interfaces'
+import {
+    addTags,
+    createCollection,
+    fetchMedia,
+    fetchTags,
+    getCollectionsList,
+    IFetchMediaHandler,
+    removeTags
+} from './api'
+import {IAppInitialState, IClientMediaItem, ICollectionItem, IMediaResponse, IUserMediaItem} from '../common/interfaces'
 import {AppRouter} from './app-router'
 
 const axios = require('axios')
@@ -17,7 +25,7 @@ const SIDE_WIDTH_COLLAPSED = 50
 const COLUMNS_COUNT_WHEN_SIDE_COLLAPSED = 4
 const COLUMNS_COUNT_WHEN_SIDE_EXPANDED = 3
 
-const ITEMS_COUNT_TO_QUERY = 5
+const ITEMS_COUNT_TO_QUERY = 18
 
 function toClientSideRepresentation(mediaDoc: IUserMediaItem): IClientMediaItem {
     return {
@@ -161,11 +169,20 @@ export class AppState {
     async loadMore() {
         try {
             this.isLoading = true
-            this.loadMoreHandler = fetchMedia({
+            let collectionId = null
+            if (this.router.pathSegments.length >= 2) {
+                const [urlCollectionSubPath, collectionUri] = this.router.pathSegments
+                if (urlCollectionSubPath === 'c' && collectionUri) {
+                    collectionId = collectionUri
+                }
+            }
+            let query = {
                 limit: ITEMS_COUNT_TO_QUERY,
                 skip: this.loadedItemsCount,
-                tags: this.filters.tags
-            })
+                tags: this.filters.tags,
+                collectionUri: collectionId
+            }
+            this.loadMoreHandler = fetchMedia(query)
             let res = await this.loadMoreHandler.response
             this.processLoadResponse(res)
         } catch (err) {
@@ -321,7 +338,14 @@ export class AppState {
 
     async refreshTags() {
         try {
-            let resp = await fetchTags()
+            let currentlyViewedCollectionId = this.currentlyViewedCollection && this.currentlyViewedCollection._id
+            let params = {}
+            if (currentlyViewedCollectionId) {
+                params = {
+                    collectionId: currentlyViewedCollectionId
+                }
+            }
+            let resp = await fetchTags(params)
             this.setTags(resp.tags)
             this.removeUnexistingUrlTag(resp.tags)
         } catch (err) {
@@ -415,6 +439,49 @@ export class AppState {
                 this.selectedUUIDs.push(uuid)
             }
         })
+    }
+
+    @observable
+    collections: Array<ICollectionItem> = []
+
+    @action.bound
+    async refreshCollectionsList() {
+        const data = await getCollectionsList()
+        if (data) {
+            this.setCollections(data)
+        }
+    }
+
+    @action.bound
+    setCollections(collections) {
+        this.collections = collections
+    }
+
+    @action.bound
+    async createCollection(collectionName: string) {
+        let success = await createCollection(collectionName)
+        return success
+    }
+
+    @observable
+    currentlyViewedCollectionId = null
+
+    @observable
+    currentlyViewedCollection: ICollectionItem
+
+    @action.bound
+    setCurrentlyViewedCollection(newVal: null | ICollectionItem) {
+        if (newVal && this.currentlyViewedCollection && this.currentlyViewedCollection._id === newVal._id) {
+            return
+        } else {
+            this.currentlyViewedCollection = newVal
+            this.refreshTags()
+        }
+    }
+
+    @action.bound
+    setCurrentlyViewedCollectionId(newId) {
+        this.currentlyViewedCollectionId = newId
     }
 }
 

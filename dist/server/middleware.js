@@ -9,9 +9,9 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var express = __importStar(require("express"));
 var path = __importStar(require("path"));
-var lib_1 = require("../common/lib");
 var env_1 = require("./env");
 var passport_1 = require("./passport");
+var lib_1 = require("../common/lib");
 var session = require("express-session");
 var bodyParser = require("body-parser");
 var mongoose = require('mongoose');

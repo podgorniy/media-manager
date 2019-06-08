@@ -37,67 +37,61 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 var _this = this;
 Object.defineProperty(exports, "__esModule", { value: true });
 var utils_1 = require("../utils");
-var media_1 = require("../media");
 var collection_1 = require("../collection");
-var DEFAULT_LIMIT = 20;
-var MAX_LIMIT = 100;
-exports.provideMedia = utils_1.asyncHandler(function (req, res) { return __awaiter(_this, void 0, void 0, function () {
-    var _a, skip, limit, tags, collectionUri, intLimit, normalizedCount, querySkipItems, queryLimitItems, query, userCollection, itemsCountForQuery, canProvideMoreItems, userMediaItems, respData, err_1;
+exports.removeFromCollection = utils_1.asyncHandler(function (req, res) { return __awaiter(_this, void 0, void 0, function () {
+    var _a, collectionId, items, collectionSelector, matchedCollection, err_1;
     return __generator(this, function (_b) {
         switch (_b.label) {
             case 0:
-                _b.trys.push([0, 5, , 6]);
-                _a = req.query, skip = _a.skip, limit = _a.limit, tags = _a.tags, collectionUri = _a.collectionUri;
-                intLimit = parseInt(limit);
-                normalizedCount = !intLimit || intLimit <= 0 ? DEFAULT_LIMIT : intLimit;
-                querySkipItems = parseInt(skip) || 0;
-                queryLimitItems = normalizedCount > MAX_LIMIT ? MAX_LIMIT : normalizedCount;
-                query = {
+                _b.trys.push([0, 3, , 4]);
+                if (!req.user._id) {
+                    res.status(401).send({
+                        success: false
+                    });
+                    return [2 /*return*/];
+                }
+                _a = req.body, collectionId = _a.collectionId, items = _a.items;
+                if (!collectionId || !items || !items.length) {
+                    res.status(400).send({
+                        success: false
+                    });
+                    return [2 /*return*/];
+                }
+                collectionSelector = {
+                    _id: collectionId,
                     owner: req.user._id
                 };
-                if (tags && tags.length) {
-                    query.tags = { $all: tags };
-                }
-                if (!collectionUri) return [3 /*break*/, 2];
-                return [4 /*yield*/, collection_1.CollectionsModel.findOne({ uri: collectionUri })];
+                return [4 /*yield*/, collection_1.CollectionsModel.findOne(collectionSelector)];
             case 1:
-                userCollection = _b.sent();
-                if (!userCollection) {
-                    res.send({
-                        success: false,
-                        items: []
+                matchedCollection = _b.sent();
+                if (!matchedCollection) {
+                    res.status(400).send({
+                        success: false
                     });
+                    return [2 /*return*/];
                 }
-                query.uuid = {
-                    $in: userCollection.media
-                };
-                _b.label = 2;
-            case 2: return [4 /*yield*/, media_1.MediaModel.find(query).count()];
-            case 3:
-                itemsCountForQuery = _b.sent();
-                canProvideMoreItems = querySkipItems + queryLimitItems < itemsCountForQuery;
-                return [4 /*yield*/, media_1.MediaModel.find(query, null, {
-                        skip: querySkipItems,
-                        limit: queryLimitItems
+                return [4 /*yield*/, collection_1.CollectionsModel.updateOne(collectionSelector, {
+                        $pull: {
+                            media: {
+                                $in: items
+                            }
+                        }
                     })];
-            case 4:
-                userMediaItems = _b.sent();
-                respData = {
-                    items: userMediaItems.map(media_1.toApiRepresentation),
-                    success: true,
-                    hasMore: canProvideMoreItems
-                };
-                res.send(respData);
-                return [3 /*break*/, 6];
-            case 5:
-                err_1 = _b.sent();
+            case 2:
+                _b.sent();
                 res.send({
+                    success: true
+                });
+                return [3 /*break*/, 4];
+            case 3:
+                err_1 = _b.sent();
+                console.error(err_1);
+                res.status(500).send({
                     success: false
                 });
-                console.error(err_1);
-                return [3 /*break*/, 6];
-            case 6: return [2 /*return*/];
+                return [3 /*break*/, 4];
+            case 4: return [2 /*return*/];
         }
     });
 }); });
-//# sourceMappingURL=provide-media.js.map
+//# sourceMappingURL=remove-from-collection.js.map

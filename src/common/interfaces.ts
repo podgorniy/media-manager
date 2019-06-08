@@ -1,6 +1,8 @@
 // Keep .ts extension. Otherwise parcel bundler fails to find this file dependency
 // TODO: try to rename to d.ts after parcel version update from 1.10.3
 
+import {Document} from 'mongoose'
+
 export interface IUserMediaItem {
     url: string
     tags: Array<string>
@@ -29,6 +31,7 @@ export interface IProvideMediaParams {
     skip?: number
     limit?: number
     tags?: Array<string>
+    collectionUri?: string
 }
 
 export type MediaType = 'img' | 'video'
@@ -36,3 +39,13 @@ export type MediaType = 'img' | 'video'
 export interface ITagsListItem {
     name: string
 }
+
+export interface ICollectionFields {
+    uri: string
+    media: Array<string>
+    public: boolean
+    title: string
+    owner: string
+}
+
+export interface ICollectionItem extends ICollectionFields, Document {}

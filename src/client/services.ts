@@ -30,9 +30,37 @@ function initLoadingMoreService(appState: AppState) {
 
 function initResettingService(appState: AppState) {
     autorun(function() {
+        if (appState.router.pathSegments.length) {
+            appState.resetMedia()
+        }
         if (appState.filters.tags.length >= 0) {
             appState.resetMedia()
         }
+    })
+}
+
+function initSelectingCurrentCollectionId(appState: AppState) {
+    autorun(() => {
+        const collectionsCount = appState.collections.length
+        const pathSegmentsCount = appState.router.pathSegments.length
+        if (collectionsCount > 0 && pathSegmentsCount === 2) {
+            const [_, collectionUri] = appState.router.pathSegments
+            const existingMatchedCollection = appState.collections.reduce((matched, collection) => {
+                if (matched) {
+                    return matched
+                }
+                if (collection.uri === collectionUri) {
+                    return collection
+                }
+            }, null)
+            if (existingMatchedCollection) {
+                appState.setCurrentlyViewedCollection(existingMatchedCollection)
+                appState.setCurrentlyViewedCollectionId(existingMatchedCollection._id)
+                return
+            }
+        }
+        appState.setCurrentlyViewedCollection(null)
+        appState.setCurrentlyViewedCollectionId(null)
     })
 }
 
@@ -40,4 +68,5 @@ function initResettingService(appState: AppState) {
 export function initServices(appState: AppState) {
     initResettingService(appState) // 1. Order matters
     initLoadingMoreService(appState) // 2. Order matters
+    initSelectingCurrentCollectionId(appState)
 }

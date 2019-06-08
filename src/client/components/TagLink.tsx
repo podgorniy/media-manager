@@ -42,7 +42,7 @@ export class TagLink extends React.Component<IProps & IAppState, IState> {
             })
         }
         return (
-            <RouterLink url={href} className={isSelected ? 'remove' : 'with'}>
+            <RouterLink url={href} behaviour='replace' className={isSelected ? 'remove' : 'with'}>
                 {tagName}
             </RouterLink>
         )
