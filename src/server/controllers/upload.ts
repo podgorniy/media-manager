@@ -52,7 +52,8 @@ async function registerFile(sourcePath: string, ownerId: string) {
         fileExtension: extension,
         md5: md5,
         type: fileType,
-        tags: tags
+        tags: tags,
+        sharedIndividually: false
     }
     const res = new MediaModel(docObj)
     await res.save()

@@ -9,6 +9,7 @@ import {UploadBtn} from './UploadBtn'
 import {TagsControls} from './TagsControls'
 import {CollectionsControls} from './CollectionsControls'
 import {Collectionsss} from './Collectionsss'
+import {ShareMediaItem} from './ShareMediaItem'
 
 @inject('appState')
 @observer
@@ -19,10 +20,15 @@ export class ContextualActions extends React.Component<{} & IAppState, {}> {
 
     render() {
         const {appState} = this.props
+        let itemForIndividualSharingControl = appState.zoomedItem
+        if (appState.selectedItems.length === 1 && !itemForIndividualSharingControl) {
+            itemForIndividualSharingControl = appState.selectedItems[0]
+        }
         return (
             <div>
                 <ToggleSidebar />
                 <UploadBtn />
+                {itemForIndividualSharingControl && <ShareMediaItem mediaItem={itemForIndividualSharingControl} />}
                 <ToggleSelectionAll />
                 <CollectionsControls />
                 <TagsControls />

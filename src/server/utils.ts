@@ -3,6 +3,8 @@ import * as path from 'path'
 import {UPLOADS_DIR} from './env'
 import {compare, hash} from 'bcrypt'
 
+export const SHARED_TAG = 'shared'
+
 export function asyncHandler(fn: RequestHandler) {
     return (req, res, next) => {
         return Promise.resolve(fn(req, res, next)).catch(next)

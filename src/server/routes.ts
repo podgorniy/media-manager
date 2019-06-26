@@ -17,6 +17,8 @@ import {createCollection} from './controllers/create-collection'
 import {removeFromCollection} from './controllers/remove-from-collection'
 import {deleteCollection} from './controllers/delete-collection'
 import {renameCollection} from './controllers/rename-collection'
+import {shareMedia} from './controllers/share-media'
+import {unShareMedia} from './controllers/un-share-media'
 
 const passport = require('passport')
 
@@ -66,6 +68,8 @@ export function initRoutes(app: Express) {
     app.post('/api/v1/delete-collection', isAuthenticated, deleteCollection)
     app.post('/api/v1/add-to-collection', isAuthenticated, addToCollection)
     app.post('/api/v1/remove-from-collection', isAuthenticated, removeFromCollection)
+    app.post('/api/v1/share-media', isAuthenticated, shareMedia)
+    app.post('/api/v1/un-share-media', isAuthenticated, unShareMedia)
     app.get('/m/:fileName', sendMedia)
     app.get(
         '*',

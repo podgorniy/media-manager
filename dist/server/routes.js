@@ -52,6 +52,8 @@ var create_collection_1 = require("./controllers/create-collection");
 var remove_from_collection_1 = require("./controllers/remove-from-collection");
 var delete_collection_1 = require("./controllers/delete-collection");
 var rename_collection_1 = require("./controllers/rename-collection");
+var share_media_1 = require("./controllers/share-media");
+var un_share_media_1 = require("./controllers/un-share-media");
 var passport = require('passport');
 // https://stackoverflow.com/a/47448486
 // declare global {
@@ -99,6 +101,8 @@ function initRoutes(app) {
     app.post('/api/v1/delete-collection', isAuthenticated, delete_collection_1.deleteCollection);
     app.post('/api/v1/add-to-collection', isAuthenticated, add_to_collection_1.addToCollection);
     app.post('/api/v1/remove-from-collection', isAuthenticated, remove_from_collection_1.removeFromCollection);
+    app.post('/api/v1/share-media', isAuthenticated, share_media_1.shareMedia);
+    app.post('/api/v1/un-share-media', isAuthenticated, un_share_media_1.unShareMedia);
     app.get('/m/:fileName', send_media_1.sendMedia);
     app.get('*', utils_1.asyncHandler(function (req, res) { return __awaiter(_this, void 0, void 0, function () {
         var appInitialState, _a, _b;

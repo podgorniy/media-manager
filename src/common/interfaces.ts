@@ -8,6 +8,7 @@ export interface IUserMediaItem {
     tags: Array<string>
     uuid: string
     type: MediaType
+    sharedIndividually: boolean
 }
 
 export interface IAppInitialState {

@@ -38,45 +38,42 @@ var _this = this;
 Object.defineProperty(exports, "__esModule", { value: true });
 var utils_1 = require("../utils");
 var media_1 = require("../media");
-exports.sendMedia = utils_1.asyncHandler(function (req, res) { return __awaiter(_this, void 0, void 0, function () {
-    var fileDoc, fileName, fileUUID, fileExtension, userId;
+exports.shareMedia = utils_1.asyncHandler(function (req, res) { return __awaiter(_this, void 0, void 0, function () {
+    var userId, uuid, fileDoc;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                fileName = req.params.fileName;
-                fileUUID = utils_1.getName(fileName);
-                fileExtension = utils_1.getExtension(fileName);
+                userId = req.user && req.user._id;
+                if (!userId) {
+                    res.status(401).json({ success: false });
+                    return [2 /*return*/];
+                }
+                uuid = req.body.uuid;
                 return [4 /*yield*/, media_1.MediaModel.findOne({
-                        uuid: fileUUID,
-                        fileExtension: fileExtension,
-                        sharedIndividually: true
+                        uuid: uuid,
+                        owner: userId
                     })];
             case 1:
                 fileDoc = _a.sent();
-                if (fileDoc) {
-                    res.sendFile(utils_1.filePathForPersistence(media_1.getFileName(fileDoc)));
+                if (!fileDoc) {
+                    res.status(406).json({ success: false });
                     return [2 /*return*/];
                 }
-                userId = req.user && req.user._id;
-                if (!userId) {
-                    res.status(404).send("Not found or don't have permissions to view");
-                    return [2 /*return*/];
-                }
-                return [4 /*yield*/, media_1.MediaModel.findOne({
-                        uuid: fileUUID,
-                        fileExtension: fileExtension,
-                        owner: req.user._id
+                return [4 /*yield*/, media_1.MediaModel.updateOne({
+                        _id: fileDoc._id
+                    }, {
+                        $set: {
+                            sharedIndividually: true
+                        },
+                        $addToSet: {
+                            tags: utils_1.SHARED_TAG
+                        }
                     })];
             case 2:
-                // not handled by type system
-                fileDoc = _a.sent();
-                if (!fileDoc) {
-                    res.status(404).send("Not found or don't have permissions to view");
-                    return [2 /*return*/];
-                }
-                res.sendFile(utils_1.filePathForPersistence(media_1.getFileName(fileDoc)));
+                _a.sent();
+                res.json({ success: true });
                 return [2 /*return*/];
         }
     });
 }); });
-//# sourceMappingURL=send-media.js.map
+//# sourceMappingURL=share-media.js.map

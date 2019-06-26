@@ -45,6 +45,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var path = __importStar(require("path"));
 var env_1 = require("./env");
 var bcrypt_1 = require("bcrypt");
+exports.SHARED_TAG = 'shared';
 function asyncHandler(fn) {
     return function (req, res, next) {
         return Promise.resolve(fn(req, res, next)).catch(next);

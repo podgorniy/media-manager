@@ -223,3 +223,35 @@ export async function renameCollection({collectionId, newTitle}): Promise<boolea
         return false
     }
 }
+
+export async function shareMedia({uuid}) {
+    try {
+        const resp = await axios({
+            method: 'post',
+            url: '/api/v1/share-media',
+            data: {
+                uuid: uuid
+            }
+        })
+        return resp.data.success || false
+    } catch (err) {
+        console.err(err)
+        return false
+    }
+}
+
+export async function unShareMedia({uuid}) {
+    try {
+        const resp = await axios({
+            method: 'post',
+            url: '/api/v1/un-share-media',
+            data: {
+                uuid: uuid
+            }
+        })
+        return resp.data.success || false
+    } catch (err) {
+        console.err(err)
+        return false
+    }
+}

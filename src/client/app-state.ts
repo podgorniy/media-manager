@@ -75,6 +75,14 @@ export class AppState {
     @observable
     selectedUUIDs: IObservableArray<string> = [] as IObservableArray<string>
 
+    /**
+     * Only which are loaded
+     */
+    @computed
+    get selectedItems(): Array<IClientMediaItem> {
+        return this.media.filter((item) => this.selectedUUIDs.indexOf(item.uuid) !== -1)
+    }
+
     @computed
     get selectedVisibleUUIDs() {
         return this.selectedUUIDs.filter((itemUUID) => {

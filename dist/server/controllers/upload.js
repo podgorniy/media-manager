@@ -102,7 +102,8 @@ function registerFile(sourcePath, ownerId) {
                         fileExtension: extension,
                         md5: md5,
                         type: fileType,
-                        tags: tags
+                        tags: tags,
+                        sharedIndividually: false
                     };
                     res = new media_1.MediaModel(docObj);
                     return [4 /*yield*/, res.save()];

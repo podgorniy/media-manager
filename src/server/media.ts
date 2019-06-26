@@ -8,6 +8,7 @@ export interface IMediaDoc {
     md5: string
     tags: Array<string>
     type: MediaType
+    sharedIndividually: boolean
 }
 
 interface IMedia extends Document, IMediaDoc {}
@@ -44,6 +45,10 @@ const MediaSchema = new Schema(
         type: {
             type: String,
             default: null
+        },
+        sharedIndividually: {
+            type: Boolean,
+            default: false
         }
     },
     {
@@ -62,6 +67,7 @@ export function toApiRepresentation(doc: IMediaDoc): IUserMediaItem {
         uuid: doc.uuid,
         tags: doc.tags,
         url: `/m/${getFileName(doc)}`,
-        type: doc.type
+        type: doc.type,
+        sharedIndividually: doc.sharedIndividually
     }
 }
