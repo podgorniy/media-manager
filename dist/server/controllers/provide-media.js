@@ -42,7 +42,7 @@ var collection_1 = require("../collection");
 var DEFAULT_LIMIT = 20;
 var MAX_LIMIT = 100;
 exports.provideMedia = utils_1.asyncHandler(function (req, res) { return __awaiter(_this, void 0, void 0, function () {
-    var _a, skip, limit, tags, collectionUri, intLimit, normalizedCount, querySkipItems, queryLimitItems, query, matchingCollection, itemsCountForQuery, canProvideMoreItems, userMediaItems, respData, err_1;
+    var _a, skip, limit, tags, collectionUri, intLimit, normalizedCount, querySkipItems, isAuthenticated, queryLimitItems, query, matchingCollection, itemsCountForQuery, canProvideMoreItems, userMediaItems, respData, err_1;
     return __generator(this, function (_b) {
         switch (_b.label) {
             case 0:
@@ -51,7 +51,15 @@ exports.provideMedia = utils_1.asyncHandler(function (req, res) { return __await
                 intLimit = parseInt(limit);
                 normalizedCount = !intLimit || intLimit <= 0 ? DEFAULT_LIMIT : intLimit;
                 querySkipItems = parseInt(skip) || 0;
-                queryLimitItems = normalizedCount > MAX_LIMIT ? MAX_LIMIT : normalizedCount;
+                isAuthenticated = req.isAuthenticated();
+                queryLimitItems = void 0;
+                if (normalizedCount > MAX_LIMIT) {
+                    // impose max limit rule for non-authenticated users only
+                    queryLimitItems = isAuthenticated ? normalizedCount : MAX_LIMIT;
+                }
+                else {
+                    queryLimitItems = normalizedCount;
+                }
                 query = {};
                 if (req.isAuthenticated()) {
                     query.owner = req.user._id;
@@ -70,7 +78,7 @@ exports.provideMedia = utils_1.asyncHandler(function (req, res) { return __await
                     });
                     return [2 /*return*/];
                 }
-                // non public collections are visible by owners only
+                // non public collections are visible to owners only
                 if (!matchingCollection.public && !req.isAuthenticated()) {
                     res.send({
                         success: false,

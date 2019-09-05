@@ -3,7 +3,6 @@ import {inject, observer} from 'mobx-react'
 import {IAppState} from '../app-state'
 import {IClientMediaItem} from '../../common/interfaces'
 import copy from 'copy-to-clipboard'
-import {shareMedia, unShareMedia} from '../api'
 
 interface IProps {
     mediaItem: IClientMediaItem
@@ -25,13 +24,9 @@ export class ShareMediaItem extends React.Component<IProps & IAppState, IState> 
         return (
             <div>
                 <button
-                    onClick={async () => {
+                    onClick={() => {
                         copy(fullUrl)
-                        const res = await shareMedia({uuid: uuid})
-                        appState.refreshTags()
-                        if (!res) {
-                            alert('Ошибка. Не получилось расшарить')
-                        }
+                        appState.shareMedia(uuid)
                     }}
                     title='Скопировать ссылку на медиа'
                 >
@@ -40,8 +35,7 @@ export class ShareMediaItem extends React.Component<IProps & IAppState, IState> 
                 <button
                     disabled={!sharedIndividually}
                     onClick={() => {
-                        unShareMedia({uuid: uuid})
-                        appState.refreshTags()
+                        appState.unShareMedia(uuid)
                     }}
                     title='Убрать медиа из публичного доступа'
                 >

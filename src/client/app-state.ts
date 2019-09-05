@@ -1,15 +1,20 @@
 import {action, computed, configure, IObservableArray, observable} from 'mobx'
 import {
     addTags,
+    addToCollection,
     createCollection,
     fetchMedia,
     fetchTags,
     getCollectionsList,
     IFetchMediaHandler,
-    removeTags
+    removeFromCollection,
+    removeTags,
+    shareMedia,
+    unShareMedia
 } from './api'
 import {IAppInitialState, IClientMediaItem, ICollectionItem, IMediaResponse, IUserMediaItem} from '../common/interfaces'
 import {AppRouter} from './app-router'
+import {getLoadMoreQuery, getRefreshQuery} from './lib'
 
 const axios = require('axios')
 
@@ -21,8 +26,6 @@ type ISetAuthenticatedParams = boolean | {userName: string}
 
 const SIDE_WIDTH_EXPANDED = 300
 const SIDE_WIDTH_COLLAPSED = 50
-
-const ITEMS_COUNT_TO_QUERY = 18
 
 function toClientSideRepresentation(mediaDoc: IUserMediaItem): IClientMediaItem {
     return {
@@ -214,6 +217,9 @@ export class AppState {
             this.isLoading = false
             this.loadMoreHandler = null
         }
+        if (this.refreshHandler) {
+            this.refreshHandler.cancel()
+        }
         this.canLoadMore = true
         this.media.clear()
     }
@@ -269,16 +275,26 @@ export class AppState {
     async loadMore() {
         try {
             this.isLoading = true
-            let collectionUri = this.currentCollectionUri
-            let query = {
-                limit: ITEMS_COUNT_TO_QUERY,
-                skip: this.loadedItemsCount,
-                tags: this.filters.tags,
-                collectionUri: collectionUri
-            }
-            this.loadMoreHandler = fetchMedia(query)
+            this.loadMoreHandler = fetchMedia(getLoadMoreQuery(this))
             let res = await this.loadMoreHandler.response
-            this.processLoadResponse(res)
+            this.processLoadMoreResponse(res)
+        } catch (err) {
+            if (!axios.isCancel(err)) {
+                console.error(err)
+            }
+        }
+    }
+
+    refreshHandler: IFetchMediaHandler
+    @action.bound
+    async refreshMedia() {
+        try {
+            if (this.refreshHandler) {
+                this.refreshHandler.cancel()
+            }
+            this.refreshHandler = fetchMedia(getRefreshQuery(this))
+            let res = await this.refreshHandler.response
+            this.processRefreshResponse(res)
         } catch (err) {
             if (!axios.isCancel(err)) {
                 console.error(err)
@@ -287,7 +303,17 @@ export class AppState {
     }
 
     @action.bound
-    processLoadResponse(response: IMediaResponse) {
+    processRefreshResponse(response: IMediaResponse) {
+        const {items, success} = response
+        if (success) {
+            this.media.replace(items.map((item) => toClientSideRepresentation(item)))
+        } else {
+            console.error(`Error`)
+        }
+    }
+
+    @action.bound
+    processLoadMoreResponse(response: IMediaResponse) {
         const {success, items, hasMore} = response
         if (success) {
             for (let i = 0; i < items.length; i += 1) {
@@ -382,7 +408,9 @@ export class AppState {
     }
 
     async refreshTags() {
-        if (!this.isAuthenticated) {return}
+        if (!this.isAuthenticated) {
+            return
+        }
         let params = {}
         let currentlyViewedCollectionId = this.currentlyViewedCollection && this.currentlyViewedCollection._id
         if (currentlyViewedCollectionId) {
@@ -417,6 +445,7 @@ export class AppState {
             })
             this.removeTagFromSelectedLocally([tagName])
             this.refreshTags()
+            this.refreshMedia()
         } catch (err) {
             console.error(err)
         }
@@ -441,6 +470,7 @@ export class AppState {
         await addTags(tags, this.selectedUUIDs)
         this.addTagForSelectedLocally(tags)
         this.refreshTags()
+        this.refreshMedia()
     }
 
     @action.bound
@@ -497,6 +527,40 @@ export class AppState {
     @action.bound
     setCurrentlyViewedCollectionId(newId) {
         this.currentlyViewedCollectionId = newId
+    }
+
+    @action.bound
+    async addSelectedToCollection(collectionId: string) {
+        await addToCollection({
+            collectionId: collectionId,
+            items: this.selectedUUIDs
+        })
+        this.refreshCollectionsList()
+        this.refreshMedia()
+    }
+
+    @action.bound
+    async removeSelectedFromCollection(collectionId: string) {
+        await removeFromCollection({
+            collectionId: collectionId,
+            items: this.selectedUUIDs
+        })
+        this.refreshCollectionsList()
+        this.refreshMedia()
+    }
+
+    @action.bound
+    async shareMedia(uuid: string) {
+        await shareMedia({uuid: uuid})
+        this.refreshTags()
+        this.refreshMedia()
+    }
+
+    @action.bound
+    async unShareMedia(uuid: string) {
+        await unShareMedia({uuid: uuid})
+        this.refreshTags()
+        this.refreshMedia()
     }
 }
 

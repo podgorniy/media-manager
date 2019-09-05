@@ -1,7 +1,6 @@
 import * as React from 'react'
 import {inject, observer} from 'mobx-react'
 import {IAppState} from '../app-state'
-import {addToCollection, removeFromCollection} from '../api'
 import {autorun} from 'mobx'
 
 interface IProps {}
@@ -106,24 +105,16 @@ export class CollectionsControls extends React.Component<IProps & IAppState, ISt
                 </select>
                 <button
                     disabled={allSelectedAreInCollection}
-                    onClick={async () => {
-                        await addToCollection({
-                            collectionId: selectedCollectionId,
-                            items: appState.selectedUUIDs
-                        })
-                        await appState.refreshCollectionsList()
+                    onClick={() => {
+                        appState.addSelectedToCollection(selectedCollectionId)
                     }}
                 >
                     Добавить
                 </button>
                 <button
                     disabled={allSelectedAreNotInCollection}
-                    onClick={async () => {
-                        await removeFromCollection({
-                            collectionId: selectedCollectionId,
-                            items: appState.selectedUUIDs
-                        })
-                        await appState.refreshCollectionsList()
+                    onClick={() => {
+                        appState.removeSelectedFromCollection(selectedCollectionId)
                     }}
                 >
                     Убрать

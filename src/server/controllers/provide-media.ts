@@ -13,7 +13,14 @@ export const provideMedia = asyncHandler(async (req, res) => {
         const intLimit = parseInt(limit)
         const normalizedCount = !intLimit || intLimit <= 0 ? DEFAULT_LIMIT : intLimit
         const querySkipItems = parseInt(skip) || 0
-        const queryLimitItems = normalizedCount > MAX_LIMIT ? MAX_LIMIT : normalizedCount
+        const isAuthenticated = req.isAuthenticated()
+        let queryLimitItems
+        if (normalizedCount > MAX_LIMIT) {
+            // impose max limit rule for non-authenticated users only
+            queryLimitItems = isAuthenticated ? normalizedCount : MAX_LIMIT
+        } else {
+            queryLimitItems = normalizedCount
+        }
         const query: {
             tags?: object
             owner?: object
@@ -37,7 +44,7 @@ export const provideMedia = asyncHandler(async (req, res) => {
                 })
                 return
             }
-            // non public collections are visible by owners only
+            // non public collections are visible to owners only
             if (!matchingCollection.public && !req.isAuthenticated()) {
                 res.send({
                     success: false,

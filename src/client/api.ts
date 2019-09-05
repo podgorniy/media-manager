@@ -219,7 +219,7 @@ export async function renameCollection({collectionId, newTitle}): Promise<boolea
         })
         return resp.data.success || false
     } catch (err) {
-        console.err(err)
+        console.error(err)
         return false
     }
 }
@@ -235,7 +235,7 @@ export async function shareMedia({uuid}) {
         })
         return resp.data.success || false
     } catch (err) {
-        console.err(err)
+        console.error(err)
         return false
     }
 }
@@ -251,7 +251,7 @@ export async function unShareMedia({uuid}) {
         })
         return resp.data.success || false
     } catch (err) {
-        console.err(err)
+        console.error(err)
         return false
     }
 }
@@ -267,7 +267,7 @@ export async function shareCollection({id}) {
         })
         return resp.data.success || false
     } catch (err) {
-        console.err(err)
+        console.error(err)
         return false
     }
 }
@@ -283,7 +283,7 @@ export async function unShareCollection({id}) {
         })
         return resp.data.success || false
     } catch (err) {
-        console.err(err)
+        console.error(err)
         return false
     }
 }
