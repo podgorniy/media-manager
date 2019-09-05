@@ -202,8 +202,8 @@ export class AppState {
     }
 
     @computed
-    get currentCollectionUrl(): string | null {
-        const [dispatch, collectionUrl] = this.router.pathSegments
+    get currentCollectionUri(): string | null {
+        const [_, collectionUrl] = this.router.pathSegments
         return collectionUrl || null
     }
 
@@ -269,18 +269,12 @@ export class AppState {
     async loadMore() {
         try {
             this.isLoading = true
-            let collectionId = null
-            if (this.router.pathSegments.length >= 2) {
-                const [urlCollectionSubPath, collectionUri] = this.router.pathSegments
-                if (urlCollectionSubPath === 'c' && collectionUri) {
-                    collectionId = collectionUri
-                }
-            }
+            let collectionUri = this.currentCollectionUri
             let query = {
                 limit: ITEMS_COUNT_TO_QUERY,
                 skip: this.loadedItemsCount,
                 tags: this.filters.tags,
-                collectionUri: collectionId
+                collectionUri: collectionUri
             }
             this.loadMoreHandler = fetchMedia(query)
             let res = await this.loadMoreHandler.response
@@ -388,18 +382,20 @@ export class AppState {
     }
 
     async refreshTags() {
+        if (!this.isAuthenticated) {return}
+        let params = {}
         let currentlyViewedCollectionId = this.currentlyViewedCollection && this.currentlyViewedCollection._id
         if (currentlyViewedCollectionId) {
-            let params = {
+            params = {
                 collectionId: currentlyViewedCollectionId
             }
-            try {
-                let resp = await fetchTags(params)
-                this.setTags(resp.tags)
-                this.removeUnexistingUrlTag(resp.tags)
-            } catch (err) {
-                console.error(err)
-            }
+        }
+        try {
+            let resp = await fetchTags(params)
+            this.setTags(resp.tags)
+            this.removeUnexistingUrlTag(resp.tags)
+        } catch (err) {
+            console.error(err)
         }
     }
 

@@ -12,10 +12,10 @@ function initLoadingMoreService(appState: AppState) {
             isAuthenticated,
             canLoadMore,
             isLoading,
-            currentCollectionUrl
+            currentCollectionUri
         } = appState
         if (
-            (isAuthenticated || currentCollectionUrl) &&
+            (isAuthenticated || currentCollectionUri) &&
             !isLoading &&
             canLoadMore &&
             mediaListFullHeight - pageScrolled - viewportHeight <
@@ -50,14 +50,13 @@ function initResettingService(appState: AppState) {
 function initSelectingCurrentCollectionId(appState: AppState) {
     autorun(() => {
         const collectionsCount = appState.collections.length
-        const pathSegmentsCount = appState.router.pathSegments.length
-        if (collectionsCount > 0 && pathSegmentsCount === 2) {
-            const [_, collectionUri] = appState.router.pathSegments
+        const {currentCollectionUri} = appState
+        if (collectionsCount > 0 && currentCollectionUri) {
             const existingMatchedCollection = appState.collections.reduce((matched, collection) => {
                 if (matched) {
                     return matched
                 }
-                if (collection.uri === collectionUri) {
+                if (collection.uri === currentCollectionUri) {
                     return collection
                 }
             }, null)
