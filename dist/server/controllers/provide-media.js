@@ -42,7 +42,7 @@ var collection_1 = require("../collection");
 var DEFAULT_LIMIT = 20;
 var MAX_LIMIT = 100;
 exports.provideMedia = utils_1.asyncHandler(function (req, res) { return __awaiter(_this, void 0, void 0, function () {
-    var _a, skip, limit, tags, collectionUri, intLimit, normalizedCount, querySkipItems, queryLimitItems, query, userCollection, itemsCountForQuery, canProvideMoreItems, userMediaItems, respData, err_1;
+    var _a, skip, limit, tags, collectionUri, intLimit, normalizedCount, querySkipItems, queryLimitItems, query, matchingCollection, itemsCountForQuery, canProvideMoreItems, userMediaItems, respData, err_1;
     return __generator(this, function (_b) {
         switch (_b.label) {
             case 0:
@@ -52,24 +52,34 @@ exports.provideMedia = utils_1.asyncHandler(function (req, res) { return __await
                 normalizedCount = !intLimit || intLimit <= 0 ? DEFAULT_LIMIT : intLimit;
                 querySkipItems = parseInt(skip) || 0;
                 queryLimitItems = normalizedCount > MAX_LIMIT ? MAX_LIMIT : normalizedCount;
-                query = {
-                    owner: req.user._id
-                };
+                query = {};
+                if (req.isAuthenticated()) {
+                    query.owner = req.user._id;
+                }
                 if (tags && tags.length) {
                     query.tags = { $all: tags };
                 }
                 if (!collectionUri) return [3 /*break*/, 2];
                 return [4 /*yield*/, collection_1.CollectionsModel.findOne({ uri: collectionUri })];
             case 1:
-                userCollection = _b.sent();
-                if (!userCollection) {
+                matchingCollection = _b.sent();
+                if (!matchingCollection) {
                     res.send({
                         success: false,
                         items: []
                     });
+                    return [2 /*return*/];
+                }
+                // non public collections are visible by owners only
+                if (!matchingCollection.public && !req.isAuthenticated()) {
+                    res.send({
+                        success: false,
+                        items: []
+                    });
+                    return [2 /*return*/];
                 }
                 query.uuid = {
-                    $in: userCollection.media
+                    $in: matchingCollection.media
                 };
                 _b.label = 2;
             case 2: return [4 /*yield*/, media_1.MediaModel.find(query).count()];

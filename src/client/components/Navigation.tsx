@@ -4,8 +4,6 @@ import {IAppState} from '../app-state'
 import {LogoutBtn} from './LogoutBtn'
 import {LoginForm} from './LoginForm'
 
-require('./Navigation.less')
-
 @inject('appState')
 @observer
 export class Navigation extends React.Component<{} & IAppState, {}> {

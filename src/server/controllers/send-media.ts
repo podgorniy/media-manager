@@ -1,35 +1,37 @@
 import {asyncHandler, filePathForPersistence, getExtension, getName} from '../utils'
 import {getFileName, MediaModel} from '../media'
+import {CollectionsModel} from '../collection'
+import {getPathSegments} from '../../common/lib'
+
+const urlParse = require('url-parse')
 
 export const sendMedia = asyncHandler(async (req, res) => {
-    let fileDoc
     const fileName = req.params.fileName
     const fileUUID = getName(fileName)
     const fileExtension = getExtension(fileName)
-
-    fileDoc = await MediaModel.findOne({
+    const refererUrl = req.headers.referer || ''
+    const parsedReferred = urlParse(refererUrl)
+    const pathSegments = getPathSegments(parsedReferred.pathname)
+    const [_, refererCollectionUri] = pathSegments
+    const matchedDoc = await MediaModel.findOne({
         uuid: fileUUID,
-        fileExtension: fileExtension,
-        sharedIndividually: true
+        fileExtension: fileExtension
     })
-    if (fileDoc) {
-        res.sendFile(filePathForPersistence(getFileName(fileDoc)))
-        return
+    if (!matchedDoc) {
+        return res.status(404).send(`Not found or don't have permissions to view`)
+    } else {
+        let sharedCollectionsWithThisDoc = await CollectionsModel.findOne({
+            media: matchedDoc.uuid,
+            uri: refererCollectionUri,
+            public: true
+        })
+        const mediaIsSharedIndividually = matchedDoc.sharedIndividually
+        const mediaBelongsToRequestedSharedCollection = !!sharedCollectionsWithThisDoc
+        const mediaBelongsToAuthenticatedUser = req.isAuthenticated() && req.user._id.toString() === matchedDoc.owner
+        if (mediaIsSharedIndividually || mediaBelongsToRequestedSharedCollection || mediaBelongsToAuthenticatedUser) {
+            return res.sendFile(filePathForPersistence(getFileName(matchedDoc)))
+        } else {
+            return res.status(404).send(`Not found or don't have permissions to view`)
+        }
     }
-    const userId = req.user && req.user._id
-    if (!userId) {
-        res.status(404).send(`Not found or don't have permissions to view`)
-        return
-    }
-    // not handled by type system
-    fileDoc = await MediaModel.findOne({
-        uuid: fileUUID,
-        fileExtension: fileExtension,
-        owner: req.user._id
-    })
-    if (!fileDoc) {
-        res.status(404).send(`Not found or don't have permissions to view`)
-        return
-    }
-    res.sendFile(filePathForPersistence(getFileName(fileDoc)))
 })

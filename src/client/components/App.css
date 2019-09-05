@@ -140,3 +140,7 @@ body {
     background: #291b09;
     color: whitesmoke;
 }
+
+html {
+    padding-top: 10px;
+}

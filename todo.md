@@ -1,5 +1,5 @@
-organise fields of app-state.ts
-    @observable
-    @computed
-    @actions
-
+Refresh media
+Reload data for already loaded media
+Get media sizes at upload stage
+uuid without dashes
+Link to reset collections/filters selection

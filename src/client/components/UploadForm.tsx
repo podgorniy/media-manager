@@ -18,7 +18,6 @@ export class UploadForm extends React.Component<{}, {}> {
             body: formData
         })
         const uploadResultJSON = await uploadResult.json()
-        console.log(`uploadResultJSON`, uploadResultJSON)
     }
 
     render() {

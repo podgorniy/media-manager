@@ -2,12 +2,14 @@ import {MediaList} from './MediaList'
 import * as React from 'react'
 import {inject, observer} from 'mobx-react'
 import {IAppState} from '../app-state'
-import {Navigation} from './Navigation'
 import {DragNDropUpload} from './DragNDropUpload'
 import {ContextualActions} from './ContextualActions'
 import {ZoomedView} from './ZoomedView'
 import {IsLoading} from './IsLoading'
+import {LogoutBtn} from './LogoutBtn'
+import {LoginForm} from './LoginForm'
 
+require('./Navigation.less')
 require('./Layout.less')
 
 @inject('appState')
@@ -31,10 +33,15 @@ export class Layout extends React.Component<{} & IAppState, {}> {
 
     render() {
         const {appState} = this.props
+        const [_, collectionUrl] = appState.router.pathSegments
         return (
             <div className='layout'>
                 <div className='layout__navigation'>
-                    <Navigation />
+                    <div className='navigation'>
+                        <div className='navigation__items'>
+                            {appState.isAuthenticated ? <LogoutBtn /> : <LoginForm />}
+                        </div>
+                    </div>
                 </div>
                 <IsLoading />
                 {appState.isAuthenticated ? (
@@ -60,6 +67,13 @@ export class Layout extends React.Component<{} & IAppState, {}> {
                         <DragNDropUpload />
                         {<ZoomedView />}
                     </>
+                ) : collectionUrl ? (
+                    <div>
+                        {appState.currentlyViewedCollectionId}
+                        {appState.currentlyViewedCollection}
+                        <MediaList />
+                        {<ZoomedView />}
+                    </div>
                 ) : null}
             </div>
         )

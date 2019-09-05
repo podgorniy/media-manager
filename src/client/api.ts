@@ -255,3 +255,35 @@ export async function unShareMedia({uuid}) {
         return false
     }
 }
+
+export async function shareCollection({id}) {
+    try {
+        const resp = await axios({
+            method: 'post',
+            url: '/api/v1/share-collection',
+            data: {
+                collectionId: id
+            }
+        })
+        return resp.data.success || false
+    } catch (err) {
+        console.err(err)
+        return false
+    }
+}
+
+export async function unShareCollection({id}) {
+    try {
+        const resp = await axios({
+            method: 'post',
+            url: '/api/v1/un-share-collection',
+            data: {
+                collectionId: id
+            }
+        })
+        return resp.data.success || false
+    } catch (err) {
+        console.err(err)
+        return false
+    }
+}

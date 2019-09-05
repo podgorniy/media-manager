@@ -22,9 +22,6 @@ type ISetAuthenticatedParams = boolean | {userName: string}
 const SIDE_WIDTH_EXPANDED = 300
 const SIDE_WIDTH_COLLAPSED = 50
 
-const COLUMNS_COUNT_WHEN_SIDE_COLLAPSED = 4
-const COLUMNS_COUNT_WHEN_SIDE_EXPANDED = 3
-
 const ITEMS_COUNT_TO_QUERY = 18
 
 function toClientSideRepresentation(mediaDoc: IUserMediaItem): IClientMediaItem {
@@ -49,31 +46,65 @@ export class AppState {
     @observable
     media: IObservableArray<IClientMediaItem> = [] as IObservableArray<IClientMediaItem>
 
-    @action.bound
-    resetMedia() {
-        if (this.loadMoreHandler) {
-            this.loadMoreHandler.cancel()
-            this.isLoading = false
-            this.canLoadMore = true
-            this.loadMoreHandler = null
-        }
-        this.media.clear()
-    }
-
     @observable
     userName: string
 
-    @action.bound
-    setAuthenticated(params: ISetAuthenticatedParams) {
-        if (typeof params === 'object') {
-            this.userName = params.userName
-        } else {
-            this.userName = ''
-        }
-    }
-
     @observable
     selectedUUIDs: IObservableArray<string> = [] as IObservableArray<string>
+
+    @observable
+    sideExpanded: boolean = true
+
+    /**
+     * Hack. To be able to hook autorun after factual react render
+     */
+    @observable
+    layoutRerenderCount: number = 0
+
+    /**
+     * Load media items
+     */
+    @observable
+    isLoading: boolean = false
+
+    @observable
+    canLoadMore: boolean = true
+
+    /**
+     * Item id for zoomed view
+     */
+    @observable
+    zoomedItemId: string = null
+
+    /**
+     * Item which is hovered at the moment
+     */
+    @observable
+    hoveredId: string = null
+
+    @observable
+    viewportHeight: number
+
+    @observable
+    pageScrolled: number
+
+    @observable
+    mediaListFullHeight: number = 0
+
+    @observable
+    tags: Array<ITagItem> = []
+
+    @observable
+    uploadIsVisible = false
+
+    @observable
+    collections: Array<ICollectionItem> = []
+
+    @observable
+    currentlyViewedCollectionId = null
+
+    @observable
+    currentlyViewedCollection: ICollectionItem
 
     /**
      * Only which are loaded
@@ -90,6 +121,112 @@ export class AppState {
                 return itemUUID === uuid
             })
         })
+    }
+
+    @computed
+    get isAuthenticated() {
+        return !!this.userName
+    }
+
+    @computed
+    get layoutColumnsCount(): number {
+        if (!this.isAuthenticated) {
+            return 4
+        } else if (this.sideExpanded) {
+            return 3
+        } else {
+            return 4
+        }
+    }
+
+    @computed
+    get sideWidth() {
+        if (!this.isAuthenticated) {
+            return 0
+        } else if (this.sideExpanded) {
+            return SIDE_WIDTH_EXPANDED
+        } else {
+            return SIDE_WIDTH_COLLAPSED
+        }
+    }
+
+    @computed
+    get loadedItemsCount() {
+        return this.media.length
+    }
+
+    @computed
+    get filters() {
+        return {
+            tags: this.router.queryParams.tags || []
+        }
+    }
+
+    @computed
+    get zoomedItem() {
+        const zoomedIndex = this.media.findIndex((item) => item.uuid === this.zoomedItemId)
+        return this.media[zoomedIndex]
+    }
+
+    /**
+     * One item that currently has focus
+     * Focus will be assigned on hover
+     * Zoomed item is also a focused item
+     */
+    @computed
+    get focusedId(): null | string {
+        const focusedItem = this.media.find((item) => item.focused)
+        if (!focusedItem) {
+            return null
+        }
+        return focusedItem.uuid
+    }
+
+    @computed
+    get selectedItemsTags() {
+        let tagsSet: Set<string> = this.media
+            .slice()
+            .filter((mediaItem) => {
+                return this.selectedUUIDs.indexOf(mediaItem.uuid) !== -1
+            })
+            .map((mediaItem) => {
+                return mediaItem.tags
+            })
+            .reduce((resSet, tagsArr) => {
+                tagsArr.forEach((tag) => resSet.add(tag))
+                return resSet
+            }, new Set<string>())
+        let tagsArr = [...tagsSet]
+        tagsArr.sort()
+        return tagsArr
+    }
+
+    @computed
+    get currentCollectionUrl(): string | null {
+        const [dispatch, collectionUrl] = this.router.pathSegments
+        return collectionUrl || null
+    }
+
+    @action.bound
+    resetMedia() {
+        if (this.loadMoreHandler) {
+            this.loadMoreHandler.cancel()
+            this.isLoading = false
+            this.loadMoreHandler = null
+        }
+        this.canLoadMore = true
+        this.media.clear()
+    }
+
+    @action.bound
+    setAuthenticated(params: ISetAuthenticatedParams) {
+        if (typeof params === 'object') {
+            this.userName = params.userName
+        } else {
+            this.userName = ''
+        }
+        // New login means that
+        this.resetMedia()
     }
 
     @action.bound
@@ -117,62 +254,17 @@ export class AppState {
         })
     }
 
-    @computed
-    get isAuthenticated() {
-        return !!this.userName
-    }
-
-    @computed
-    get columnsCount() {
-        if (this.sideExpanded) {
-            return COLUMNS_COUNT_WHEN_SIDE_EXPANDED
-        } else {
-            return COLUMNS_COUNT_WHEN_SIDE_COLLAPSED
-        }
-    }
-
-    @computed
-    get sideWidth() {
-        if (this.sideExpanded) {
-            return SIDE_WIDTH_EXPANDED
-        } else {
-            return SIDE_WIDTH_COLLAPSED
-        }
-    }
-
-    @observable
-    sideExpanded: boolean = true
-
     @action.bound
     toggleSide() {
         this.sideExpanded = !this.sideExpanded
     }
-
-    /**
-     * Hack. To be able to hook autorun after factual react render
-     */
-    @observable
-    layoutRerenderCount: number = 0
 
     @action.bound
     incLayoutRerenderCount() {
         this.layoutRerenderCount += 1
     }
 
-    /**
-     * Load media items
-     */
-    @observable
-    isLoading: boolean = false
-
-    @observable
-    canLoadMore: boolean = true
-
-    @computed
-    get loadedItemsCount() {
-        return this.media.length
-    }
-
+    loadMoreHandler: IFetchMediaHandler
     @action.bound
     async loadMore() {
         try {
@@ -200,15 +292,6 @@ export class AppState {
         }
     }
 
-    loadMoreHandler: IFetchMediaHandler
-
-    @computed
-    get filters() {
-        return {
-            tags: this.router.queryParams.tags || []
-        }
-    }
-
     @action.bound
     processLoadResponse(response: IMediaResponse) {
         const {success, items, hasMore} = response
@@ -218,22 +301,10 @@ export class AppState {
             }
             this.canLoadMore = hasMore
         } else {
-            this.canLoadMore = true
+            this.canLoadMore = false
             alert(`Failed to load media items`)
         }
         this.isLoading = false
-    }
-
-    /**
-     * Item id for zoomed view
-     */
-    @observable
-    zoomedItemId: string = null
-
-    @computed
-    get zoomedItem() {
-        const zoomedIndex = this.media.findIndex((item) => item.uuid === this.zoomedItemId)
-        return this.media[zoomedIndex]
     }
 
     @action.bound
@@ -262,31 +333,12 @@ export class AppState {
         }
     }
 
-    /**
-     * Item which is hovered at the moment
-     */
-    @observable
-    hoveredId: string = null
     @action.bound
     setHoveredId(id) {
         if (!this.zoomedItemId) {
             this.setFocused(id)
         }
         this.hoveredId = id
-    }
-
-    /**
-     * One item that currently has focus
-     * Focus will be assigned on hover
-     * Zoomed item is also a focused item
-     */
-    @computed
-    get focusedId(): null | string {
-        const focusedItem = this.media.find((item) => item.focused)
-        if (!focusedItem) {
-            return null
-        }
-        return focusedItem.uuid
     }
 
     @action.bound
@@ -296,29 +348,20 @@ export class AppState {
         })
     }
 
-    @observable
-    viewportHeight: number
     @action.bound
     updateViewPortHeight() {
         this.viewportHeight = window.innerHeight
     }
 
-    @observable
-    pageScrolled: number
     @action.bound
     calcPageScrolled() {
         this.pageScrolled = document.body.scrollTop
     }
 
-    @observable
-    mediaListFullHeight: number = 0
     @action.bound
     setMediaListFullHeight(newValue: number) {
         this.mediaListFullHeight = newValue
     }
-
-    @observable
-    tags: Array<ITagItem> = []
 
     @action.bound
     setTags(newTags: Array<ITagItem>): void {
@@ -345,24 +388,20 @@ export class AppState {
     }
 
     async refreshTags() {
-        try {
-            let currentlyViewedCollectionId = this.currentlyViewedCollection && this.currentlyViewedCollection._id
-            let params = {}
-            if (currentlyViewedCollectionId) {
-                params = {
-                    collectionId: currentlyViewedCollectionId
-                }
+        let currentlyViewedCollectionId = this.currentlyViewedCollection && this.currentlyViewedCollection._id
+        if (currentlyViewedCollectionId) {
+            let params = {
+                collectionId: currentlyViewedCollectionId
             }
-            let resp = await fetchTags(params)
-            this.setTags(resp.tags)
-            this.removeUnexistingUrlTag(resp.tags)
-        } catch (err) {
-            console.error(err)
+            try {
+                let resp = await fetchTags(params)
+                this.setTags(resp.tags)
+                this.removeUnexistingUrlTag(resp.tags)
+            } catch (err) {
+                console.error(err)
+            }
         }
     }
-
-    @observable
-    uploadIsVisible = false
 
     @action.bound
     toggleUploadVisibility(state?: boolean) {
@@ -371,25 +410,6 @@ export class AppState {
         } else {
             this.uploadIsVisible = state
         }
-    }
-
-    @computed
-    get selectedItemsTags() {
-        let tagsSet: Set<string> = this.media
-            .slice()
-            .filter((mediaItem) => {
-                return this.selectedUUIDs.indexOf(mediaItem.uuid) !== -1
-            })
-            .map((mediaItem) => {
-                return mediaItem.tags
-            })
-            .reduce((resSet, tagsArr) => {
-                tagsArr.forEach((tag) => resSet.add(tag))
-                return resSet
-            }, new Set<string>())
-        let tagsArr = [...tagsSet]
-        tagsArr.sort()
-        return tagsArr
     }
 
     @action.bound
@@ -449,9 +469,6 @@ export class AppState {
         })
     }
 
-    @observable
-    collections: Array<ICollectionItem> = []
-
     @action.bound
     async refreshCollectionsList() {
         const data = await getCollectionsList()
@@ -470,12 +487,6 @@ export class AppState {
         let success = await createCollection(collectionName)
         return success
     }
-
-    @observable
-    currentlyViewedCollectionId = null
-
-    @observable
-    currentlyViewedCollection: ICollectionItem
 
     @action.bound
     setCurrentlyViewedCollection(newVal: null | ICollectionItem) {

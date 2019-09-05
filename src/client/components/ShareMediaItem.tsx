@@ -35,7 +35,7 @@ export class ShareMediaItem extends React.Component<IProps & IAppState, IState> 
                     }}
                     title='Скопировать ссылку на медиа'
                 >
-                    {sharedIndividually ? 'Скопировать ссылку' : 'Расшарить'}
+                    {sharedIndividually ? 'Скопировать ссылку' : 'Поделиться'}
                 </button>
                 <button
                     disabled={!sharedIndividually}
@@ -45,7 +45,7 @@ export class ShareMediaItem extends React.Component<IProps & IAppState, IState> 
                     }}
                     title='Убрать медиа из публичного доступа'
                 >
-                    Отшарить обратно
+                    Закрыть доступ
                 </button>
             </div>
         )

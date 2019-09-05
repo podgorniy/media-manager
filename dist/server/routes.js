@@ -54,6 +54,8 @@ var delete_collection_1 = require("./controllers/delete-collection");
 var rename_collection_1 = require("./controllers/rename-collection");
 var share_media_1 = require("./controllers/share-media");
 var un_share_media_1 = require("./controllers/un-share-media");
+var share_collection_1 = require("./controllers/share-collection");
+var un_share_collection_1 = require("./controllers/un-share-collection");
 var passport = require('passport');
 // https://stackoverflow.com/a/47448486
 // declare global {
@@ -91,7 +93,7 @@ function initRoutes(app) {
     app.post('/api/v1/logout', logout_1.logout);
     app.post('/api/v1/upload', isAuthenticated, uploader_1.uploader.array('uploads'), upload_1.upload);
     app.get('/api/v1/check', isAuthenticated, check_1.check);
-    app.get('/api/v1/media', isAuthenticated, provide_media_1.provideMedia);
+    app.get('/api/v1/media', provide_media_1.provideMedia);
     app.get('/api/v1/tags', isAuthenticated, provide_tags_1.provideTags);
     app.post('/api/v1/add-tags', isAuthenticated, add_tags_1.addTags);
     app.patch('/api/v1/remove-tags', isAuthenticated, remove_tags_1.removeTags);
@@ -103,6 +105,8 @@ function initRoutes(app) {
     app.post('/api/v1/remove-from-collection', isAuthenticated, remove_from_collection_1.removeFromCollection);
     app.post('/api/v1/share-media', isAuthenticated, share_media_1.shareMedia);
     app.post('/api/v1/un-share-media', isAuthenticated, un_share_media_1.unShareMedia);
+    app.post('/api/v1/share-collection', isAuthenticated, share_collection_1.shareCollection);
+    app.post('/api/v1/un-share-collection', isAuthenticated, un_share_collection_1.unShareCollection);
     app.get('/m/:fileName', send_media_1.sendMedia);
     app.get('*', utils_1.asyncHandler(function (req, res) { return __awaiter(_this, void 0, void 0, function () {
         var appInitialState, _a, _b;

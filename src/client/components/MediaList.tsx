@@ -10,9 +10,11 @@ import {autorun} from 'mobx'
 const SHUFFLE_ANIMATION_DURATION = 250
 const SCREEN_FRAME_DURATION = 17
 
+interface IProps extends IAppState {}
+
 @inject('appState')
 @observer
-export class MediaList extends React.Component<{} & IAppState, {}> {
+export class MediaList extends React.Component<IProps, {}> {
     listRef = React.createRef<HTMLUListElement>()
     shuffle: Shuffle
     disposeLayoutWatcher: Disposer
@@ -66,7 +68,7 @@ export class MediaList extends React.Component<{} & IAppState, {}> {
 
     render() {
         const {appState} = this.props
-        const widthClass = 'media-items-columns-' + appState.columnsCount
+        const widthClass = 'media-items-columns-' + appState.layoutColumnsCount
         return (
             <ul ref={this.listRef} className={`media-items ${widthClass}`}>
                 {appState.media.map(({uuid}) => {

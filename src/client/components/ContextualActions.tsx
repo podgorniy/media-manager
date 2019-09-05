@@ -8,7 +8,7 @@ import {ToggleSelectionVisible} from './ToggleSelectionVisible'
 import {UploadBtn} from './UploadBtn'
 import {TagsControls} from './TagsControls'
 import {CollectionsControls} from './CollectionsControls'
-import {Collectionsss} from './Collectionsss'
+import {Collections} from './Collections'
 import {ShareMediaItem} from './ShareMediaItem'
 
 @inject('appState')
@@ -34,7 +34,7 @@ export class ContextualActions extends React.Component<{} & IAppState, {}> {
                 <TagsControls />
                 <ToggleSelectionVisible />
                 <TagsList />
-                <Collectionsss />
+                <Collections />
             </div>
         )
     }

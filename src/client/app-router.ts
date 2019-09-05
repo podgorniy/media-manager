@@ -1,17 +1,12 @@
 import {action, observable} from 'mobx'
 import {parse, stringify} from 'qs'
+import {getPathSegments} from '../common/lib'
 
 const equal = require('deep-equal')
 const urlParse = require('url-parse')
 import deepmerge = require('deepmerge')
 import traverse = require('traverse')
 import cloneDeep = require('clone-deep')
-
-function getPathSegments(path: string): Array<string> {
-    path = path.replace(/^\/*|\/*$/g, '')
-    path = path.replace(/\/{2,}/g, '/')
-    return path.split('/')
-}
 
 function isBrowser(): boolean {
     return typeof window !== 'undefined'
@@ -61,6 +56,7 @@ export class AppRouter {
                 return replaceState.apply(this, arguments)
             }
         }
+        // TODO: figure out why timeout
         setTimeout(() => {
             this.urlToState(initialUrl)
         })

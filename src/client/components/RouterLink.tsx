@@ -20,10 +20,10 @@ export class RouterLink extends React.Component<IProps & IAppState, IState> {
     }
 
     render() {
-        const {appState} = this.props
+        const {appState, url} = this.props
         return (
             <a
-                href={this.props.url}
+                href={url}
                 className={this.props.className ? this.props.className : ''}
                 onClick={(event) => {
                     event.preventDefault()

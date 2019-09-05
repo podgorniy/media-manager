@@ -19,6 +19,8 @@ import {deleteCollection} from './controllers/delete-collection'
 import {renameCollection} from './controllers/rename-collection'
 import {shareMedia} from './controllers/share-media'
 import {unShareMedia} from './controllers/un-share-media'
+import {shareCollection} from './controllers/share-collection'
+import {unShareCollection} from './controllers/un-share-collection'
 
 const passport = require('passport')
 
@@ -58,7 +60,7 @@ export function initRoutes(app: Express) {
     app.post('/api/v1/logout', logout)
     app.post('/api/v1/upload', isAuthenticated, uploader.array('uploads'), upload)
     app.get('/api/v1/check', isAuthenticated, check)
-    app.get('/api/v1/media', isAuthenticated, provideMedia)
+    app.get('/api/v1/media', provideMedia)
     app.get('/api/v1/tags', isAuthenticated, provideTags)
     app.post('/api/v1/add-tags', isAuthenticated, addTags)
     app.patch('/api/v1/remove-tags', isAuthenticated, removeTags)
@@ -70,6 +72,9 @@ export function initRoutes(app: Express) {
     app.post('/api/v1/remove-from-collection', isAuthenticated, removeFromCollection)
     app.post('/api/v1/share-media', isAuthenticated, shareMedia)
     app.post('/api/v1/un-share-media', isAuthenticated, unShareMedia)
+
+    app.post('/api/v1/share-collection', isAuthenticated, shareCollection)
+    app.post('/api/v1/un-share-collection', isAuthenticated, unShareCollection)
     app.get('/m/:fileName', sendMedia)
     app.get(
         '*',

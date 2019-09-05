@@ -5,9 +5,17 @@ const VIEW_PORTS_BELOW_SCREEN_TO_TRIGGER_LOADING = 1.5
 
 function initLoadingMoreService(appState: AppState) {
     autorun(function() {
-        const {viewportHeight, pageScrolled, mediaListFullHeight, isAuthenticated, canLoadMore, isLoading} = appState
+        const {
+            viewportHeight,
+            pageScrolled,
+            mediaListFullHeight,
+            isAuthenticated,
+            canLoadMore,
+            isLoading,
+            currentCollectionUrl
+        } = appState
         if (
-            isAuthenticated &&
+            (isAuthenticated || currentCollectionUrl) &&
             !isLoading &&
             canLoadMore &&
             mediaListFullHeight - pageScrolled - viewportHeight <

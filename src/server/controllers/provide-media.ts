@@ -16,25 +16,37 @@ export const provideMedia = asyncHandler(async (req, res) => {
         const queryLimitItems = normalizedCount > MAX_LIMIT ? MAX_LIMIT : normalizedCount
         const query: {
             tags?: object
-            owner: object
+            owner?: object
             _id?: object
             uuid?: object
-        } = {
-            owner: (req.user as IUserFields)._id
+        } = {}
+
+        if (req.isAuthenticated()) {
+            query.owner = (req.user as IUserFields)._id
         }
+
         if (tags && tags.length) {
             query.tags = {$all: tags}
         }
         if (collectionUri) {
-            let userCollection = await CollectionsModel.findOne({uri: collectionUri})
-            if (!userCollection) {
+            let matchingCollection = await CollectionsModel.findOne({uri: collectionUri})
+            if (!matchingCollection) {
                 res.send({
                     success: false,
                     items: []
                 })
+                return
+            }
+            // non public collections are visible by owners only
+            if (!matchingCollection.public && !req.isAuthenticated()) {
+                res.send({
+                    success: false,
+                    items: []
+                })
+                return
             }
             query.uuid = {
-                $in: userCollection.media
+                $in: matchingCollection.media
             }
         }
         const itemsCountForQuery = await MediaModel.find(query).count()

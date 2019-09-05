@@ -2,7 +2,8 @@ import * as React from 'react'
 import {inject, observer} from 'mobx-react'
 import {IAppState} from '../app-state'
 import {RouterLink} from './RouterLink'
-import {deleteCollection, renameCollection} from '../api'
+import {deleteCollection, renameCollection, shareCollection, unShareCollection} from '../api'
+import copy = require('copy-to-clipboard')
 
 interface IProps {}
 
@@ -13,7 +14,7 @@ interface IState {
 
 @inject('appState')
 @observer
-export class Collectionsss extends React.Component<IProps & IAppState, IState> {
+export class Collections extends React.Component<IProps & IAppState, IState> {
     constructor(props) {
         super(props)
         this.state = {
@@ -58,13 +59,17 @@ export class Collectionsss extends React.Component<IProps & IAppState, IState> {
                 </form>
                 <ul>
                     {appState.collections.map((collection) => {
-                        let collectionUrl = appState.router.getFullUrl({replace: {pathSegments: ['c', collection.uri]}})
-                        let isActiveCollection = false
-                        if (appState.router.pathSegments.length >= 2) {
-                            isActiveCollection = appState.router.pathSegments[1] === collection.uri
-                            if (isActiveCollection) {
-                                collectionUrl = appState.router.getFullUrl({replace: {pathSegments: []}})
-                            }
+                        const collectionUrl = appState.router.getFullUrl({
+                            replace: {pathSegments: ['c', collection.uri]}
+                        })
+                        let collectionLinkUrl
+                        let isActiveCollection =
+                            appState.router.pathSegments.length >= 2 &&
+                            appState.router.pathSegments[1] === collection.uri
+                        if (isActiveCollection) {
+                            collectionLinkUrl = appState.router.getFullUrl({replace: {pathSegments: []}})
+                        } else {
+                            collectionLinkUrl = collectionUrl
                         }
                         return (
                             <li key={collection.uri}>
@@ -97,7 +102,25 @@ export class Collectionsss extends React.Component<IProps & IAppState, IState> {
                                 >
                                     Переименовать
                                 </button>
-                                <RouterLink url={collectionUrl} className={isActiveCollection ? 'remove' : 'with'}>
+                                <button
+                                    onClick={async () => {
+                                        copy(collectionUrl)
+                                        await shareCollection({id: collection._id})
+                                        appState.refreshCollectionsList()
+                                    }}
+                                >
+                                    {collection.public ? 'Скопировать ссылку' : 'Поделиться'}
+                                </button>
+                                <button
+                                    disabled={!collection.public}
+                                    onClick={async () => {
+                                        await unShareCollection({id: collection._id})
+                                        appState.refreshCollectionsList()
+                                    }}
+                                >
+                                    Закрыть доступ
+                                </button>
+                                <RouterLink url={collectionLinkUrl} className={isActiveCollection ? 'remove' : 'with'}>
                                     {collection.title}
                                 </RouterLink>
                             </li>
