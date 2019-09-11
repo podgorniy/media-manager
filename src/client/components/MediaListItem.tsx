@@ -56,9 +56,9 @@ export class MediaListItem extends React.Component<IMediaListItemProps & IAppSta
         const {appState, uuid, onLoad} = this.props
         const {selectedUUIDs} = appState
         const mediaItem = appState.media.find((item) => item.uuid === uuid)
-        const {url, focused, type} = mediaItem
+        const {url, focused, type, width, height} = mediaItem
+        const aspectPadding = height / width * 100
         const selected = selectedUUIDs.indexOf(uuid) !== -1
-
         return (
             <div
                 ref={this.ref}
@@ -76,25 +76,30 @@ export class MediaListItem extends React.Component<IMediaListItemProps & IAppSta
                                 ${focused ? 'focused' : ''}
                             `}
                 >
-                    {type === 'img' && (
-                        <img
-                            onClick={this.clickHandler}
-                            src={url}
-                            className={`MediaListItem`}
-                            alt={uuid}
-                            onLoad={onLoad}
-                        />
-                    )}
+                    <div className='MediaListItem__aspect' style={{paddingBottom: aspectPadding + '%'}}>
+                        <div className='MediaListItem__aspect_inner'>
+                            {type === 'img' && (
+                                <img
+                                    onClick={this.clickHandler}
+                                    src={url}
+                                    className={`MediaListItem`}
+                                    alt={uuid}
+                                    onLoad={onLoad}
+                                />
+                            )}
 
-                    {type === 'video' && (
-                        <video
-                            controls
-                            onClick={this.clickHandler}
-                            src={url}
-                            className={`MediaListItem`}
-                            onLoad={onLoad}
-                        />
-                    )}
+                            {type === 'video' && (
+                                <video
+                                    controls
+                                    onClick={this.clickHandler}
+                                    src={url}
+                                    className={`MediaListItem`}
+                                    onLoad={onLoad}
+                                    width='100%'
+                                />
+                            )}
+                        </div>
+                    </div>
                 </div>
             </div>
         )

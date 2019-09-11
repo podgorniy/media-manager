@@ -47,6 +47,9 @@ var utils_1 = require("../utils");
 var media_1 = require("../media");
 var path = __importStar(require("path"));
 var mime_1 = require("mime");
+var sizeOf = require("image-size");
+var fluent_ffmpeg_1 = require("fluent-ffmpeg");
+var util_1 = require("util");
 var md5file = require('md5-file/promise');
 var uuidv4 = require('uuid/v4');
 var fs = require('fs-extra');
@@ -69,18 +72,18 @@ function getTags(extension) {
 // Returns mongo doc of corresponding file
 function registerFile(sourcePath, ownerId) {
     return __awaiter(this, void 0, void 0, function () {
-        var md5, sameFileForCurrentUser, uuid, fileExtensionWithDot, fileMimeType, fileType, extension, fileName, fileTargetPath, tags, docObj, res;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
+        var md5, sameFileForCurrentUser, uuid, fileExtensionWithDot, fileMimeType, fileType, extension, fileName, fileTargetPath, mediaSize, size, videoMetaInfo, _a, width, height, tags, docObj, res;
+        return __generator(this, function (_b) {
+            switch (_b.label) {
                 case 0: return [4 /*yield*/, md5file(sourcePath)];
                 case 1:
-                    md5 = _a.sent();
+                    md5 = _b.sent();
                     return [4 /*yield*/, media_1.MediaModel.findOne({
                             owner: ownerId,
                             md5: md5
                         })];
                 case 2:
-                    sameFileForCurrentUser = _a.sent();
+                    sameFileForCurrentUser = _b.sent();
                     if (sameFileForCurrentUser) {
                         return [2 /*return*/, sameFileForCurrentUser];
                     }
@@ -92,9 +95,27 @@ function registerFile(sourcePath, ownerId) {
                     extension = mime_1.getExtension(fileMimeType);
                     fileName = uuid + fileExtensionWithDot;
                     fileTargetPath = utils_1.filePathForPersistence(fileName);
-                    return [4 /*yield*/, fs.copy(sourcePath, fileTargetPath)];
+                    mediaSize = {
+                        width: 0,
+                        height: 0
+                    };
+                    if (!(fileType === 'img')) return [3 /*break*/, 3];
+                    size = sizeOf(sourcePath);
+                    mediaSize.width = size.width;
+                    mediaSize.height = size.height;
+                    return [3 /*break*/, 5];
                 case 3:
-                    _a.sent();
+                    if (!(fileType === 'video')) return [3 /*break*/, 5];
+                    return [4 /*yield*/, util_1.promisify(fluent_ffmpeg_1.ffprobe)(sourcePath)];
+                case 4:
+                    videoMetaInfo = _b.sent();
+                    _a = videoMetaInfo.streams[0], width = _a.width, height = _a.height;
+                    mediaSize.width = width;
+                    mediaSize.height = height;
+                    _b.label = 5;
+                case 5: return [4 /*yield*/, fs.copy(sourcePath, fileTargetPath)];
+                case 6:
+                    _b.sent();
                     tags = getTags(extension);
                     docObj = {
                         owner: ownerId,
@@ -103,12 +124,14 @@ function registerFile(sourcePath, ownerId) {
                         md5: md5,
                         type: fileType,
                         tags: tags,
-                        sharedIndividually: false
+                        sharedIndividually: false,
+                        width: mediaSize.width,
+                        height: mediaSize.height
                     };
                     res = new media_1.MediaModel(docObj);
                     return [4 /*yield*/, res.save()];
-                case 4:
-                    _a.sent();
+                case 7:
+                    _b.sent();
                     return [2 /*return*/, res];
             }
         });

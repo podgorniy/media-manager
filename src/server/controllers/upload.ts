@@ -3,6 +3,9 @@ import {IMediaDoc, MediaModel} from '../media'
 import * as path from 'path'
 import {getExtension, getType} from 'mime'
 import {MediaType} from '../../common/interfaces'
+import sizeOf = require('image-size')
+import {ffprobe} from 'fluent-ffmpeg'
+import {promisify} from 'util'
 
 const md5file = require('md5-file/promise')
 const uuidv4 = require('uuid/v4')
@@ -44,6 +47,22 @@ async function registerFile(sourcePath: string, ownerId: string) {
     const extension = getExtension(fileMimeType)
     const fileName = uuid + fileExtensionWithDot
     const fileTargetPath = filePathForPersistence(fileName)
+    let mediaSize: {width: number; height: number} = {
+        width: 0,
+        height: 0
+    }
+    if (fileType === 'img') {
+        const size = sizeOf(sourcePath)
+        mediaSize.width = size.width
+        mediaSize.height = size.height
+    } else if (fileType === 'video') {
+        // @ts-ignore
+        const videoMetaInfo = await promisify(ffprobe)(sourcePath)
+        const {width, height} = videoMetaInfo.streams[0]
+        mediaSize.width = width
+        mediaSize.height = height
+    }
+
     await fs.copy(sourcePath, fileTargetPath)
     const tags = getTags(extension)
     const docObj: IMediaDoc = {
@@ -53,7 +72,9 @@ async function registerFile(sourcePath: string, ownerId: string) {
         md5: md5,
         type: fileType,
         tags: tags,
-        sharedIndividually: false
+        sharedIndividually: false,
+        width: mediaSize.width,
+        height: mediaSize.height
     }
     const res = new MediaModel(docObj)
     await res.save()

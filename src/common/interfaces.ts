@@ -9,6 +9,8 @@ export interface IUserMediaItem {
     uuid: string
     type: MediaType
     sharedIndividually: boolean
+    width: number
+    height: number
 }
 
 export interface IAppInitialState {
