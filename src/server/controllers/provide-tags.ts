@@ -6,7 +6,7 @@ import {CollectionsModel} from '../collection'
 export const provideTags = asyncHandler(async (req, res) => {
     try {
         const {collectionId} = req.query
-        let tagsSet = new Set()
+        let tagsSet = new Set<string>()
         let queryMedia = {
             owner: req.user._id
         }
@@ -31,7 +31,7 @@ export const provideTags = asyncHandler(async (req, res) => {
         let tagsArr = Array.from(tagsSet)
         tagsArr.sort()
         let responseData: Array<ITagsListItem>
-        responseData = tagsArr.map((tagName) => {
+        responseData = tagsArr.map<ITagsListItem>((tagName) => {
             return {
                 name: tagName
             }

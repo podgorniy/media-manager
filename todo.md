@@ -4,5 +4,6 @@ Improve zoomed view
     close button
     transparent background
     disable scrolling while zoomed
+Localization
 uuid without dashes
 Link to reset collections/filters selection
