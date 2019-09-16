@@ -5,6 +5,7 @@ import {Provider} from 'mobx-react'
 import {Layout} from './Layout'
 
 require('./App.css')
+import 'semantic-ui-css/semantic.min.css'
 
 export function initApp(appState: AppState): FunctionComponent<{}> {
     return function() {

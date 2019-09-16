@@ -14,8 +14,8 @@
     "_watch-server-views": "sync-files --watch ./src/server-views ./.dev/server-views",
     "_build-server": "tsc --project ./src/server/tsconfig.json",
     "_watch-server": "tsc --watch --project ./src/server/tsconfig.dev.json",
-    "_build-client": "parcel build --no-source-maps ./src/client/client.tsx --out-dir ./dist/static/client",
-    "_watch-client": "parcel watch --cache-dir ./.dev/.cache ./src/client/client.tsx --out-dir ./.dev/static/client --public-url ./",
+    "_build-client": "parcel build --no-source-maps ./src/client/client.tsx --out-dir ./dist/static/client  --public-url /client/",
+    "_watch-client": "parcel watch --cache-dir ./.dev/.cache ./src/client/client.tsx --out-dir ./.dev/static/client --public-url /client/",
     "_watch-server-run": "nodemon -w ./.dev/server -w ./.dev/server-views ./.dev/server/index.js"
   },
   "license": "MIT",
@@ -83,6 +83,8 @@
     "prettier": "^1.18.2",
     "react": "^16.9.0",
     "react-dom": "^16.9.0",
+    "semantic-ui-css": "^2.4.1",
+    "semantic-ui-react": "^0.88.1",
     "shufflejs": "^5.2.3",
     "sync-files": "git+ssh://git@github.com/podgorniy/node-sync-files.git#v1.0.5",
     "typescript": "^3.6.3"

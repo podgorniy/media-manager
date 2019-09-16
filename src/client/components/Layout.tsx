@@ -4,7 +4,7 @@ import {inject, observer} from 'mobx-react'
 import {IAppState} from '../app-state'
 import {DragNDropUpload} from './DragNDropUpload'
 import {ContextualActions} from './ContextualActions'
-import {ZoomedView} from './ZoomedView'
+import {Zoom} from './Zoom'
 import {IsLoading} from './IsLoading'
 import {LogoutBtn} from './LogoutBtn'
 import {LoginForm} from './LoginForm'
@@ -27,7 +27,7 @@ export class Layout extends React.Component<{} & IAppState, {}> {
         this.notifyAboutRender()
     }
 
-    componentWillMount(): void {
+    componentDidMount(): void {
         this.notifyAboutRender()
     }
 
@@ -65,14 +65,14 @@ export class Layout extends React.Component<{} & IAppState, {}> {
                             </div>
                         </div>
                         <DragNDropUpload />
-                        {<ZoomedView />}
+                        {<Zoom />}
                     </>
                 ) : collectionUrl ? (
                     <div>
                         {appState.currentlyViewedCollectionId}
                         {appState.currentlyViewedCollection}
                         <MediaList />
-                        {<ZoomedView />}
+                        {<Zoom />}
                     </div>
                 ) : null}
             </div>

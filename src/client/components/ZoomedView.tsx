@@ -1,14 +1,45 @@
 import * as React from 'react'
 import {inject, observer} from 'mobx-react'
 import {IAppState} from '../app-state'
+import {Icon} from 'semantic-ui-react'
+import {autorun} from 'mobx'
 
 require('./ZoomedView.css')
 
+interface IZoomedView {
+    scale: number
+    currentShiftLeft: number
+    currentShiftTop: number
+    startMoveX: number
+    startMoveY: number
+    startMoveShiftLeft: number
+    startMoveShiftTop: number
+    moving: boolean
+}
+
+interface IZoomedViewProps {}
+
+const FITTING_RATIO = 0.85
+
 @inject('appState')
 @observer
-export class ZoomedView extends React.Component<{} & IAppState, {}> {
+export class ZoomedView extends React.Component<IZoomedViewProps & IAppState, IZoomedView> {
+    componentRootRef = React.createRef<HTMLDivElement>()
+    innerWrapperRef = React.createRef<HTMLDivElement>()
+    stopWatching
+
     constructor(props) {
         super(props)
+        this.state = {
+            scale: 0,
+            currentShiftLeft: 0,
+            currentShiftTop: 0,
+            startMoveShiftLeft: 0,
+            startMoveShiftTop: 0,
+            startMoveX: 0,
+            startMoveY: 0,
+            moving: false
+        }
     }
 
     keyDown = (event) => {
@@ -16,13 +47,7 @@ export class ZoomedView extends React.Component<{} & IAppState, {}> {
         if (event.code === 'Space') {
             // In zoomed view. Exit zoomed view
             if (appState.zoomedItemId) {
-                appState.setZoomed(null)
-                event.preventDefault()
-                return
-            }
-            // Some element is focused
-            if (appState.focusedId) {
-                appState.setZoomed(appState.focusedId)
+                this.close()
                 event.preventDefault()
                 return
             }
@@ -41,27 +66,105 @@ export class ZoomedView extends React.Component<{} & IAppState, {}> {
         }
     }
 
+    mousedown = (e) => {
+        e.preventDefault()
+        const {screenX, screenY} = e
+        this.setState({
+            ...this.state,
+            startMoveY: screenY,
+            startMoveX: screenX,
+            moving: true,
+            startMoveShiftTop: this.state.currentShiftTop,
+            startMoveShiftLeft: this.state.currentShiftLeft
+        })
+        document.documentElement.addEventListener('mousemove', this.mousemove)
+        document.documentElement.addEventListener('mouseup', this.mouseup)
+    }
+
+    mousemove = (e) => {
+        e.preventDefault()
+        const {screenX, screenY} = e
+        const {startMoveX, startMoveY} = this.state
+        this.setState({
+            ...this.state,
+            currentShiftLeft: this.state.startMoveShiftLeft - (startMoveX - screenX),
+            currentShiftTop: this.state.startMoveShiftTop - (startMoveY - screenY)
+        })
+    }
+
+    mouseup = () => {
+        document.documentElement.removeEventListener('mousemove', this.mousemove)
+        this.setState({
+            ...this.state,
+            startMoveY: 0,
+            startMoveX: 0,
+            moving: false
+        })
+    }
+
+    resize = () => {
+        this.fitIntoView()
+    }
+
+    getFittingRatio = (): number => {
+        const {appState} = this.props
+        const {zoomedItem} = appState
+        const {width, height} = zoomedItem
+        const currentWrapperNodeRef = this.componentRootRef.current
+        const viewWidth = currentWrapperNodeRef.offsetWidth
+        const viewHeight = currentWrapperNodeRef.offsetHeight
+        const viewMaxWidth = viewWidth * FITTING_RATIO
+        const viewMaxHeight = viewHeight * FITTING_RATIO
+
+        if (width <= viewMaxWidth && height < viewMaxHeight) {
+            return 1
+        } else {
+            const scaleWidth = viewMaxWidth / width
+            const scaleHeight = viewMaxHeight / height
+            return Math.min(scaleWidth, scaleHeight)
+        }
+    }
+
+    fitIntoView = () => {
+        this.setState({...this.state, scale: this.getFittingRatio()})
+    }
+
     viewNext() {
         const {appState} = this.props
-        if (appState.zoomedItemId) {
-            appState.shiftZoomed(1)
-        }
+        appState.shiftZoomed(1)
+        this.fitIntoView()
     }
+
     viewPrev() {
         const {appState} = this.props
-        if (appState.zoomedItemId) {
-            appState.shiftZoomed(-1)
-        }
+        appState.shiftZoomed(-1)
+        this.fitIntoView()
     }
 
-    componentDidMount(): void {
+    componentDidMount() {
         document.documentElement.addEventListener('keydown', this.keyDown)
         document.documentElement.addEventListener('keyup', this.keyup)
+        this.innerWrapperRef.current.addEventListener('mousedown', this.mousedown)
+        window.addEventListener('resize', this.resize)
+        this.stopWatching = autorun(() => {
+            // sideWidth is required to react to change of this value
+            // when component is dismounted there is not zoomedItem, but callback is called.
+            // So check for zoomed item existence
+            const {sideWidth, zoomedItem} = this.props.appState
+            if (zoomedItem) {
+                this.fitIntoView()
+            }
+        })
     }
 
-    componentWillUnmount(): void {
+    componentWillUnmount() {
         document.documentElement.removeEventListener('keydown', this.keyDown)
         document.documentElement.removeEventListener('keyup', this.keyup)
+        this.innerWrapperRef.current.removeEventListener('mousedown', this.mousedown)
+        document.documentElement.removeEventListener('mouseup', this.mouseup)
+        document.documentElement.removeEventListener('mousemove', this.mousemove)
+        window.removeEventListener('resize', this.resize)
+        this.stopWatching()
     }
 
     close() {
@@ -70,48 +173,62 @@ export class ZoomedView extends React.Component<{} & IAppState, {}> {
 
     render() {
         const {appState} = this.props
-        const {zoomedItem} = appState
-        let type
-        let url
-        if (zoomedItem) {
-            type = zoomedItem.type
-            url = zoomedItem.url
-        }
+        const {zoomedItem, sideWidth} = appState
+        const {type, url} = zoomedItem
+        const {currentShiftLeft, currentShiftTop} = this.state
+        const transformString = `translate(${currentShiftLeft}px, ${currentShiftTop}px) scale(${this.state.scale})`
         return (
-            appState.zoomedItemId && (
+            <div
+                className={`ZoomedView ${this.state.moving ? 'ZoomedView--move-cursor' : ''}`}
+                style={{
+                    left: sideWidth + 'px'
+                }}
+                ref={this.componentRootRef}
+            >
+                <div className='ZoomedView__media-wrapper-outer'>
+                    <div
+                        className='ZoomedView__media-wrapper-inner'
+                        style={{
+                            transform: transformString
+                        }}
+                        ref={this.innerWrapperRef}
+                    >
+                        {zoomedItem
+                            ? type === 'img' && <img className='ZoomedView__container ZoomedView__img' src={url} />
+                            : null}
+                        {zoomedItem
+                            ? type === 'video' && (
+                                  <video controls className='ZoomedView__container ZoomedView__video' src={url} />
+                              )
+                            : null}
+                    </div>
+                </div>
+
                 <div
-                    className='ZoomedView'
-                    style={{
-                        left: appState.sideWidth + 'px'
+                    className='ZoomedView__control-prev'
+                    onClick={() => {
+                        this.viewPrev()
                     }}
                 >
-                    <h1>This is zoomed view</h1>
-                    <h1>{appState.zoomedItemId}</h1>
-                    <div
-                        onClick={() => {
-                            this.viewNext()
-                        }}
-                    >
-                        next
-                    </div>
-                    <div
-                        onClick={() => {
-                            this.viewPrev()
-                        }}
-                    >
-                        prev
-                    </div>
-                    {zoomedItem
-                        ? type === 'img' && <img className='ZoomedView__container ZoomedView__img' src={url} />
-                        : null}
-                    {zoomedItem
-                        ? type === 'video' && (
-                              <video controls className='ZoomedView__container ZoomedView__video' src={url} />
-                          )
-                        : null}
-                    <div />
+                    <Icon name='angle left' link color='grey' inverted size='huge' />
                 </div>
-            )
+                <div
+                    className='ZoomedView__control-next'
+                    onClick={() => {
+                        this.viewNext()
+                    }}
+                >
+                    <Icon name='angle right' link color='grey' inverted size='huge' />
+                </div>
+                <div
+                    className='ZoomedView__control-exit'
+                    onClick={() => {
+                        this.close()
+                    }}
+                >
+                    <Icon name='close' link color='grey' inverted size='huge' />
+                </div>
+            </div>
         )
     }
 }
