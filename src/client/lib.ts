@@ -30,3 +30,23 @@ export function getLoadMoreQuery(appState: AppState) {
         skip: appState.loadedItemsCount
     }
 }
+
+export function throttle(fn, time) {
+    let lastTimeCall = 0
+    let planned = null
+    let lastCallArgs
+    return function() {
+        lastCallArgs = arguments
+        const now = Date.now()
+        if (now - lastTimeCall > time) {
+            lastTimeCall = now
+            fn.apply(this, lastCallArgs)
+        } else if (!planned) {
+            planned = setTimeout(() => {
+                planned = null
+                lastTimeCall = Date.now()
+                fn.apply(this, lastCallArgs)
+            }, time)
+        }
+    }
+}

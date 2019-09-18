@@ -1,6 +1,10 @@
+.disable-scroll {
+    overflow: hidden;
+}
+
 .ZoomedView {
     transition: margin-left 2s ease 0ms, margin-right 2s ease,
-    margin-top 2s ease, margin-bottom 2s ease;
+        margin-top 2s ease, margin-bottom 2s ease;
     background: rgba(0, 0, 0, 0.9);
     position: fixed;
     top: 0;

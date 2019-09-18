@@ -3,6 +3,7 @@ import {inject, observer} from 'mobx-react'
 import {IAppState} from '../app-state'
 import {Icon} from 'semantic-ui-react'
 import {autorun} from 'mobx'
+import {throttle} from '../lib'
 
 require('./ZoomedView.css')
 
@@ -142,6 +143,7 @@ export class ZoomedView extends React.Component<IZoomedViewProps & IAppState, IZ
     }
 
     componentDidMount() {
+        document.body.classList.add('disable-scroll')
         document.documentElement.addEventListener('keydown', this.keyDown)
         document.documentElement.addEventListener('keyup', this.keyup)
         this.innerWrapperRef.current.addEventListener('mousedown', this.mousedown)
@@ -159,6 +161,7 @@ export class ZoomedView extends React.Component<IZoomedViewProps & IAppState, IZ
     }
 
     componentWillUnmount() {
+        document.body.classList.remove('disable-scroll')
         document.documentElement.removeEventListener('keydown', this.keyDown)
         document.documentElement.removeEventListener('keyup', this.keyup)
         this.innerWrapperRef.current.removeEventListener('mousedown', this.mousedown)
@@ -190,6 +193,18 @@ export class ZoomedView extends React.Component<IZoomedViewProps & IAppState, IZ
                         this.close()
                     }
                 }}
+                onWheel={throttle((event) => {
+                    const currentScale = this.state.scale
+                    const stepValue = (currentScale / 100) * 6
+                    const step = event.deltaY > 0 ? -stepValue : stepValue
+                    let nextScale = currentScale + step
+                    if (nextScale <= 0) {
+                        nextScale = 0.01
+                    } else if (nextScale > 5) {
+                        nextScale = 5
+                    }
+                    this.setState({...this.state, scale: nextScale})
+                }, 16)}
             >
                 <div className='ZoomedView__media-wrapper-outer js-overlay'>
                     <div
