@@ -14,7 +14,7 @@ interface IZoomedView {
     startMoveY: number
     startMoveShiftLeft: number
     startMoveShiftTop: number
-    moving: boolean
+    dragging: boolean
 }
 
 interface IZoomedViewProps {}
@@ -38,7 +38,7 @@ export class ZoomedView extends React.Component<IZoomedViewProps & IAppState, IZ
             startMoveShiftTop: 0,
             startMoveX: 0,
             startMoveY: 0,
-            moving: false
+            dragging: false
         }
     }
 
@@ -73,7 +73,7 @@ export class ZoomedView extends React.Component<IZoomedViewProps & IAppState, IZ
             ...this.state,
             startMoveY: screenY,
             startMoveX: screenX,
-            moving: true,
+            dragging: true,
             startMoveShiftTop: this.state.currentShiftTop,
             startMoveShiftLeft: this.state.currentShiftLeft
         })
@@ -98,7 +98,7 @@ export class ZoomedView extends React.Component<IZoomedViewProps & IAppState, IZ
             ...this.state,
             startMoveY: 0,
             startMoveX: 0,
-            moving: false
+            dragging: false
         })
     }
 
@@ -152,7 +152,8 @@ export class ZoomedView extends React.Component<IZoomedViewProps & IAppState, IZ
             // So check for zoomed item existence
             const {sideWidth, zoomedItem} = this.props.appState
             if (zoomedItem) {
-                this.fitIntoView()
+                // Wait for components to render after sideWidth change so fitIntoView uses relevant value
+                setTimeout(this.fitIntoView, 0)
             }
         })
     }
@@ -179,13 +180,18 @@ export class ZoomedView extends React.Component<IZoomedViewProps & IAppState, IZ
         const transformString = `translate(${currentShiftLeft}px, ${currentShiftTop}px) scale(${this.state.scale})`
         return (
             <div
-                className={`ZoomedView ${this.state.moving ? 'ZoomedView--move-cursor' : ''}`}
+                className={`ZoomedView ${this.state.dragging ? 'ZoomedView--move-cursor' : ''}`}
                 style={{
                     left: sideWidth + 'px'
                 }}
                 ref={this.componentRootRef}
+                onClick={(event) => {
+                    if ((event.target as HTMLElement).classList.contains('js-overlay')) {
+                        this.close()
+                    }
+                }}
             >
-                <div className='ZoomedView__media-wrapper-outer'>
+                <div className='ZoomedView__media-wrapper-outer js-overlay'>
                     <div
                         className='ZoomedView__media-wrapper-inner'
                         style={{
