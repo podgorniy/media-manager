@@ -14,7 +14,6 @@ services:
         environment:
             - NODE_ENV=production
             - MONGO_URL=mongodb://mongodb/media-manager
-            - SESSION_SECRET
         networks:
             - webappnetwork
         depends_on:

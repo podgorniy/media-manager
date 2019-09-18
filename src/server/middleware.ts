@@ -1,7 +1,6 @@
 import * as express from 'express'
 import {Express} from 'express'
 import * as path from 'path'
-import {SESSION_SECRET} from './env'
 import {configurePassport} from './passport'
 import {isDev} from '../common/lib'
 import session = require('express-session')
@@ -22,7 +21,9 @@ export function initMiddleware(app: Express) {
     })
     app.use(
         session({
-            secret: SESSION_SECRET,
+            // Session will persist on server restarts during development
+            // and will reset on every production restart
+            secret: isDev() ? '' : Math.random().toString(),
             store: new MongoStore({
                 mongooseConnection: mongoose.connection,
                 collection: 'sessions'

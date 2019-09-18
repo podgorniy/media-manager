@@ -9,7 +9,6 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var express = __importStar(require("express"));
 var path = __importStar(require("path"));
-var env_1 = require("./env");
 var passport_1 = require("./passport");
 var lib_1 = require("../common/lib");
 var session = require("express-session");
@@ -28,7 +27,9 @@ function initMiddleware(app) {
         }
     });
     app.use(session({
-        secret: env_1.SESSION_SECRET,
+        // Session will persist on server restarts during development
+        // and will reset on every production restart
+        secret: lib_1.isDev() ? '' : Math.random().toString(),
         store: new MongoStore({
             mongooseConnection: mongoose.connection,
             collection: 'sessions'

@@ -36,15 +36,6 @@ npm run dev
 
 ## Запуск в продакшене
 
-Папке, в которой запускается комманда, должна находиться папка `dist` с скомпилированными клиентом и сервером. `dist` получается в результате `npm run build`
-
 ```
-export SESSION_SECRET=123123 && docker-compose up -d
-```
-
-## Заметки
-
-Собрать образы без кеша, подтянуть образы без кеша
-```
-docker-compose build --no-cache --force-rm --pull
+npm run docker-prod
 ```
