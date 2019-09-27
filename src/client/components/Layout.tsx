@@ -6,8 +6,7 @@ import {DragNDropUpload} from './DragNDropUpload'
 import {ContextualActions} from './ContextualActions'
 import {Zoom} from './Zoom'
 import {IsLoading} from './IsLoading'
-import {LogoutBtn} from './LogoutBtn'
-import {LoginForm} from './LoginForm'
+import {Auth} from './Auth'
 
 require('./Navigation.less')
 require('./Layout.less')
@@ -34,48 +33,49 @@ export class Layout extends React.Component<{} & IAppState, {}> {
     render() {
         const {appState} = this.props
         const [_, collectionUrl] = appState.router.pathSegments
-        return (
-            <div className='layout'>
-                <div className='layout__navigation'>
-                    <div className='navigation'>
-                        <div className='navigation__items'>
-                            {appState.isAuthenticated ? <LogoutBtn /> : <LoginForm />}
+        let content
+        if (appState.isAuthenticated) {
+            content = (
+                <React.Fragment>
+                    <IsLoading />
+                    <div className='layout__content'>
+                        <div
+                            className='layout__side'
+                            style={{
+                                width: appState.sideWidth + 'px'
+                            }}
+                        >
+                            <ContextualActions />
+                        </div>
+                        <div
+                            className='layout__main'
+                            style={{
+                                marginLeft: appState.sideWidth + 'px'
+                            }}
+                        >
+                            <MediaList />
                         </div>
                     </div>
-                </div>
-                <IsLoading />
-                {appState.isAuthenticated ? (
-                    <>
-                        <div className='layout__content'>
-                            <div
-                                className='layout__side'
-                                style={{
-                                    width: appState.sideWidth + 'px'
-                                }}
-                            >
-                                <ContextualActions />
-                            </div>
-                            <div
-                                className='layout__main'
-                                style={{
-                                    marginLeft: appState.sideWidth + 'px'
-                                }}
-                            >
-                                <MediaList />
-                            </div>
-                        </div>
-                        <DragNDropUpload />
-                        {<Zoom />}
-                    </>
-                ) : collectionUrl ? (
+                    <DragNDropUpload />
+                    {<Zoom />}
+                </React.Fragment>
+            )
+        } else if (collectionUrl) {
+            content = (
+                <React.Fragment>
+                    <IsLoading />
                     <div>
                         {appState.currentlyViewedCollectionId}
                         {appState.currentlyViewedCollection}
                         <MediaList />
                         {<Zoom />}
                     </div>
-                ) : null}
-            </div>
-        )
+                </React.Fragment>
+            )
+        } else {
+            content = <Auth />
+        }
+
+        return <div className='layout'>{content}</div>
     }
 }

@@ -10,6 +10,7 @@ import {TagsControls} from './TagsControls'
 import {CollectionsControls} from './CollectionsControls'
 import {Collections} from './Collections'
 import {ShareMediaItem} from './ShareMediaItem'
+import {LogoutBtn} from './LogoutBtn'
 
 @inject('appState')
 @observer
@@ -28,6 +29,7 @@ export class ContextualActions extends React.Component<{} & IAppState, {}> {
             <div>
                 <ToggleSidebar />
                 <UploadBtn />
+                <LogoutBtn />
                 {itemForIndividualSharingControl && <ShareMediaItem mediaItem={itemForIndividualSharingControl} />}
                 <ToggleSelectionAll />
                 <CollectionsControls />
