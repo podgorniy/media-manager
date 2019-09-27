@@ -29,7 +29,7 @@ function initMiddleware(app) {
     app.use(session({
         // Session will persist on server restarts during development
         // and will reset on every production restart
-        secret: lib_1.isDev() ? '' : Math.random().toString(),
+        secret: lib_1.isDev() ? '123' : Math.random().toString(),
         store: new MongoStore({
             mongooseConnection: mongoose.connection,
             collection: 'sessions'
