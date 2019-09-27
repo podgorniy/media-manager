@@ -219,7 +219,12 @@ export class ZoomedView extends React.Component<IZoomedViewProps & IAppState, IZ
                             : null}
                         {zoomedItem
                             ? type === 'video' && (
-                                  <video controls className='ZoomedView__container ZoomedView__video' src={url} />
+                                  <video
+                                      autoPlay={true}
+                                      controls
+                                      className='ZoomedView__container ZoomedView__video'
+                                      src={url}
+                                  />
                               )
                             : null}
                     </div>

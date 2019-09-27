@@ -57,7 +57,7 @@ export class MediaListItem extends React.Component<IMediaListItemProps & IAppSta
         const {selectedUUIDs} = appState
         const mediaItem = appState.media.find((item) => item.uuid === uuid)
         const {url, focused, type, width, height} = mediaItem
-        const aspectPadding = height / width * 100
+        const aspectPadding = (height / width) * 100
         const selected = selectedUUIDs.indexOf(uuid) !== -1
         return (
             <div
