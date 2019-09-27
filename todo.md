@@ -1,10 +1,6 @@
-Improve zoomed view
-    animate on zooming and unsooming
-    zoom-in-out with mousewheel in zoomed view
-    close button
-    transparent background
-    disable scrolling while zoomed
-    keep keyboard shortcuts
+Show controls for zoomed media item
+Button to reset all selections/filters/collection
 Localization
-uuid without dashes
-Link to reset collections/filters selection
+Username and password as env variables
+Designs
+
