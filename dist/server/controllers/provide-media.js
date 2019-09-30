@@ -96,7 +96,10 @@ exports.provideMedia = utils_1.asyncHandler(function (req, res) { return __await
                 canProvideMoreItems = querySkipItems + queryLimitItems < itemsCountForQuery;
                 return [4 /*yield*/, media_1.MediaModel.find(query, null, {
                         skip: querySkipItems,
-                        limit: queryLimitItems
+                        limit: queryLimitItems,
+                        sort: {
+                            created: -1
+                        }
                     })];
             case 4:
                 userMediaItems = _b.sent();

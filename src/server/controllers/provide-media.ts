@@ -60,7 +60,10 @@ export const provideMedia = asyncHandler(async (req, res) => {
         const canProvideMoreItems = querySkipItems + queryLimitItems < itemsCountForQuery
         const userMediaItems = await MediaModel.find(query, null, {
             skip: querySkipItems,
-            limit: queryLimitItems
+            limit: queryLimitItems,
+            sort: {
+                created: -1
+            }
         })
         const respData: IMediaResponse = {
             items: userMediaItems.map(toApiRepresentation),

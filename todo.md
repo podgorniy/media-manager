@@ -3,5 +3,4 @@ Button to reset all selections/filters/collection
 Localization
 Username and password as env variables
 Designs
-Proper logout
-
+Shuffled view
