@@ -1,5 +1,5 @@
-import {asyncHandler} from '../utils'
-import {CollectionsModel} from '../collection'
+import { asyncHandler } from '../utils'
+import { CollectionsModel } from '../collection'
 
 export const addToCollection = asyncHandler(async (req, res) => {
     const {collectionId, items} = req.body

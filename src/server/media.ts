@@ -1,5 +1,5 @@
-import {Document, Model, model, Schema} from 'mongoose'
-import {IUserMediaItem, MediaType} from '../common/interfaces'
+import { Document, Model, model, Schema } from 'mongoose'
+import { IUserMediaItem, MediaType } from '../common/interfaces'
 
 export interface IMediaDoc {
     owner: string

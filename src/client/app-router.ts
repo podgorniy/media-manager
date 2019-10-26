@@ -1,6 +1,6 @@
-import {action, observable} from 'mobx'
-import {parse, stringify} from 'qs'
-import {getPathSegments} from '../common/lib'
+import { action, observable } from 'mobx'
+import { parse, stringify } from 'qs'
+import { getPathSegments } from '../common/lib'
 
 const equal = require('deep-equal')
 const urlParse = require('url-parse')

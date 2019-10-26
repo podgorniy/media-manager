@@ -1,9 +1,9 @@
 import * as React from 'react'
-import {FunctionComponent} from 'react'
-import {AppState} from '../app-state'
-import {Provider} from 'mobx-react'
-import {Layout} from './Layout'
-import 'semantic-ui-css/semantic.min.css'
+import { FunctionComponent } from 'react'
+import { AppState } from '../app-state'
+import { Provider } from 'mobx-react'
+import { Layout } from './Layout'
+
 
 require('./App.css')
 

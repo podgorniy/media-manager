@@ -1,6 +1,7 @@
 import * as React from 'react'
-import {inject, observer} from 'mobx-react'
-import {IAppState} from '../app-state'
+import { inject, observer } from 'mobx-react'
+import { IAppState } from '../app-state'
+import { Button } from 'semantic-ui-react'
 
 interface IProps {}
 interface IState {}
@@ -15,14 +16,16 @@ export class SelectAllLoaded extends React.Component<IProps & IAppState, IState>
     render() {
         const {appState} = this.props
         return (
-            <button
+            <Button
+                compact
+                size='small'
                 onClick={(event) => {
                     event.preventDefault()
                     appState.selectAllLoaded()
                 }}
             >
-                Выбрать все подгруженные
-            </button>
+                Select all loaded
+            </Button>
         )
     }
 }

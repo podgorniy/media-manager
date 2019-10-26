@@ -1,7 +1,7 @@
-import {asyncHandler, filePathForPersistence, getExtension, getName} from '../utils'
-import {getFileName, MediaModel} from '../media'
-import {CollectionsModel} from '../collection'
-import {getPathSegments} from '../../common/lib'
+import { asyncHandler, filePathForPersistence, getExtension, getName } from '../utils'
+import { getFileName, MediaModel } from '../media'
+import { CollectionsModel } from '../collection'
+import { getPathSegments } from '../../common/lib'
 
 const urlParse = require('url-parse')
 

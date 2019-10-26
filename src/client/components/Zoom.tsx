@@ -1,7 +1,7 @@
 import * as React from 'react'
-import {inject, observer} from 'mobx-react'
-import {IAppState} from '../app-state'
-import {ZoomedView} from './ZoomedView'
+import { inject, observer } from 'mobx-react'
+import { IAppState } from '../app-state'
+import { ZoomedView } from './ZoomedView'
 
 interface IZoom {
     scale: number

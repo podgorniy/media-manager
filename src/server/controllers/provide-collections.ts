@@ -1,5 +1,5 @@
-import {asyncHandler} from '../utils'
-import {CollectionsModel} from '../collection'
+import { asyncHandler } from '../utils'
+import { CollectionsModel } from '../collection'
 
 export const provideCollections = asyncHandler(async (req, res) => {
     if (!req.user._id) {

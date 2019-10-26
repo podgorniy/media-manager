@@ -1,5 +1,5 @@
-import {IMediaResponse, IProvideMediaParams, ITagsListItem} from '../common/interfaces'
-import {stringify} from 'qs'
+import { IMediaResponse, IProvideMediaParams, ITagsListItem } from '../common/interfaces'
+import { stringify } from 'qs'
 
 const axios = require('axios')
 

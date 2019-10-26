@@ -1,9 +1,9 @@
 import * as React from 'react'
-import {inject, observer} from 'mobx-react'
-import {IAppState} from '../app-state'
-import {Icon} from 'semantic-ui-react'
-import {autorun} from 'mobx'
-import {throttle} from '../lib'
+import { inject, observer } from 'mobx-react'
+import { IAppState } from '../app-state'
+import { Icon } from 'semantic-ui-react'
+import { autorun } from 'mobx'
+import { throttle } from '../lib'
 
 require('./ZoomedView.css')
 

@@ -1,6 +1,6 @@
-import {Express} from 'express'
-import {IUserFields, UserModel} from './user'
-import {compareHashed} from './utils'
+import { Express } from 'express'
+import { IUserFields, UserModel } from './user'
+import { compareHashed } from './utils'
 
 const passport = require('passport')
 const Strategy = require('passport-local')

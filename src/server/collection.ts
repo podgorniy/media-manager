@@ -1,5 +1,5 @@
-import {Model, model, Schema} from 'mongoose'
-import {ICollectionItem} from '../common/interfaces'
+import { Model, model, Schema } from 'mongoose'
+import { ICollectionItem } from '../common/interfaces'
 
 interface ICollectionModel extends Model<ICollectionItem> {}
 const CollectionSchema = new Schema(

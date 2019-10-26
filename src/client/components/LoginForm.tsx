@@ -1,7 +1,7 @@
 import * as React from 'react'
-import {inject, observer} from 'mobx-react'
-import {IAppState} from '../app-state'
-import {authenticate} from '../api'
+import { inject, observer } from 'mobx-react'
+import { IAppState } from '../app-state'
+import { authenticate } from '../api'
 
 interface ILoginFormState {
     userName: string

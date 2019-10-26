@@ -1,5 +1,5 @@
 import * as os from 'os'
-import {getExtension} from 'mime'
+import { getExtension } from 'mime'
 import multer = require('multer')
 
 function genRandomName(ext) {

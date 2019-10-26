@@ -1,12 +1,13 @@
-import {MediaList} from './MediaList'
+import { MediaList } from './MediaList'
 import * as React from 'react'
-import {inject, observer} from 'mobx-react'
-import {IAppState} from '../app-state'
-import {DragNDropUpload} from './DragNDropUpload'
-import {ContextualActions} from './ContextualActions'
-import {Zoom} from './Zoom'
-import {IsLoading} from './IsLoading'
-import {Auth} from './Auth'
+import { inject, observer } from 'mobx-react'
+import { IAppState } from '../app-state'
+import { DragNDropUpload } from './DragNDropUpload'
+import { ContextualActions } from './ContextualActions'
+import { Zoom } from './Zoom'
+import { IsLoading } from './IsLoading'
+import { Auth } from './Auth'
+import { CollapsedMenu } from './CollapsedMenu'
 
 require('./Navigation.less')
 require('./Layout.less')
@@ -33,8 +34,9 @@ export class Layout extends React.Component<{} & IAppState, {}> {
     render() {
         const {appState} = this.props
         const [_, collectionUrl] = appState.router.pathSegments
+        const {sideExpanded, isAuthenticated, sideWidth} = appState
         let content
-        if (appState.isAuthenticated) {
+        if (isAuthenticated) {
             content = (
                 <React.Fragment>
                     <IsLoading />
@@ -42,15 +44,15 @@ export class Layout extends React.Component<{} & IAppState, {}> {
                         <div
                             className='layout__side'
                             style={{
-                                width: appState.sideWidth + 'px'
+                                width: sideWidth + 'px'
                             }}
                         >
-                            <ContextualActions />
+                            {sideExpanded ? <ContextualActions /> : <CollapsedMenu />}
                         </div>
                         <div
                             className='layout__main'
                             style={{
-                                marginLeft: appState.sideWidth + 'px'
+                                marginLeft: sideWidth + 'px'
                             }}
                         >
                             <MediaList />

@@ -3,8 +3,8 @@ require('dropzone/dist/min/dropzone.min.css')
 require('./DragNDropUpload.css')
 import Dropzone = require('dropzone')
 import * as React from 'react'
-import {inject, observer} from 'mobx-react'
-import {IAppState} from '../app-state'
+import { inject, observer } from 'mobx-react'
+import { IAppState } from '../app-state'
 
 interface IDragNDropUploadState {
     filesHovering: boolean
@@ -37,14 +37,14 @@ export class DragNDropUpload extends React.Component<{} & IAppState, IDragNDropU
             >
                 <div className='DragNDropUpload__dropzone' ref={this.ref}>
                     <div className='DragNDropUpload__head'>
-                        <h1>Загрузка файлов</h1>
+                        <h1>Uload files</h1>
                         <div className='DragNDropUpload__btn-wrapper'>
                             <button
                                 onClick={() => {
                                     appState.toggleUploadVisibility(false)
                                 }}
                             >
-                                Закрыть
+                                Close
                             </button>
                         </div>
                     </div>

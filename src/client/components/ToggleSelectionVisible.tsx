@@ -1,6 +1,6 @@
 import * as React from 'react'
-import {inject, observer} from 'mobx-react'
-import {IAppState} from '../app-state'
+import { inject, observer } from 'mobx-react'
+import { IAppState } from '../app-state'
 
 interface IProps {}
 interface IState {}
@@ -21,7 +21,7 @@ export class ToggleSelectionVisible extends React.Component<IProps & IAppState, 
             <div>
                 {visibleItemsSelected && visibleItemsSelected !== appState.selectedUUIDs.length ? (
                     <button onClick={appState.unselectVisibleOnly}>
-                        Убрать выделение c {visibleItemsSelected} подгруженных элементов
+                        Deselect <strong>{visibleItemsSelected}</strong> items
                     </button>
                 ) : null}
             </div>

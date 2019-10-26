@@ -1,7 +1,8 @@
 import * as React from 'react'
-import {inject, observer} from 'mobx-react'
-import {IAppState} from '../app-state'
-import {SelectAllLoaded} from './SelectAllLoaded'
+import { inject, observer } from 'mobx-react'
+import { IAppState } from '../app-state'
+import { SelectAllLoaded } from './SelectAllLoaded'
+import { Button } from 'semantic-ui-react'
 
 @inject('appState')
 @observer
@@ -17,7 +18,9 @@ export class ToggleSelectionAll extends React.Component<{} & IAppState, {}> {
         return (
             <div>
                 {totalItemsSelected ? (
-                    <button onClick={appState.unselectAll}>Убрать выделение {totalItemsSelected} элементов</button>
+                    <Button size='small' compact onClick={appState.unselectAll}>
+                        Deselect all {totalItemsSelected} elements
+                    </Button>
                 ) : (
                     <SelectAllLoaded />
                 )}

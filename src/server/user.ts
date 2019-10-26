@@ -1,5 +1,5 @@
-import {Document, model, Model, Schema} from 'mongoose'
-import {hashString} from './utils'
+import { Document, model, Model, Schema } from 'mongoose'
+import { hashString } from './utils'
 
 export interface IUserFields {
     _id: any

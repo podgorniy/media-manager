@@ -1,8 +1,9 @@
-import {action, computed, configure, IObservableArray, observable} from 'mobx'
+import { action, computed, configure, IObservableArray, observable } from 'mobx'
 import {
     addTags,
     addToCollection,
     createCollection,
+    deleteCollection,
     fetchMedia,
     fetchTags,
     getCollectionsList,
@@ -12,9 +13,15 @@ import {
     shareMedia,
     unShareMedia
 } from './api'
-import {IAppInitialState, IClientMediaItem, ICollectionItem, IMediaResponse, IUserMediaItem} from '../common/interfaces'
-import {AppRouter} from './app-router'
-import {getLoadMoreQuery, getRefreshQuery} from './lib'
+import {
+    IAppInitialState,
+    IClientMediaItem,
+    ICollectionItem,
+    IMediaResponse,
+    IUserMediaItem
+} from '../common/interfaces'
+import { AppRouter } from './app-router'
+import { getLoadMoreQuery, getRefreshQuery } from './lib'
 
 const axios = require('axios')
 
@@ -25,7 +32,7 @@ configure({
 type ISetAuthenticatedParams = boolean | {userName: string}
 
 const SIDE_WIDTH_EXPANDED = 300
-const SIDE_WIDTH_COLLAPSED = 50
+const SIDE_WIDTH_COLLAPSED = 60
 
 function toClientSideRepresentation(mediaDoc: IUserMediaItem): IClientMediaItem {
     return {
@@ -561,6 +568,16 @@ export class AppState {
         await unShareMedia({uuid: uuid})
         this.refreshTags()
         this.refreshMedia()
+    }
+
+    @action.bound
+    async deleteCollection(collectionId) {
+        await deleteCollection({collectionId: collectionId})
+        this.refreshCollectionsList()
+    }
+
+    asObj() {
+        return JSON.parse(JSON.stringify(this))
     }
 }
 

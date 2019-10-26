@@ -1,5 +1,5 @@
-import {asyncHandler} from '../utils'
-import {CollectionsModel} from '../collection'
+import { asyncHandler } from '../utils'
+import { CollectionsModel } from '../collection'
 
 export const shareCollection = asyncHandler(async (req, res) => {
     const _id = req.body.collectionId

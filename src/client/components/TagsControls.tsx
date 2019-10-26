@@ -1,7 +1,7 @@
 import * as React from 'react'
-import {inject, observer} from 'mobx-react'
-import {IAppState} from '../app-state'
-import {TagLink} from './TagLink'
+import { inject, observer } from 'mobx-react'
+import { IAppState } from '../app-state'
+import { TagLink } from './TagLink'
 
 interface IProps {}
 
@@ -42,7 +42,7 @@ export class TagsControls extends React.Component<IProps & IAppState, IState> {
             <div>
                 <input
                     type='text'
-                    placeholder='Тэг'
+                    placeholder='Tag'
                     value={this.state.inputValue}
                     onChange={(event) => {
                         this.setState({
@@ -62,7 +62,7 @@ export class TagsControls extends React.Component<IProps & IAppState, IState> {
                     }}
                     disabled={this.state.submissionDisabled}
                 >
-                    добавить
+                    add
                 </button>
                 {appState.selectedItemsTags.length ? (
                     <ul>
@@ -77,7 +77,7 @@ export class TagsControls extends React.Component<IProps & IAppState, IState> {
                                     >
                                         ×
                                     </button>
-                                    <TagLink tagName={tag} />
+                                    <TagLink href={tag} />
                                 </li>
                             )
                         })}

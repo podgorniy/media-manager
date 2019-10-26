@@ -1,6 +1,6 @@
 import * as React from 'react'
-import {inject, observer} from 'mobx-react'
-import {IAppState} from '../app-state'
+import { inject, observer } from 'mobx-react'
+import { IAppState } from '../app-state'
 
 interface IProps {}
 interface IState {}
@@ -21,7 +21,7 @@ export class UploadBtn extends React.Component<IProps & IAppState, IState> {
                         appState.toggleUploadVisibility(true)
                     }}
                 >
-                    Загрузить
+                    Upload
                 </button>
             </div>
         )

@@ -1,8 +1,9 @@
 import * as React from 'react'
-import {inject, observer} from 'mobx-react'
-import {IAppState} from '../app-state'
-import {IClientMediaItem} from '../../common/interfaces'
+import { inject, observer } from 'mobx-react'
+import { IAppState } from '../app-state'
+import { IClientMediaItem } from '../../common/interfaces'
 import copy from 'copy-to-clipboard'
+import { Button } from 'semantic-ui-react'
 
 interface IProps {
     mediaItem: IClientMediaItem
@@ -21,27 +22,40 @@ export class ShareMediaItem extends React.Component<IProps & IAppState, IState> 
         const {appState, mediaItem} = this.props
         const {sharedIndividually, uuid} = mediaItem
         const fullUrl = `${location.protocol}//${location.host}${mediaItem.url}`
-        return (
-            <div>
-                <button
+        return sharedIndividually ? (
+            <Button.Group compact size='small' floated='left'>
+                <Button
+                    compact
+                    size='small'
                     onClick={() => {
                         copy(fullUrl)
-                        appState.shareMedia(uuid)
                     }}
-                    title='Скопировать ссылку на медиа'
                 >
-                    {sharedIndividually ? 'Скопировать ссылку' : 'Поделиться'}
-                </button>
-                <button
-                    disabled={!sharedIndividually}
+                    Copy Url
+                </Button>
+                <Button
+                    compact
+                    size='small'
                     onClick={() => {
                         appState.unShareMedia(uuid)
                     }}
-                    title='Убрать медиа из публичного доступа'
                 >
-                    Закрыть доступ
-                </button>
-            </div>
+                    Unshare
+                </Button>
+            </Button.Group>
+        ) : (
+            <Button.Group compact size='small' floated='left'>
+                <Button
+                    size='small'
+                    compact
+                    onClick={() => {
+                        appState.shareMedia(uuid)
+                        copy(fullUrl)
+                    }}
+                >
+                    Share and Copy URL
+                </Button>
+            </Button.Group>
         )
     }
 }

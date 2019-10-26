@@ -1,5 +1,5 @@
-import {asyncHandler} from '../utils'
-import {MediaModel} from '../media'
+import { asyncHandler } from '../utils'
+import { MediaModel } from '../media'
 
 export const removeTags = asyncHandler(async (req, res) => {
     const {tags, media} = req.body

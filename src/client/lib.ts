@@ -1,4 +1,4 @@
-import {AppState} from './app-state'
+import { AppState } from './app-state'
 
 export const ITEMS_COUNT_TO_QUERY = 18
 

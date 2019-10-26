@@ -1,8 +1,8 @@
 import * as React from 'react'
-import {inject, observer} from 'mobx-react'
-import {IAppState} from '../app-state'
-import {Button, Form, Input, Message, Modal} from 'semantic-ui-react'
-import {authenticate} from '../api'
+import { inject, observer } from 'mobx-react'
+import { IAppState } from '../app-state'
+import { Button, Form, Input, Message, Modal } from 'semantic-ui-react'
+import { authenticate } from '../api'
 
 interface IProps {}
 

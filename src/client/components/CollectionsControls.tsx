@@ -1,7 +1,9 @@
 import * as React from 'react'
-import {inject, observer} from 'mobx-react'
-import {IAppState} from '../app-state'
-import {autorun} from 'mobx'
+import { inject, observer } from 'mobx-react'
+import { IAppState } from '../app-state'
+import { autorun } from 'mobx'
+import { Button, Dropdown } from 'semantic-ui-react'
+import './CollectionsControls.css'
 
 interface IProps {}
 
@@ -25,12 +27,12 @@ export class CollectionsControls extends React.Component<IProps & IAppState, ISt
 
     componentDidMount() {
         // This will ensure that at least some collection is selected
-        this._stopEnsureCollectionSelected = autorun(() => {
+        this._stopEnsureCollectionSelected = autorun((comp) => {
             const {appState} = this.props
             const collectionsCount = appState.collections.length
             const thisComponentSelectedCollection = this.state.selectedCollection
             if (thisComponentSelectedCollection) {
-                this._stopEnsureCollectionSelected()
+                comp.dispose()
                 return
             }
             if (!thisComponentSelectedCollection && collectionsCount) {
@@ -38,7 +40,7 @@ export class CollectionsControls extends React.Component<IProps & IAppState, ISt
                 this.setState({
                     selectedCollection: appState.collections[0]._id
                 })
-                this._stopEnsureCollectionSelected()
+                comp.dispose()
             }
         })
 
@@ -82,43 +84,52 @@ export class CollectionsControls extends React.Component<IProps & IAppState, ISt
             }
         }
         return (
-            <div
-                style={{
-                    display: appState.selectedUUIDs.length ? 'block' : 'none'
-                }}
-            >
-                <select
-                    value={selectedCollectionId}
-                    onChange={(e) => {
-                        this.setState({
-                            selectedCollection: e.target.value
-                        })
-                    }}
-                >
-                    {appState.collections.map(({_id, title}) => {
-                        return (
-                            <option value={_id} key={_id}>
-                                {title}
-                            </option>
-                        )
-                    })}
-                </select>
-                <button
-                    disabled={allSelectedAreInCollection}
-                    onClick={() => {
-                        appState.addSelectedToCollection(selectedCollectionId)
-                    }}
-                >
-                    Добавить
-                </button>
-                <button
-                    disabled={allSelectedAreNotInCollection}
-                    onClick={() => {
-                        appState.removeSelectedFromCollection(selectedCollectionId)
-                    }}
-                >
-                    Убрать
-                </button>
+            <div className='CollectionsControls'>
+                <div className='CollectionsControls__item CollectionsControls__item--grow'>
+                    <div className="ui button compact tiny dropdown-wrapper">
+                        <Dropdown
+                            compact
+                            fluid
+                            search
+                            selection
+                            value={selectedCollectionId}
+                            onChange={(event) => {
+                                this.setState({
+                                    selectedCollection: (event.target as HTMLSelectElement).value
+                                })
+                            }}
+                            options={appState.collections.map((collection, index) => {
+                                return {
+                                    key: collection._id,
+                                    text: collection.title,
+                                    value: collection._id
+                                }
+                            })}
+                        />
+                    </div>
+                </div>
+                <div className='CollectionsControls__item CollectionsControls__item--buttons'>
+                    <Button.Group className='CollectionsControls__buttons'>
+                        <Button
+                            compact
+                            disabled={allSelectedAreInCollection}
+                            onClick={() => {
+                                appState.addSelectedToCollection(this.state.selectedCollection)
+                            }}
+                        >
+                            Add
+                        </Button>
+                        <Button
+                            compact
+                            disabled={allSelectedAreNotInCollection}
+                            onClick={() => {
+                                appState.removeSelectedFromCollection(selectedCollectionId)
+                            }}
+                        >
+                            Remove
+                        </Button>
+                    </Button.Group>
+                </div>
             </div>
         )
     }

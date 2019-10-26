@@ -1,5 +1,5 @@
-import {asyncHandler, SHARED_TAG} from '../utils'
-import {MediaModel} from '../media'
+import { asyncHandler, SHARED_TAG } from '../utils'
+import { MediaModel } from '../media'
 
 export const shareMedia = asyncHandler(async (req, res) => {
     const userId = req.user && req.user._id
