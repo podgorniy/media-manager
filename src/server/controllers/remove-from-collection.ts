@@ -1,5 +1,5 @@
-import { asyncHandler } from '../utils'
-import { CollectionsModel } from '../collection'
+import {asyncHandler} from '../utils'
+import {CollectionsModel} from '../collection'
 
 export const removeFromCollection = asyncHandler(async (req, res) => {
     try {

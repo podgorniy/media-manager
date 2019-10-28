@@ -93,9 +93,9 @@ export class CollectionsControls extends React.Component<IProps & IAppState, ISt
                             search
                             selection
                             value={selectedCollectionId}
-                            onChange={(event) => {
+                            onChange={(event, data) => {
                                 this.setState({
-                                    selectedCollection: (event.target as HTMLSelectElement).value
+                                    selectedCollection: data.value.toString()
                                 })
                             }}
                             options={appState.collections.map((collection, index) => {

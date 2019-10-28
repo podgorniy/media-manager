@@ -1,8 +1,8 @@
-import { asyncHandler } from '../utils'
-import { IMediaResponse } from '../../common/interfaces'
-import { MediaModel, toApiRepresentation } from '../media'
-import { IUserFields } from '../user'
-import { CollectionsModel } from '../collection'
+import {asyncHandler} from '../utils'
+import {IMediaResponse} from '../../common/interfaces'
+import {MediaModel, toApiRepresentation} from '../media'
+import {IUserFields} from '../user'
+import {CollectionsModel} from '../collection'
 
 const DEFAULT_LIMIT = 20
 const MAX_LIMIT = 100
