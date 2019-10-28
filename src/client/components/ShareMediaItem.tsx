@@ -1,9 +1,9 @@
 import * as React from 'react'
-import { inject, observer } from 'mobx-react'
-import { IAppState } from '../app-state'
-import { IClientMediaItem } from '../../common/interfaces'
+import {inject, observer} from 'mobx-react'
+import {IAppState} from '../app-state'
+import {IClientMediaItem} from '../../common/interfaces'
 import copy from 'copy-to-clipboard'
-import { Button } from 'semantic-ui-react'
+import {Button} from 'semantic-ui-react'
 
 interface IProps {
     mediaItem: IClientMediaItem

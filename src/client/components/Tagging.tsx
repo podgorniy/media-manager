@@ -1,7 +1,7 @@
 import * as React from 'react'
-import { inject, observer } from 'mobx-react'
-import { IAppState } from '../app-state'
-import { Button, Input } from 'semantic-ui-react'
+import {inject, observer} from 'mobx-react'
+import {IAppState} from '../app-state'
+import {Button, Input} from 'semantic-ui-react'
 
 interface IProps {}
 
@@ -24,6 +24,12 @@ export class Tagging extends React.Component<IProps & IAppState, IState> {
         return (
             <div>
                 <Input
+                    onChange={(event) => {
+                        this.setState({
+                            val: event.target.value
+                        })
+                    }}
+                    value={this.state.val}
                     size='mini'
                     list='tags'
                     action={

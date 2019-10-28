@@ -1,5 +1,5 @@
-import { AppState } from './app-state'
-import { autorun } from 'mobx'
+import {AppState} from './app-state'
+import {autorun} from 'mobx'
 
 const VIEW_PORTS_BELOW_SCREEN_TO_TRIGGER_LOADING = 1.5
 

@@ -1,9 +1,9 @@
 import * as React from 'react'
-import { inject, observer } from 'mobx-react'
-import { IAppState } from '../app-state'
-import { RouterLink } from './RouterLink'
-import { deleteCollection, renameCollection, shareCollection, unShareCollection } from '../api'
-import { Button, Input } from 'semantic-ui-react'
+import {inject, observer} from 'mobx-react'
+import {IAppState} from '../app-state'
+import {RouterLink} from './RouterLink'
+import {deleteCollection, renameCollection, shareCollection, unShareCollection} from '../api'
+import {Button, Input} from 'semantic-ui-react'
 import './Collections2.css'
 import copy = require('copy-to-clipboard')
 

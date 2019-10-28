@@ -3,8 +3,8 @@ require('dropzone/dist/min/dropzone.min.css')
 require('./DragNDropUpload.css')
 import Dropzone = require('dropzone')
 import * as React from 'react'
-import { inject, observer } from 'mobx-react'
-import { IAppState } from '../app-state'
+import {inject, observer} from 'mobx-react'
+import {IAppState} from '../app-state'
 
 interface IDragNDropUploadState {
     filesHovering: boolean

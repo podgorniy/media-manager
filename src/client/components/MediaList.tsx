@@ -1,11 +1,11 @@
 require('./MediaList.less')
 import * as React from 'react'
-import { Disposer, inject, observer } from 'mobx-react'
-import { IAppState } from '../app-state'
+import {Disposer, inject, observer} from 'mobx-react'
+import {IAppState} from '../app-state'
 import Shuffle from 'shufflejs'
-import { MediaListItem } from './MediaListItem'
-import { isDev } from '../../common/lib'
-import { autorun } from 'mobx'
+import {MediaListItem} from './MediaListItem'
+import {isDev} from '../../common/lib'
+import {autorun} from 'mobx'
 
 const SHUFFLE_ANIMATION_DURATION = 250
 const SCREEN_FRAME_DURATION = 17

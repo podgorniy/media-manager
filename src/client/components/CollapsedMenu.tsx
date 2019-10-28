@@ -1,7 +1,7 @@
 import * as React from 'react'
-import { inject, observer } from 'mobx-react'
-import { IAppState } from '../app-state'
-import { Button, Icon } from 'semantic-ui-react'
+import {inject, observer} from 'mobx-react'
+import {IAppState} from '../app-state'
+import {Button, Icon} from 'semantic-ui-react'
 import './CollapsedMenu.css'
 
 interface IProps {}

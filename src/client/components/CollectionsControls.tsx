@@ -1,8 +1,8 @@
 import * as React from 'react'
-import { inject, observer } from 'mobx-react'
-import { IAppState } from '../app-state'
-import { autorun } from 'mobx'
-import { Button, Dropdown } from 'semantic-ui-react'
+import {inject, observer} from 'mobx-react'
+import {IAppState} from '../app-state'
+import {autorun} from 'mobx'
+import {Button, Dropdown} from 'semantic-ui-react'
 import './CollectionsControls.css'
 
 interface IProps {}
@@ -86,7 +86,7 @@ export class CollectionsControls extends React.Component<IProps & IAppState, ISt
         return (
             <div className='CollectionsControls'>
                 <div className='CollectionsControls__item CollectionsControls__item--grow'>
-                    <div className="ui button compact tiny dropdown-wrapper">
+                    <div className='ui button compact tiny dropdown-wrapper'>
                         <Dropdown
                             compact
                             fluid

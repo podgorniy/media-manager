@@ -1,8 +1,8 @@
 import * as React from 'react'
-import { inject, observer } from 'mobx-react'
-import { IAppState } from '../app-state'
-import { SelectAllLoaded } from './SelectAllLoaded'
-import { Button } from 'semantic-ui-react'
+import {inject, observer} from 'mobx-react'
+import {IAppState} from '../app-state'
+import {SelectAllLoaded} from './SelectAllLoaded'
+import {Button} from 'semantic-ui-react'
 
 @inject('appState')
 @observer

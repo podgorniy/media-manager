@@ -1,13 +1,13 @@
-import { MediaList } from './MediaList'
+import {MediaList} from './MediaList'
 import * as React from 'react'
-import { inject, observer } from 'mobx-react'
-import { IAppState } from '../app-state'
-import { DragNDropUpload } from './DragNDropUpload'
-import { ContextualActions } from './ContextualActions'
-import { Zoom } from './Zoom'
-import { IsLoading } from './IsLoading'
-import { Auth } from './Auth'
-import { CollapsedMenu } from './CollapsedMenu'
+import {inject, observer} from 'mobx-react'
+import {IAppState} from '../app-state'
+import {DragNDropUpload} from './DragNDropUpload'
+import {ContextualActions} from './ContextualActions'
+import {Zoom} from './Zoom'
+import {IsLoading} from './IsLoading'
+import {Auth} from './Auth'
+import {CollapsedMenu} from './CollapsedMenu'
 
 require('./Navigation.less')
 require('./Layout.less')

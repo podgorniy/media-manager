@@ -1,4 +1,4 @@
-import { action, computed, configure, IObservableArray, observable } from 'mobx'
+import {action, computed, configure, IObservableArray, observable} from 'mobx'
 import {
     addTags,
     addToCollection,
@@ -13,15 +13,9 @@ import {
     shareMedia,
     unShareMedia
 } from './api'
-import {
-    IAppInitialState,
-    IClientMediaItem,
-    ICollectionItem,
-    IMediaResponse,
-    IUserMediaItem
-} from '../common/interfaces'
-import { AppRouter } from './app-router'
-import { getLoadMoreQuery, getRefreshQuery } from './lib'
+import {IAppInitialState, IClientMediaItem, ICollectionItem, IMediaResponse, IUserMediaItem} from '../common/interfaces'
+import {AppRouter} from './app-router'
+import {getLoadMoreQuery, getRefreshQuery} from './lib'
 
 const axios = require('axios')
 

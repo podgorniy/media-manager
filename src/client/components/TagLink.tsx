@@ -1,7 +1,7 @@
 import * as React from 'react'
-import { inject, observer } from 'mobx-react'
-import { IAppState } from '../app-state'
-import { RouterLink } from './RouterLink'
+import {inject, observer} from 'mobx-react'
+import {IAppState} from '../app-state'
+import {RouterLink} from './RouterLink'
 
 require('./TagLink.less')
 
