@@ -27,12 +27,11 @@ export class RouterLink extends React.Component<IProps & IAppState, IState> {
                 className={this.props.className ? this.props.className : ''}
                 onClick={(event) => {
                     event.preventDefault()
-                    const linkTag = event.target as HTMLAnchorElement
                     const linkBehaviour: RouterLinkBehaviour = this.props.behaviour ? this.props.behaviour : 'push'
                     if (linkBehaviour === 'push') {
-                        appState.router.pushUrl(linkTag.href)
+                        appState.router.pushUrl(url)
                     } else if (linkBehaviour === 'replace') {
-                        appState.router.replaceUrl(linkTag.href)
+                        appState.router.replaceUrl(url)
                     } else {
                         console.error('Unknown router link behaviour')
                     }

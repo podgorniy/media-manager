@@ -1,10 +1,10 @@
-import { asyncHandler, filePathForPersistence } from '../utils'
-import { IMediaDoc, MediaModel } from '../media'
+import {asyncHandler, filePathForPersistence} from '../utils'
+import {IMediaDoc, MediaModel} from '../media'
 import * as path from 'path'
-import { getExtension, getType } from 'mime'
-import { MediaType } from '../../common/interfaces'
-import { ffprobe } from 'fluent-ffmpeg'
-import { promisify } from 'util'
+import {getExtension, getType} from 'mime'
+import {MediaType} from '../../common/interfaces'
+import {ffprobe} from 'fluent-ffmpeg'
+import {promisify} from 'util'
 import sizeOf = require('image-size')
 
 const md5file = require('md5-file/promise')

@@ -57,15 +57,16 @@ export class TagsList extends React.Component<{} & IAppState, {}> {
                             })
                         }
                         return (
-                            <Label
-                                className='TagsList__item'
-                                color={isSelected ? 'black' : 'grey'}
-                                size='small'
-                                key={name}
-                            >
-                                <TagLink href={href}>{name}</TagLink>
-                                {/*<Icon name='delete' />*/}
-                            </Label>
+                            <TagLink href={href} key={name}>
+                                <Label
+                                    as='span'
+                                    className='TagsList__item'
+                                    color={isSelected ? 'black' : 'grey'}
+                                    size='small'
+                                >
+                                    {name}
+                                </Label>
+                            </TagLink>
                         )
                     })}
                 </div>

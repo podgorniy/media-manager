@@ -1,7 +1,7 @@
-import { asyncHandler } from '../utils'
-import { MediaModel } from '../media'
-import { ITagsListItem } from '../../common/interfaces'
-import { CollectionsModel } from '../collection'
+import {asyncHandler} from '../utils'
+import {MediaModel} from '../media'
+import {ITagsListItem} from '../../common/interfaces'
+import {CollectionsModel} from '../collection'
 
 export const provideTags = asyncHandler(async (req, res) => {
     try {
