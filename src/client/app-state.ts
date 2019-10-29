@@ -252,7 +252,7 @@ export class AppState {
     }
 
     @action.bound
-    unselectVisibleOnly() {
+    unselectSelected() {
         this.media.forEach(({uuid}) => {
             const currentItemSelectedIndex = this.selectedUUIDs.indexOf(uuid)
             if (currentItemSelectedIndex !== -1) {

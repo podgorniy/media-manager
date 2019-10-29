@@ -5,3 +5,9 @@
 .ContextualActions__row {
     margin-bottom: 10px;
 }
+
+.ContextualActions__row--separator {
+    border-bottom: 1px dashed #3c3c3c;
+    margin-left: -10px;
+    margin-right: -10px;
+}

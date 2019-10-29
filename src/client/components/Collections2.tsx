@@ -107,7 +107,7 @@ export class Collections2 extends React.Component<IProps & IAppState, IState> {
                                 <h2 className='Collections2__collection-link'>
                                     <RouterLink
                                         url={collectionLinkUrl}
-                                        className={isActiveCollection ? 'remove' : 'with'}
+                                        className={isActiveCollection ? 'Collections2__collection-link-active' : ''}
                                     >
                                         {collection.title}
                                     </RouterLink>

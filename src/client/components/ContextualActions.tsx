@@ -64,6 +64,7 @@ export class ContextualActions extends React.Component<{} & IAppState, {}> {
                         </Button>
                     </Button.Group>
                 </div>
+                <div className='ContextualActions__row ContextualActions__row--separator' />
                 {itemForIndividualSharingControl && (
                     <div className='ContextualActions__row'>
                         <ShareMediaItem mediaItem={itemForIndividualSharingControl} />
@@ -73,6 +74,7 @@ export class ContextualActions extends React.Component<{} & IAppState, {}> {
                 <div className='ContextualActions__row'>
                     <ToggleSelectionAll />
                 </div>
+                <div className='ContextualActions__row ContextualActions__row--separator' />
                 {appState.selectedUUIDs.length ? (
                     <React.Fragment>
                         <div className='ContextualActions__row'>
@@ -81,14 +83,16 @@ export class ContextualActions extends React.Component<{} & IAppState, {}> {
                         <div className='ContextualActions__row'>
                             <TagsControls />
                         </div>
+                        <div className='ContextualActions__row'>
+                            <ToggleSelectionVisible />
+                        </div>
+                        <div className='ContextualActions__row ContextualActions__row--separator' />
                     </React.Fragment>
                 ) : null}
                 <div className='ContextualActions__row'>
-                    <ToggleSelectionVisible />
-                </div>
-                <div className='ContextualActions__row'>
                     <TagsList />
                 </div>
+                <div className='ContextualActions__row ContextualActions__row--separator' />
                 <div className='ContextualActions__row'>
                     <Collections2 />
                 </div>

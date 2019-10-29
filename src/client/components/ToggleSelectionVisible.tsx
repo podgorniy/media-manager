@@ -15,13 +15,13 @@ export class ToggleSelectionVisible extends React.Component<IProps & IAppState, 
     render() {
         const {appState} = this.props
         const {selectedVisibleUUIDs} = appState
-        const visibleItemsSelected = selectedVisibleUUIDs.length
+        const itemsSelected = selectedVisibleUUIDs.length
 
         return (
             <div>
-                {visibleItemsSelected && visibleItemsSelected !== appState.selectedUUIDs.length ? (
-                    <button onClick={appState.unselectVisibleOnly}>
-                        Deselect <strong>{visibleItemsSelected}</strong> items
+                {itemsSelected && itemsSelected !== appState.selectedUUIDs.length ? (
+                    <button onClick={appState.unselectSelected}>
+                        Deselect <strong>{itemsSelected}</strong> items
                     </button>
                 ) : null}
             </div>
