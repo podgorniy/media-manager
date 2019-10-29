@@ -25,7 +25,8 @@ export class TagsList extends React.Component<{} & IAppState, {}> {
                 {anyTagsSelected ? (
                     <Button
                         className='TagsList'
-                        size='tiny'
+                        compact
+                        size='small'
                         onClick={() => {
                             appState.router.replaceUrl(urlWithoutTags)
                         }}

@@ -7,6 +7,7 @@ interface IProps {}
 
 interface IState {
     val: string
+    submissionDisabled: boolean
 }
 
 @inject('appState')
@@ -15,8 +16,24 @@ export class Tagging extends React.Component<IProps & IAppState, IState> {
     constructor(props) {
         super(props)
         this.state = {
-            val: ''
+            val: '',
+            submissionDisabled: false
         }
+    }
+
+    private async _attemptSubmit() {
+        const {appState} = this.props
+        if (this.state.submissionDisabled) {
+            return
+        }
+        this.setState({
+            submissionDisabled: true
+        })
+        await appState.addTagForSelectedRemotely([this.state.val])
+        this.setState({
+            val: '',
+            submissionDisabled: false
+        })
     }
 
     render() {
@@ -24,10 +41,17 @@ export class Tagging extends React.Component<IProps & IAppState, IState> {
         return (
             <div>
                 <Input
+                    placeholder='Add tag'
+                    disabled={this.state.submissionDisabled}
                     onChange={(event) => {
                         this.setState({
                             val: event.target.value
                         })
+                    }}
+                    onKeyUp={(event) => {
+                        if (event.key === 'Enter') {
+                            this._attemptSubmit()
+                        }
                     }}
                     value={this.state.val}
                     size='mini'
@@ -36,12 +60,9 @@ export class Tagging extends React.Component<IProps & IAppState, IState> {
                         <Button
                             compact
                             size='tiny'
-                            disabled={!this.state.val}
+                            disabled={!this.state.val || this.state.submissionDisabled}
                             onClick={async () => {
-                                await appState.addTagForSelectedRemotely([this.state.val])
-                                this.setState({
-                                    val: ''
-                                })
+                                this._attemptSubmit()
                             }}
                         >
                             Add

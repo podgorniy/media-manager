@@ -2,6 +2,9 @@ import * as React from 'react'
 import {inject, observer} from 'mobx-react'
 import {IAppState} from '../app-state'
 import {TagLink} from './TagLink'
+import {Tagging} from './Tagging'
+import {Icon, Label} from 'semantic-ui-react'
+import './TagsControls.css'
 
 interface IProps {}
 
@@ -40,49 +43,44 @@ export class TagsControls extends React.Component<IProps & IAppState, IState> {
         const {appState} = this.props
         return (
             <div>
-                <input
-                    type='text'
-                    placeholder='Tag'
-                    value={this.state.inputValue}
-                    onChange={(event) => {
-                        this.setState({
-                            inputValue: event.target.value.trim().toLowerCase()
-                        })
-                    }}
-                    onKeyUp={(event) => {
-                        if (event.key === 'Enter') {
-                            this._attemptSubmit()
+                <Tagging />
+                <div className='TagControls__list'>
+                    {appState.selectedItemsTags.map((tag) => {
+                        let href
+                        const {router} = appState
+                        let currentTagsList = router.queryParams.tags || []
+                        const isSelected = currentTagsList.indexOf(tag) !== -1
+                        if (isSelected) {
+                            href = router.getFullUrl({
+                                without: {
+                                    queryParams: {
+                                        tags: [tag]
+                                    }
+                                }
+                            })
+                        } else {
+                            href = router.getFullUrl({
+                                with: {
+                                    queryParams: {
+                                        tags: [tag]
+                                    }
+                                }
+                            })
                         }
-                    }}
-                />
-                <button
-                    onClick={(event) => {
-                        event.preventDefault()
-                        this._attemptSubmit()
-                    }}
-                    disabled={this.state.submissionDisabled}
-                >
-                    add
-                </button>
-                {appState.selectedItemsTags.length ? (
-                    <ul>
-                        {appState.selectedItemsTags.map((tag) => {
-                            return (
-                                <li key={tag}>
-                                    <button
-                                        onClick={(event) => {
-                                            event.preventDefault()
-                                            appState.removeTagFromSelectedRemotely(tag)
-                                        }}
-                                    >
-                                        ×
-                                    </button>
-                                    <TagLink href={tag} />
-                                </li>
-                            )
-                        })}
-                    </ul>
-                ) : null}
+                        return (
+                            <Label key={href} size='small' color={isSelected ? 'black' : 'grey'}>
+                                <TagLink href={href}>{tag}</TagLink>
+                                <Icon
+                                    onClick={(event) => {
+                                        event.preventDefault()
+                                        appState.removeTagFromSelectedRemotely(tag)
+                                    }}
+                                    name='delete'
+                                />
+                            </Label>
+                        )
+                    })}
+                </div>
             </div>
         )
     }

@@ -9,8 +9,8 @@ import {ShareMediaItem} from './ShareMediaItem'
 import './ContextualActions.css'
 import {Button, Icon} from 'semantic-ui-react'
 import {logout} from '../api'
-import {Tagging} from './Tagging'
 import {Collections2} from './Collections2'
+import {TagsControls} from './TagsControls'
 
 @inject('appState')
 @observer
@@ -74,11 +74,15 @@ export class ContextualActions extends React.Component<{} & IAppState, {}> {
                     <ToggleSelectionAll />
                 </div>
                 {appState.selectedUUIDs.length ? (
-                    <div className='ContextualActions__row'>
-                        <CollectionsControls />
-                    </div>
+                    <React.Fragment>
+                        <div className='ContextualActions__row'>
+                            <CollectionsControls />
+                        </div>
+                        <div className='ContextualActions__row'>
+                            <TagsControls />
+                        </div>
+                    </React.Fragment>
                 ) : null}
-                <div className='ContextualActions__row'>{appState.selectedUUIDs.length ? <Tagging /> : null}</div>
                 <div className='ContextualActions__row'>
                     <ToggleSelectionVisible />
                 </div>
