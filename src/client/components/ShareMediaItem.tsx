@@ -1,12 +1,11 @@
 import * as React from 'react'
 import {inject, observer} from 'mobx-react'
 import {IAppState} from '../app-state'
-import {IClientMediaItem} from '../../common/interfaces'
 import copy from 'copy-to-clipboard'
 import {Button} from 'semantic-ui-react'
 
 interface IProps {
-    mediaItem: IClientMediaItem
+    mediaItemUUID: string
 }
 
 interface IState {}
@@ -19,9 +18,15 @@ export class ShareMediaItem extends React.Component<IProps & IAppState, IState> 
     }
 
     render() {
-        const {appState, mediaItem} = this.props
-        const {sharedIndividually, uuid} = mediaItem
-        const fullUrl = `${location.protocol}//${location.host}${mediaItem.url}`
+        const {appState, mediaItemUUID} = this.props
+        const mediaItem = appState.media.find((item) => {
+            return item.uuid === mediaItemUUID
+        })
+        if (!mediaItem) {
+            return null
+        }
+        const {sharedIndividually, uuid, url} = mediaItem
+        const fullUrl = `${location.protocol}//${location.host}${url}`
         return sharedIndividually ? (
             <Button.Group compact size='small' floated='left'>
                 <Button

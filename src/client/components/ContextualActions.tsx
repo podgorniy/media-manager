@@ -21,10 +21,6 @@ export class ContextualActions extends React.Component<{} & IAppState, {}> {
 
     render() {
         const {appState} = this.props
-        let itemForIndividualSharingControl = appState.zoomedItem
-        if (appState.selectedItems.length === 1 && !itemForIndividualSharingControl) {
-            itemForIndividualSharingControl = appState.selectedItems[0]
-        }
         return (
             <div className='ContextualActions'>
                 <div className='ContextualActions__row'>
@@ -65,18 +61,26 @@ export class ContextualActions extends React.Component<{} & IAppState, {}> {
                     </Button.Group>
                 </div>
                 <div className='ContextualActions__row ContextualActions__row--separator' />
-                {itemForIndividualSharingControl && (
-                    <div className='ContextualActions__row'>
-                        <ShareMediaItem mediaItem={itemForIndividualSharingControl} />
-                        <div className='clear'></div>
-                    </div>
+                {appState.zoomedItemId && (
+                    <React.Fragment>
+                        <div className='ContextualActions__row'>
+                            <ShareMediaItem mediaItemUUID={appState.zoomedItemId} />
+                            <div className='clear' />
+                        </div>
+                        <div className='ContextualActions__row ContextualActions__row--separator' />
+                    </React.Fragment>
                 )}
-                <div className='ContextualActions__row'>
-                    <ToggleSelectionAll />
-                </div>
-                <div className='ContextualActions__row ContextualActions__row--separator' />
                 {appState.selectedUUIDs.length ? (
                     <React.Fragment>
+                        <div className='ContextualActions__row'>
+                            <ToggleSelectionAll />
+                        </div>
+                        {appState.selectedUUIDs.length === 1 ? (
+                            <div className='ContextualActions__row'>
+                                <ShareMediaItem mediaItemUUID={appState.selectedUUIDs[0]} />
+                                <div className='clear'/>
+                            </div>
+                        ) : null}
                         <div className='ContextualActions__row'>
                             <CollectionsControls />
                         </div>
@@ -88,7 +92,14 @@ export class ContextualActions extends React.Component<{} & IAppState, {}> {
                         </div>
                         <div className='ContextualActions__row ContextualActions__row--separator' />
                     </React.Fragment>
-                ) : null}
+                ) : (
+                    <React.Fragment>
+                        <div className='ContextualActions__row'>
+                            <ToggleSelectionAll />
+                        </div>
+                        <div className='ContextualActions__row ContextualActions__row--separator' />
+                    </React.Fragment>
+                )}
                 <div className='ContextualActions__row'>
                     <TagsList />
                 </div>
