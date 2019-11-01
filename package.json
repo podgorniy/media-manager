@@ -17,7 +17,7 @@
     "_watch-server": "tsc --watch --project ./src/server/tsconfig.dev.json",
     "_build-client": "parcel build --no-source-maps ./src/client/client.tsx --out-dir ./dist/static/client  --public-url /client/",
     "_watch-client": "parcel watch --cache-dir ./.dev/.cache ./src/client/client.tsx --out-dir ./.dev/static/client --public-url /client/",
-    "_watch-server-run": "nodemon -w ./.dev/server -w ./.dev/server-views ./.dev/server/index.js"
+    "_watch-server-run": "nodemon --delay 333 -w ./.dev/server -w ./.dev/server-views ./.dev/server/index.js"
   },
   "license": "MIT",
   "dependencies": {
