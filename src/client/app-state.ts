@@ -519,10 +519,10 @@ export class AppState {
     }
 
     @action.bound
-    async addSelectedToCollection(collectionId: string) {
+    async addToCollection(collectionId: string, UUIDs: Array<UUID>) {
         await addToCollection({
             collectionId: collectionId,
-            items: this.selectedUUIDs
+            items: UUIDs
         })
         this.refreshCollectionsList()
         this.refreshMedia()

@@ -4,8 +4,11 @@ import {IAppState} from '../app-state'
 import {autorun} from 'mobx'
 import {Button, Dropdown} from 'semantic-ui-react'
 import './CollectionsControls.css'
+import {UUID} from '../../common/interfaces'
 
-interface IProps {}
+interface IProps {
+    UUIDs: Array<UUID>
+}
 
 interface IState {
     selectedCollection: string
@@ -73,7 +76,7 @@ export class CollectionsControls extends React.Component<IProps & IAppState, ISt
         }, null)
         let allSelectedAreInCollection = false
         let allSelectedAreNotInCollection = false
-        const selectedUUIDs = appState.selectedUUIDs
+        const selectedUUIDs = this.props.UUIDs
         if (selectedCollection && selectedCollection.media) {
             const mediaOfSelectedCollection = selectedCollection.media
             if (selectedCollection.media.length === 0) {
@@ -114,7 +117,7 @@ export class CollectionsControls extends React.Component<IProps & IAppState, ISt
                             compact
                             disabled={allSelectedAreInCollection}
                             onClick={() => {
-                                appState.addSelectedToCollection(this.state.selectedCollection)
+                                appState.addToCollection(this.state.selectedCollection, selectedUUIDs)
                             }}
                         >
                             Add

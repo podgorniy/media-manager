@@ -74,6 +74,9 @@ export class ContextualActions extends React.Component<{} & IAppState, {}> {
                         <div className='ContextualActions__row'>
                             <TagsControls mediaUUIDs={[appState.zoomedItemId]} />
                         </div>
+                        <div className='ContextualActions__row'>
+                            <CollectionsControls UUIDs={[appState.zoomedItemId]} />
+                        </div>
                         <div className='ContextualActions__row ContextualActions__row--separator' />
                     </React.Fragment>
                 )}
@@ -89,7 +92,7 @@ export class ContextualActions extends React.Component<{} & IAppState, {}> {
                             </div>
                         ) : null}
                         <div className='ContextualActions__row'>
-                            <CollectionsControls />
+                            <CollectionsControls UUIDs={appState.selectedUUIDs} />
                         </div>
                         <div className='ContextualActions__row'>
                             <TagsControls mediaUUIDs={appState.selectedUUIDs} />
