@@ -558,6 +558,25 @@ export class AppState {
         this.refreshCollectionsList()
     }
 
+    @action.bound
+    addToSelection(UUIDs: Array<UUID>) {
+        UUIDs.forEach(uuid => {
+            if (this.selectedUUIDs.indexOf(uuid) === -1) {
+                this.selectedUUIDs.push(uuid)
+            }
+        })
+    }
+
+    @action.bound
+    removeFromSelection(UUIDs: Array<UUID>) {
+        UUIDs.forEach(uuid => {
+            const index = this.selectedUUIDs.indexOf(uuid)
+            if (index !== -1) {
+                this.selectedUUIDs.splice(index, 1)
+            }
+        })
+    }
+
     asObj() {
         return JSON.parse(JSON.stringify(this))
     }

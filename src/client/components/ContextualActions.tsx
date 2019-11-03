@@ -11,6 +11,7 @@ import {Button, Icon} from 'semantic-ui-react'
 import {logout} from '../api'
 import {Collections2} from './Collections2'
 import {TagsControls} from './TagsControls'
+import {SelectionControls} from './SelectionControls'
 
 @inject('appState')
 @observer
@@ -66,6 +67,9 @@ export class ContextualActions extends React.Component<{} & IAppState, {}> {
                         <div className='ContextualActions__row'>
                             <ShareMediaItem mediaItemUUID={appState.zoomedItemId} />
                             <div className='clear' />
+                        </div>
+                        <div className='ContextualActions__row'>
+                            <SelectionControls UUIDs={[appState.zoomedItemId]} />
                         </div>
                         <div className='ContextualActions__row'>
                             <TagsControls mediaUUIDs={[appState.zoomedItemId]} />
