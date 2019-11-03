@@ -1,16 +1,37 @@
 import * as React from 'react'
 import {inject, observer} from 'mobx-react'
-import {IAppState} from '../app-state'
+import {AppState, IAppState} from '../app-state'
 import {TagLink} from './TagLink'
 import {Tagging} from './Tagging'
 import {Icon, Label} from 'semantic-ui-react'
 import './TagsControls.css'
+import {UUID} from '../../common/interfaces'
 
-interface IProps {}
+interface IProps {
+    mediaUUIDs: Array<UUID>
+}
 
 interface IState {
     inputValue: string
     submissionDisabled: boolean
+}
+
+function getTagsForMedia(appState: AppState, UUIDs: Array<UUID>): Array<string> {
+    let tagsSet: Set<string> = appState.media
+        .slice()
+        .filter((mediaItem) => {
+            return UUIDs.indexOf(mediaItem.uuid) !== -1
+        })
+        .map((mediaItem) => {
+            return mediaItem.tags
+        })
+        .reduce((resSet, tagsArr) => {
+            tagsArr.forEach((tag) => resSet.add(tag))
+            return resSet
+        }, new Set<string>())
+    let tagsArr = [...tagsSet]
+    tagsArr.sort()
+    return tagsArr
 }
 
 @inject('appState')
@@ -24,28 +45,13 @@ export class TagsControls extends React.Component<IProps & IAppState, IState> {
         }
     }
 
-    private async _attemptSubmit() {
-        const {appState} = this.props
-        if (this.state.submissionDisabled) {
-            return
-        }
-        this.setState({
-            submissionDisabled: true
-        })
-        await appState.addTagForSelectedRemotely([this.state.inputValue])
-        this.setState({
-            inputValue: '',
-            submissionDisabled: false
-        })
-    }
-
     render() {
         const {appState} = this.props
         return (
             <div>
-                <Tagging />
+                <Tagging mediaUUIDs={this.props.mediaUUIDs} />
                 <div className='TagControls__list'>
-                    {appState.selectedItemsTags.map((tag) => {
+                    {getTagsForMedia(appState, this.props.mediaUUIDs).map((tag) => {
                         let href
                         const {router} = appState
                         let currentTagsList = router.queryParams.tags || []

@@ -2,8 +2,11 @@ import * as React from 'react'
 import {inject, observer} from 'mobx-react'
 import {IAppState} from '../app-state'
 import {Button, Input} from 'semantic-ui-react'
+import {UUID} from '../../common/interfaces'
 
-interface IProps {}
+interface IProps {
+    mediaUUIDs: Array<UUID>
+}
 
 interface IState {
     val: string
@@ -29,7 +32,7 @@ export class Tagging extends React.Component<IProps & IAppState, IState> {
         this.setState({
             submissionDisabled: true
         })
-        await appState.addTagForSelectedRemotely([this.state.val])
+        await appState.addTagFor([this.state.val], this.props.mediaUUIDs)
         this.setState({
             val: '',
             submissionDisabled: false

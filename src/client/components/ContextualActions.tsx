@@ -67,6 +67,9 @@ export class ContextualActions extends React.Component<{} & IAppState, {}> {
                             <ShareMediaItem mediaItemUUID={appState.zoomedItemId} />
                             <div className='clear' />
                         </div>
+                        <div className='ContextualActions__row'>
+                            <TagsControls mediaUUIDs={[appState.zoomedItemId]} />
+                        </div>
                         <div className='ContextualActions__row ContextualActions__row--separator' />
                     </React.Fragment>
                 )}
@@ -78,14 +81,14 @@ export class ContextualActions extends React.Component<{} & IAppState, {}> {
                         {appState.selectedUUIDs.length === 1 ? (
                             <div className='ContextualActions__row'>
                                 <ShareMediaItem mediaItemUUID={appState.selectedUUIDs[0]} />
-                                <div className='clear'/>
+                                <div className='clear' />
                             </div>
                         ) : null}
                         <div className='ContextualActions__row'>
                             <CollectionsControls />
                         </div>
                         <div className='ContextualActions__row'>
-                            <TagsControls />
+                            <TagsControls mediaUUIDs={appState.selectedUUIDs} />
                         </div>
                         <div className='ContextualActions__row'>
                             <ToggleSelectionVisible />

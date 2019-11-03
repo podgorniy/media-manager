@@ -13,7 +13,14 @@ import {
     shareMedia,
     unShareMedia
 } from './api'
-import {IAppInitialState, IClientMediaItem, ICollectionItem, IMediaResponse, IUserMediaItem} from '../common/interfaces'
+import {
+    IAppInitialState,
+    IClientMediaItem,
+    ICollectionItem,
+    IMediaResponse,
+    IUserMediaItem,
+    UUID
+} from '../common/interfaces'
 import {AppRouter} from './app-router'
 import {getLoadMoreQuery, getRefreshQuery} from './lib'
 
@@ -184,25 +191,6 @@ export class AppState {
             return null
         }
         return focusedItem.uuid
-    }
-
-    @computed
-    get selectedItemsTags() {
-        let tagsSet: Set<string> = this.media
-            .slice()
-            .filter((mediaItem) => {
-                return this.selectedUUIDs.indexOf(mediaItem.uuid) !== -1
-            })
-            .map((mediaItem) => {
-                return mediaItem.tags
-            })
-            .reduce((resSet, tagsArr) => {
-                tagsArr.forEach((tag) => resSet.add(tag))
-                return resSet
-            }, new Set<string>())
-        let tagsArr = [...tagsSet]
-        tagsArr.sort()
-        return tagsArr
     }
 
     @computed
@@ -467,17 +455,17 @@ export class AppState {
         })
     }
 
-    async addTagForSelectedRemotely(tags: Array<string>) {
-        await addTags(tags, this.selectedUUIDs)
-        this.addTagForSelectedLocally(tags)
+    async addTagFor(tags: Array<string>, UUIDs: Array<UUID>) {
+        await addTags(tags, UUIDs)
+        this.addTagForLocalMedia(tags, UUIDs)
         this.refreshTags()
         this.refreshMedia()
     }
 
     @action.bound
-    addTagForSelectedLocally(tagList: Array<string>) {
+    addTagForLocalMedia(tagList: Array<string>, UUIDs: Array<UUID>) {
         this.media.forEach((mediaItem) => {
-            if (this.selectedUUIDs.indexOf(mediaItem.uuid) !== -1) {
+            if (UUIDs.indexOf(mediaItem.uuid) !== -1) {
                 tagList.forEach((addedTagName) => {
                     if (mediaItem.tags.indexOf(addedTagName) === -1) {
                         mediaItem.tags.push(addedTagName)
