@@ -50,9 +50,9 @@ export class CollectionsControls extends React.Component<IProps & IAppState, ISt
         // Select currently active collection bu default
         this._stopSetViewedAsSelected = autorun(() => {
             const {appState} = this.props
-            if (appState.currentlyViewedCollection && appState.currentlyViewedCollection._id) {
+            if (appState.currentlyViewedOwnCollection && appState.currentlyViewedOwnCollection._id) {
                 this.setState({
-                    selectedCollection: appState.currentlyViewedCollection._id
+                    selectedCollection: appState.currentlyViewedOwnCollection._id
                 })
             }
         })

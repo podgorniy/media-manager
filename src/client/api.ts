@@ -287,3 +287,36 @@ export async function unShareCollection({id}) {
         return false
     }
 }
+
+interface ICheckCollectionParams {
+    uri: string
+    password?: string
+}
+
+export interface ICheckCollectionValidResult {
+    success: boolean
+    exists: boolean
+    passwordProtected: boolean
+    passwordIsValid: boolean
+}
+
+export type ICheckCollectionResult = ICheckCollectionValidResult | false
+
+export async function checkCollection({uri, password}: ICheckCollectionParams): Promise<ICheckCollectionResult> {
+    try {
+        const resp: {
+            data: ICheckCollectionValidResult
+        } = await axios({
+            method: 'get',
+            url: '/api/v1/check-collection',
+            params: {
+                uri: uri,
+                password: password
+            }
+        })
+        return resp.data
+    } catch (err) {
+        console.error(err)
+        return false
+    }
+}

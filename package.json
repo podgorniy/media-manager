@@ -4,7 +4,7 @@
   "description": "",
   "scripts": {
     "_hack-first-run": "mkdir -p ./.dev/server/ && touch ./.dev/server/index.js",
-    "dev": "export NODE_ENV=development && npm run _hack-first-run && concurrently npm:_watch-server-run npm:_watch-server npm:_watch-static npm:_watch-server-views npm:_watch-client",
+    "dev": "export NODE_ENV=development && npm run _hack-first-run && concurrently npm:_watch-server npm:_watch-server-run npm:_watch-static npm:_watch-server-views npm:_watch-client",
     "build": "export NODE_ENV=production && npm run _clean && npm run _build-server && npm run _build-server-views && npm run _build-static && npm run _build-client",
     "docker-prod": "docker-compose build --no-cache && docker-compose up --build -d",
     "prod": "node ./dist/server/index.js",
@@ -17,7 +17,7 @@
     "_watch-server": "tsc --watch --project ./src/server/tsconfig.dev.json",
     "_build-client": "parcel build --no-source-maps ./src/client/client.tsx --out-dir ./dist/static/client  --public-url /client/",
     "_watch-client": "parcel watch --cache-dir ./.dev/.cache ./src/client/client.tsx --out-dir ./.dev/static/client --public-url /client/",
-    "_watch-server-run": "nodemon --delay 333 -w ./.dev/server -w ./.dev/server-views ./.dev/server/index.js"
+    "_watch-server-run": "nodemon -w ./.dev/server -w ./.dev/server-views ./.dev/server/index.js"
   },
   "license": "MIT",
   "dependencies": {

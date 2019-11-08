@@ -33,9 +33,9 @@ export class Layout extends React.Component<{} & IAppState, {}> {
 
     render() {
         const {appState} = this.props
-        const [_, collectionUrl] = appState.router.pathSegments
-        const {sideExpanded, isAuthenticated, sideWidth} = appState
+        const {sideExpanded, isAuthenticated, sideWidth, currentCollectionUri} = appState
         let content
+        const {concluded, pending, exists, passwordIsValid, passwordProtected} = appState.guestCollection
         if (isAuthenticated) {
             content = (
                 <React.Fragment>
@@ -62,18 +62,27 @@ export class Layout extends React.Component<{} & IAppState, {}> {
                     {<Zoom />}
                 </React.Fragment>
             )
-        } else if (collectionUrl) {
-            content = (
-                <React.Fragment>
-                    <IsLoading />
-                    <div>
-                        {appState.currentlyViewedCollectionId}
-                        {appState.currentlyViewedCollection}
-                        <MediaList />
-                        {<Zoom />}
-                    </div>
-                </React.Fragment>
-            )
+        } else if (currentCollectionUri) {
+            if (!concluded) {
+                content = 'Loading...' // TODO: improve
+            } else if (
+                concluded &&
+                !pending &&
+                exists &&
+                ((passwordProtected && passwordIsValid) || !passwordProtected)
+            ) {
+                content = (
+                    <React.Fragment>
+                        <IsLoading />
+                        <div>
+                            <MediaList />
+                            {<Zoom />}
+                        </div>
+                    </React.Fragment>
+                )
+            } else {
+                content = `You don't have access or collection does not exist` // TODO: improve
+            }
         } else {
             content = <Auth />
         }

@@ -25,6 +25,10 @@ const CollectionSchema = new Schema(
         owner: {
             type: String,
             required: true
+        },
+        publicPassword: {
+            type: String,
+            required: false
         }
     },
     {

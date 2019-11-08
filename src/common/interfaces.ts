@@ -51,6 +51,7 @@ export interface ICollectionFields {
     public: boolean
     title: string
     owner: string
+    publicPassword: string
 }
 
 export interface ICollectionItem extends ICollectionFields, Document {}

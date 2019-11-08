@@ -12,10 +12,13 @@ function initLoadingMoreService(appState: AppState) {
             isAuthenticated,
             canLoadMore,
             isLoading,
-            currentCollectionUri
+            guestCollection
         } = appState
+        const {concluded, exists, passwordProtected, passwordIsValid} = guestCollection
+        const canLoadGuestCollection =
+            concluded && exists && (!passwordProtected || (passwordProtected && passwordIsValid))
         if (
-            (isAuthenticated || currentCollectionUri) &&
+            (isAuthenticated || canLoadGuestCollection) &&
             !isLoading &&
             canLoadMore &&
             mediaListFullHeight - pageScrolled - viewportHeight <
@@ -71,9 +74,26 @@ function initSelectingCurrentCollectionId(appState: AppState) {
     })
 }
 
+function initGuestCollection(appState: AppState) {
+    autorun((r) => {
+        const {isAuthenticated, currentCollectionUri} = appState
+        const {concluded, pending} = appState.guestCollection
+        if (!isAuthenticated) {
+            if (currentCollectionUri && (!pending && !concluded)) {
+                appState.initGuestCollection().finally(() => {
+                    r.dispose()
+                })
+            }
+        } else {
+            r.dispose()
+        }
+    })
+}
+
 // Reacts to state changes
 export function initServices(appState: AppState) {
     initResettingService(appState) // 1. Order matters
     initLoadingMoreService(appState) // 2. Order matters
     initSelectingCurrentCollectionId(appState)
+    initGuestCollection(appState)
 }

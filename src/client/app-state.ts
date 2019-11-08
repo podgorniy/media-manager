@@ -1,12 +1,14 @@
-import {action, computed, configure, IObservableArray, observable} from 'mobx'
+import {action, computed, configure, flow, IObservableArray, observable} from 'mobx'
 import {
     addTags,
     addToCollection,
+    checkCollection,
     createCollection,
     deleteCollection,
     fetchMedia,
     fetchTags,
     getCollectionsList,
+    ICheckCollectionResult,
     IFetchMediaHandler,
     removeFromCollection,
     removeTags,
@@ -44,6 +46,24 @@ function toClientSideRepresentation(mediaDoc: IUserMediaItem): IClientMediaItem 
 
 interface ITagItem {
     name: string
+}
+
+export interface IGuestCollectionParams {
+    pending?: boolean
+    exists?: boolean
+    passwordProtected?: boolean
+    password?: string
+    concluded?: boolean
+    passwordIsValid?: boolean
+}
+
+export interface IGuestCollection extends IGuestCollectionParams {
+    pending: boolean
+    exists: boolean
+    passwordProtected: boolean
+    password: string
+    concluded: boolean
+    passwordIsValid: boolean
 }
 
 export class AppState {
@@ -115,7 +135,26 @@ export class AppState {
     currentlyViewedCollectionId = null
 
     @observable
-    currentlyViewedCollection: ICollectionItem
+    currentlyViewedOwnCollection: ICollectionItem
+
+    @observable
+    guestsCurrentCollectionPass: string
+
+    @observable
+    guestCollection: IGuestCollection = {
+        pending: false,
+        exists: false,
+        concluded: false,
+        passwordProtected: false,
+        password: '',
+        passwordIsValid: false
+    }
+
+    @observable
+    guestsCurrentCollectionPassIsValid: boolean = false
+
+    @observable
+    waitingForCurrentCollectionGuestsPassValidation: boolean = false
 
     /**
      * Only which are loaded
@@ -311,7 +350,6 @@ export class AppState {
             this.canLoadMore = hasMore
         } else {
             this.canLoadMore = false
-            alert(`Failed to load media items`)
         }
         this.isLoading = false
     }
@@ -401,7 +439,7 @@ export class AppState {
             return
         }
         let params = {}
-        let currentlyViewedCollectionId = this.currentlyViewedCollection && this.currentlyViewedCollection._id
+        let currentlyViewedCollectionId = this.currentlyViewedOwnCollection && this.currentlyViewedOwnCollection._id
         if (currentlyViewedCollectionId) {
             params = {
                 collectionId: currentlyViewedCollectionId
@@ -505,10 +543,10 @@ export class AppState {
 
     @action.bound
     setCurrentlyViewedCollection(newVal: null | ICollectionItem) {
-        if (newVal && this.currentlyViewedCollection && this.currentlyViewedCollection._id === newVal._id) {
+        if (newVal && this.currentlyViewedOwnCollection && this.currentlyViewedOwnCollection._id === newVal._id) {
             return
         } else {
-            this.currentlyViewedCollection = newVal
+            this.currentlyViewedOwnCollection = newVal
             this.refreshTags()
         }
     }
@@ -560,7 +598,7 @@ export class AppState {
 
     @action.bound
     addToSelection(UUIDs: Array<UUID>) {
-        UUIDs.forEach(uuid => {
+        UUIDs.forEach((uuid) => {
             if (this.selectedUUIDs.indexOf(uuid) === -1) {
                 this.selectedUUIDs.push(uuid)
             }
@@ -569,13 +607,68 @@ export class AppState {
 
     @action.bound
     removeFromSelection(UUIDs: Array<UUID>) {
-        UUIDs.forEach(uuid => {
+        UUIDs.forEach((uuid) => {
             const index = this.selectedUUIDs.indexOf(uuid)
             if (index !== -1) {
                 this.selectedUUIDs.splice(index, 1)
             }
         })
     }
+
+    @action.bound
+    updateGuestCollectionState(params: IGuestCollectionParams) {
+        this.guestCollection = Object.assign({}, this.guestCollection, params)
+    }
+
+    initGuestCollection = flow(function*(this: AppState) {
+        this.updateGuestCollectionState({pending: true})
+        try {
+            const collectionStatus: ICheckCollectionResult = yield checkCollection({
+                uri: this.currentCollectionUri
+            })
+            if (collectionStatus && collectionStatus.exists) {
+                this.updateGuestCollectionState({exists: true})
+                if (collectionStatus.passwordProtected) {
+                    this.updateGuestCollectionState({
+                        passwordProtected: true
+                    })
+                    do {
+                        let userPromptedPass = prompt('Password for this collection')
+                        if (!userPromptedPass) {
+                            this.updateGuestCollectionState({
+                                concluded: true,
+                                passwordIsValid: false,
+                                pending: false
+                            })
+                            break
+                        }
+                        userPromptedPass = userPromptedPass.trim()
+                        const validationResult: ICheckCollectionResult = yield checkCollection({
+                            uri: this.currentCollectionUri,
+                            password: userPromptedPass
+                        })
+                        if (validationResult && validationResult.passwordIsValid) {
+                            this.updateGuestCollectionState({
+                                exists: true,
+                                pending: false,
+                                concluded: true,
+                                password: userPromptedPass,
+                                passwordIsValid: true
+                            })
+                            break
+                        }
+                    } while (true)
+                } else {
+                    this.updateGuestCollectionState({concluded: true, passwordProtected: false, pending: false})
+                }
+            } else {
+                this.updateGuestCollectionState({exists: false, pending: false, concluded: true})
+            }
+        } catch (e) {
+            console.error(e)
+            this.updateGuestCollectionState({pending: false, concluded: true, exists: false})
+        }
+    })
 
     asObj() {
         return JSON.parse(JSON.stringify(this))

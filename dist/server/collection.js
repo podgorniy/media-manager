@@ -23,6 +23,10 @@ var CollectionSchema = new mongoose_1.Schema({
     owner: {
         type: String,
         required: true
+    },
+    publicPassword: {
+        type: String,
+        required: false
     }
 }, {
     collection: 'collections'

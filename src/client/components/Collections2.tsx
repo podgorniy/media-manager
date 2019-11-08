@@ -153,15 +153,16 @@ export class Collections2 extends React.Component<IProps & IAppState, IState> {
                                     >
                                         {collection.public ? 'Copy link' : 'Share'}
                                     </Button>
-                                    <Button
-                                        disabled={!collection.public}
-                                        onClick={async () => {
-                                            await unShareCollection({id: collection._id})
-                                            appState.refreshCollectionsList()
-                                        }}
-                                    >
-                                        Unshare
-                                    </Button>
+                                    {collection.public ? (
+                                        <Button
+                                            onClick={async () => {
+                                                await unShareCollection({id: collection._id})
+                                                appState.refreshCollectionsList()
+                                            }}
+                                        >
+                                            Unshare
+                                        </Button>
+                                    ) : null}
                                 </Button.Group>
                             </React.Fragment>
                         )
