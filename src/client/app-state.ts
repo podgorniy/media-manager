@@ -156,14 +156,6 @@ export class AppState {
     @observable
     waitingForCurrentCollectionGuestsPassValidation: boolean = false
 
-    /**
-     * Only which are loaded
-     */
-    @computed
-    get selectedItems(): Array<IClientMediaItem> {
-        return this.media.filter((item) => this.selectedUUIDs.indexOf(item.uuid) !== -1)
-    }
-
     @computed
     get selectedVisibleUUIDs() {
         return this.selectedUUIDs.filter((itemUUID) => {
@@ -464,13 +456,13 @@ export class AppState {
     }
 
     @action.bound
-    async removeTagFromSelectedRemotely(tagName: string) {
+    async removeTagFrom(tagName: string, uuids: Array<string>) {
         try {
             await removeTags({
                 tags: [tagName],
-                media: this.selectedUUIDs
+                media: uuids
             })
-            this.removeTagFromSelectedLocally([tagName])
+            this.removeTagsLocallyFrom([tagName], uuids)
             this.refreshTags()
             this.refreshMedia()
         } catch (err) {
@@ -479,9 +471,9 @@ export class AppState {
     }
 
     @action.bound
-    removeTagFromSelectedLocally(tagsList: Array<string>) {
+    removeTagsLocallyFrom(tagsList: Array<string>, uuids: Array<string>) {
         this.media.forEach((mediaItem) => {
-            if (this.selectedUUIDs.indexOf(mediaItem.uuid) !== -1) {
+            if (uuids.indexOf(mediaItem.uuid) !== -1) {
                 mediaItem.tags = mediaItem.tags.filter((tagName) => {
                     if (tagsList.indexOf(tagName) !== -1) {
                         return false

@@ -79,7 +79,7 @@ export class TagsControls extends React.Component<IProps & IAppState, IState> {
                                 <Icon
                                     onClick={(event) => {
                                         event.preventDefault()
-                                        appState.removeTagFromSelectedRemotely(tag)
+                                        appState.removeTagFrom(tag, this.props.mediaUUIDs)
                                     }}
                                     name='delete'
                                 />
