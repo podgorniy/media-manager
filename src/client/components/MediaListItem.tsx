@@ -2,6 +2,7 @@ import {autorun} from 'mobx'
 import * as React from 'react'
 import {inject, observer} from 'mobx-react'
 import {IAppState} from '../app-state'
+import {getRandomIntInclusive} from '../../common/lib'
 
 require('./MediaListItem.less')
 
@@ -10,15 +11,30 @@ interface IMediaListItemProps {
     onLoad: () => void
 }
 
+interface IMediaListItemState {
+    loaded: boolean
+}
+
 @inject('appState')
 @observer
-export class MediaListItem extends React.Component<IMediaListItemProps & IAppState, {}> {
+export class MediaListItem extends React.Component<IMediaListItemProps & IAppState, IMediaListItemState> {
     constructor(props) {
         super(props)
+        this.state = {
+            loaded: false
+        }
+        this.handleOnLoad = this.handleOnLoad.bind(this)
     }
 
     private ref = React.createRef<HTMLDivElement>()
     private stopAutoScrollIntoView
+
+    private handleOnLoad() {
+        this.props.onLoad()
+        this.setState({
+            loaded: true
+        })
+    }
 
     componentDidMount() {
         const {appState, uuid} = this.props
@@ -59,6 +75,12 @@ export class MediaListItem extends React.Component<IMediaListItemProps & IAppSta
         const {url, focused, type, width, height} = mediaItem
         const aspectPadding = (height / width) * 100
         const selected = selectedUUIDs.indexOf(uuid) !== -1
+        const wrapperExtraClass = this.state.loaded
+            ? ''
+            : `MediaListItem__aspect_inner--loading MediaListItem__aspect_inner--loading-${getRandomIntInclusive(
+                  1,
+                  5
+              ).toString()}`
         return (
             <div
                 ref={this.ref}
@@ -77,14 +99,14 @@ export class MediaListItem extends React.Component<IMediaListItemProps & IAppSta
                             `}
                 >
                     <div className='MediaListItem__aspect' style={{paddingBottom: aspectPadding + '%'}}>
-                        <div className='MediaListItem__aspect_inner'>
+                        <div className={`MediaListItem__aspect_inner ${wrapperExtraClass}`}>
                             {type === 'img' && (
                                 <img
                                     onClick={this.clickHandler}
                                     src={url}
-                                    className={`MediaListItem`}
+                                    className='MediaListItem'
                                     alt={uuid}
-                                    onLoad={onLoad}
+                                    onLoad={this.handleOnLoad}
                                 />
                             )}
 
@@ -93,8 +115,8 @@ export class MediaListItem extends React.Component<IMediaListItemProps & IAppSta
                                     controls
                                     onClick={this.clickHandler}
                                     src={url}
-                                    className={`MediaListItem`}
-                                    onLoad={onLoad}
+                                    className='MediaListItem'
+                                    onLoad={this.handleOnLoad}
                                     width='100%'
                                 />
                             )}
