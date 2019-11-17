@@ -6,7 +6,7 @@ import {AppState} from './app-state'
 import {isDev} from '../common/lib'
 import {initServices} from './services'
 
-const appState = new AppState(window['initialState'])
+const appState = new AppState()
 if (isDev()) {
     window['a'] = appState
 }

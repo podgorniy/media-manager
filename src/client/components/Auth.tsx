@@ -50,7 +50,7 @@ export class Auth extends React.Component<IProps & IAppState, IState> {
                                         loading: false
                                     })
                                     if (authResults.success) {
-                                        appState.setAuthenticated({userName: authResults.userName})
+                                        appState.setAuthenticated(true)
                                     } else {
                                         this.setState({
                                             error: true

@@ -16,7 +16,6 @@ import {
     unShareMedia
 } from './api'
 import {
-    IAppInitialState,
     IClientMediaItem,
     ICollectionItem,
     IMediaResponse,
@@ -67,9 +66,9 @@ export interface IGuestCollection extends IGuestCollectionParams {
 }
 
 export class AppState {
-    constructor(initialState: IAppInitialState) {
-        this.router = new AppRouter(initialState.url || location.href)
-        this.setAuthenticated({userName: initialState.userName})
+    constructor() {
+        this.router = new AppRouter(location.href)
+        this.setAuthenticated(!!window['isAuthenticated'])
     }
 
     router: AppRouter
@@ -165,10 +164,8 @@ export class AppState {
         })
     }
 
-    @computed
-    get isAuthenticated() {
-        return !!this.userName
-    }
+    @observable
+    isAuthenticated = false
 
     @computed
     get layoutColumnsCount(): number {
@@ -245,12 +242,8 @@ export class AppState {
     }
 
     @action.bound
-    setAuthenticated(params: ISetAuthenticatedParams) {
-        if (typeof params === 'object') {
-            this.userName = params.userName
-        } else {
-            this.userName = ''
-        }
+    setAuthenticated(authenticated: boolean) {
+        this.isAuthenticated = authenticated
         // New login means that
         this.resetMedia()
     }

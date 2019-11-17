@@ -19,7 +19,7 @@ export class LogoutBtn extends React.Component<{} & IAppState, {}> {
                     }
                 }}
             >
-                Logout {appState.userName}
+                Logout
             </span>
         )
     }

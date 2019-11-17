@@ -5,8 +5,6 @@ import {uploader} from './uploader'
 import {sendMedia} from './controllers/send-media'
 import {logout} from './controllers/logout'
 import {check} from './controllers/check'
-import {MediaModel, toApiRepresentation} from './media'
-import {IAppInitialState} from '../common/interfaces'
 import {provideMedia} from './controllers/provide-media'
 import {provideTags} from './controllers/provide-tags'
 import {addTags} from './controllers/add-tags'
@@ -83,16 +81,8 @@ export function initRoutes(app: Express) {
     app.get(
         '*',
         asyncHandler(async (req, res) => {
-            req.session.visits = (req.session.visits || 0) + 1
-            res.locals.visits = req.session.visits
-            res.locals.isLoggedIn = !!req.user
-            const appInitialState: IAppInitialState = {
-                userMedia: res.locals.isLoggedIn
-                    ? (await MediaModel.find({owner: req.user._id})).map(toApiRepresentation)
-                    : [],
-                userName: req.user ? req.user.name : ''
-            }
-            res.locals.initialState = appInitialState
+            res.locals.title = 'Media Manager'
+            res.locals.isAuthenticated = !!req.user
             res.render('default')
         })
     )

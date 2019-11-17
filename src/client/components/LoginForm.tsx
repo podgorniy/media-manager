@@ -26,7 +26,7 @@ export class LoginForm extends React.Component<{} & IAppState, ILoginFormState> 
                         event.preventDefault()
                         const authSuccess = await authenticate(this.state)
                         if (authSuccess.success) {
-                            appState.setAuthenticated({userName: authSuccess.userName})
+                            appState.setAuthenticated(true)
                         } else {
                             alert('Failed to authenticate')
                         }

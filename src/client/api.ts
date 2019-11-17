@@ -28,7 +28,6 @@ export async function authenticate({userName, password}): Promise<{userName?: st
     if (loginRes.success) {
         return {
             success: true,
-            userName: loginRes.userName
         }
     } else {
         return {

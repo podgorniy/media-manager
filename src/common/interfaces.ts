@@ -13,12 +13,6 @@ export interface IUserMediaItem {
     height: number
 }
 
-export interface IAppInitialState {
-    userName: string
-    userMedia: Array<IUserMediaItem>
-    url?: string // TODO: validate with server side rendering
-}
-
 // Client side representation of media item
 export interface IClientMediaItem extends IUserMediaItem {
     focused: boolean
