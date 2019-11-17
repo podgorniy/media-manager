@@ -121,7 +121,7 @@ export async function removeTags(params: {tags: Array<string>; media: Array<stri
     }
 }
 
-export async function getCollectionsList(): Promise<Array<{uri: string; title: string}>> {
+export async function getCollections(): Promise<Array<{uri: string; title: string}>> {
     try {
         const resp = await axios({
             method: 'get',
@@ -315,6 +315,28 @@ export async function checkCollection({uri, password}: ICheckCollectionParams): 
             }
         })
         return resp.data
+    } catch (err) {
+        console.error(err)
+        return false
+    }
+}
+
+export interface IUpdateCollectionParams {
+    uri: string
+    public?: boolean
+    publicPassword?: string
+}
+
+export async function updateCollection(params: IUpdateCollectionParams): Promise<boolean> {
+    try {
+        const resp: {
+            data: {success: boolean}
+        } = await axios({
+            method: 'post',
+            url: '/api/v1/update-collection',
+            data: params
+        })
+        return resp.data.success
     } catch (err) {
         console.error(err)
         return false

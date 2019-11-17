@@ -22,6 +22,7 @@ import {unShareMedia} from './controllers/un-share-media'
 import {shareCollection} from './controllers/share-collection'
 import {unShareCollection} from './controllers/un-share-collection'
 import {checkCollection} from './controllers/checkCollection'
+import { updateCollection } from './controllers/update-collection'
 
 const passport = require('passport')
 
@@ -71,6 +72,7 @@ export function initRoutes(app: Express) {
     app.post('/api/v1/delete-collection', isAuthenticated, deleteCollection)
     app.post('/api/v1/add-to-collection', isAuthenticated, addToCollection)
     app.post('/api/v1/remove-from-collection', isAuthenticated, removeFromCollection)
+    app.post('/api/v1/update-collection', isAuthenticated, updateCollection)
     app.post('/api/v1/share-media', isAuthenticated, shareMedia)
     app.post('/api/v1/un-share-media', isAuthenticated, unShareMedia)
 

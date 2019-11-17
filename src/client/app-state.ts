@@ -7,7 +7,7 @@ import {
     deleteCollection,
     fetchMedia,
     fetchTags,
-    getCollectionsList,
+    getCollections,
     ICheckCollectionResult,
     IFetchMediaHandler,
     removeFromCollection,
@@ -515,8 +515,8 @@ export class AppState {
     }
 
     @action.bound
-    async refreshCollectionsList() {
-        const data = await getCollectionsList()
+    async refreshCollections() {
+        const data = await getCollections()
         if (data) {
             this.setCollections(data)
         }
@@ -554,7 +554,7 @@ export class AppState {
             collectionId: collectionId,
             items: UUIDs
         })
-        this.refreshCollectionsList()
+        this.refreshCollections()
         this.refreshMedia()
     }
 
@@ -564,7 +564,7 @@ export class AppState {
             collectionId: collectionId,
             items: this.selectedUUIDs
         })
-        this.refreshCollectionsList()
+        this.refreshCollections()
         this.refreshMedia()
     }
 
@@ -585,7 +585,7 @@ export class AppState {
     @action.bound
     async deleteCollection(collectionId) {
         await deleteCollection({collectionId: collectionId})
-        this.refreshCollectionsList()
+        this.refreshCollections()
     }
 
     @action.bound

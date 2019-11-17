@@ -5,6 +5,7 @@ import {RouterLink} from './RouterLink'
 import {deleteCollection, renameCollection, shareCollection, unShareCollection} from '../api'
 import {Button, Input} from 'semantic-ui-react'
 import './Collections2.css'
+import {CollectionPublicPassword} from './CollectionPublicPassword'
 import copy = require('copy-to-clipboard')
 
 interface IProps {}
@@ -26,7 +27,7 @@ export class Collections2 extends React.Component<IProps & IAppState, IState> {
     }
 
     componentDidMount(): void {
-        this.props.appState.refreshCollectionsList()
+        this.props.appState.refreshCollections()
     }
 
     render() {
@@ -69,7 +70,7 @@ export class Collections2 extends React.Component<IProps & IAppState, IState> {
                                 this.setState({disabled: false})
                                 if (res) {
                                     this.setState({text: ''})
-                                    appState.refreshCollectionsList()
+                                    appState.refreshCollections()
                                 }
                             }}
                         >
@@ -117,7 +118,7 @@ export class Collections2 extends React.Component<IProps & IAppState, IState> {
                                         onClick={async () => {
                                             if (confirm(`Confirm deletion of collection "${collection.title}"`)) {
                                                 await deleteCollection({collectionId: collection._id})
-                                                await appState.refreshCollectionsList()
+                                                await appState.refreshCollections()
                                                 if (isActiveCollection) {
                                                     appState.router.replaceUrl(
                                                         appState.router.getFullUrl({replace: {pathSegments: []}})
@@ -138,7 +139,7 @@ export class Collections2 extends React.Component<IProps & IAppState, IState> {
                                                     collectionId: collection._id,
                                                     newTitle: newTitle
                                                 })
-                                                appState.refreshCollectionsList()
+                                                appState.refreshCollections()
                                             }
                                         }}
                                     >
@@ -148,7 +149,7 @@ export class Collections2 extends React.Component<IProps & IAppState, IState> {
                                         onClick={async () => {
                                             copy(collectionUrl)
                                             await shareCollection({id: collection._id})
-                                            appState.refreshCollectionsList()
+                                            appState.refreshCollections()
                                         }}
                                     >
                                         {collection.public ? 'Copy link' : 'Share'}
@@ -157,13 +158,14 @@ export class Collections2 extends React.Component<IProps & IAppState, IState> {
                                         <Button
                                             onClick={async () => {
                                                 await unShareCollection({id: collection._id})
-                                                appState.refreshCollectionsList()
+                                                appState.refreshCollections()
                                             }}
                                         >
                                             Unshare
                                         </Button>
                                     ) : null}
                                 </Button.Group>
+                                {collection.public ? <CollectionPublicPassword collection={collection} /> : null}
                             </React.Fragment>
                         )
                     })}
