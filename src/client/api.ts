@@ -27,7 +27,7 @@ export async function authenticate({userName, password}): Promise<{userName?: st
     const loginRes = await loginRequestObj.json()
     if (loginRes.success) {
         return {
-            success: true,
+            success: true
         }
     } else {
         return {

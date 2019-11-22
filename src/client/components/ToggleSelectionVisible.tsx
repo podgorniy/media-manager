@@ -1,6 +1,7 @@
 import * as React from 'react'
 import {inject, observer} from 'mobx-react'
 import {IAppState} from '../app-state'
+import {Button} from 'semantic-ui-react'
 
 interface IProps {}
 interface IState {}
@@ -20,9 +21,9 @@ export class ToggleSelectionVisible extends React.Component<IProps & IAppState, 
         return (
             <div>
                 {itemsSelected && itemsSelected !== appState.selectedUUIDs.length ? (
-                    <button onClick={appState.unselectSelected}>
+                    <Button size='small' compact onClick={appState.unselectSelected}>
                         Deselect <strong>{itemsSelected}</strong> items
-                    </button>
+                    </Button>
                 ) : null}
             </div>
         )

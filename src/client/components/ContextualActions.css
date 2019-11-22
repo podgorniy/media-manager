@@ -1,13 +1,31 @@
 .ContextualActions {
-    padding-top: 5px;
 }
 
-.ContextualActions__row {
+.ContextualActions__block {
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.ContextualActions__block:not(:last-of-type) {
+    margin-bottom: 5px;
+}
+
+.ContextualActions__user {
+    background-color: rgba(215, 56, 222, 0.3);
+}
+
+.ContextualActions__zoomed {
+    background-color: rgba(80, 225, 81, 0.3);
+}
+
+.ContextualActions__selected {
+    background-color: rgba(255, 253, 0, 0.8);
+}
+
+.ContextualActions__collections {
+    background-color: rgba(95, 43, 255, 0.4);
+}
+
+.ContextualActions__row:not(:last-of-type) {
     margin-bottom: 10px;
-}
-
-.ContextualActions__row--separator {
-    border-bottom: 1px dashed #3c3c3c;
-    margin-left: -10px;
-    margin-right: -10px;
 }

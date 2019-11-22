@@ -15,13 +15,7 @@ import {
     shareMedia,
     unShareMedia
 } from './api'
-import {
-    IClientMediaItem,
-    ICollectionItem,
-    IMediaResponse,
-    IUserMediaItem,
-    UUID
-} from '../common/interfaces'
+import {IClientMediaItem, ICollectionItem, IMediaResponse, IUserMediaItem, UUID} from '../common/interfaces'
 import {AppRouter} from './app-router'
 import {getLoadMoreQuery, getRefreshQuery} from './lib'
 

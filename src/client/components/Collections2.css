@@ -8,12 +8,13 @@
 }
 
 .Collections2__collection-link a {
+    color: #fefefe;
     padding: 0 10px;
-    border-top-left-radius: 5px;
-    border-top-right-radius: 5px;
     display: inline-block;
+    margin-bottom: 5px;
+    border-radius: 5px;
 }
 
 .Collections2__collection-link-active {
-    background: #3c3c3c;
+    background: #8096b1;
 }

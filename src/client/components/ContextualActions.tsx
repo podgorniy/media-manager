@@ -24,46 +24,47 @@ export class ContextualActions extends React.Component<{} & IAppState, {}> {
         const {appState} = this.props
         return (
             <div className='ContextualActions'>
-                <div className='ContextualActions__row'>
-                    <Button.Group size='tiny' icon>
-                        <Button
-                            compact
-                            size='tiny'
-                            active={appState.sideExpanded}
-                            onClick={() => {
-                                appState.toggleSide()
-                            }}
-                        >
-                            <Icon className='ToggleMenu' name='bars' />
-                        </Button>
-                        <Button
-                            compact
-                            size='tiny'
-                            onClick={() => {
-                                appState.toggleUploadVisibility(true)
-                            }}
-                        >
-                            Upload
-                        </Button>
-                        <Button
-                            compact
-                            size='tiny'
-                            onClick={async () => {
-                                const logoutSuccess = await logout()
-                                if (logoutSuccess) {
-                                    appState.setAuthenticated(false)
-                                } else {
-                                    alert('Failed to logout')
-                                }
-                            }}
-                        >
-                            Logout
-                        </Button>
-                    </Button.Group>
+                <div className='ContextualActions__block ContextualActions__user'>
+                    <div className='ContextualActions__row'>
+                        <Button.Group size='tiny' icon>
+                            <Button
+                                compact
+                                size='tiny'
+                                active={appState.sideExpanded}
+                                onClick={() => {
+                                    appState.toggleSide()
+                                }}
+                            >
+                                <Icon className='ToggleMenu' name='bars' />
+                            </Button>
+                            <Button
+                                compact
+                                size='tiny'
+                                onClick={() => {
+                                    appState.toggleUploadVisibility(true)
+                                }}
+                            >
+                                Upload
+                            </Button>
+                            <Button
+                                compact
+                                size='tiny'
+                                onClick={async () => {
+                                    const logoutSuccess = await logout()
+                                    if (logoutSuccess) {
+                                        appState.setAuthenticated(false)
+                                    } else {
+                                        alert('Failed to logout')
+                                    }
+                                }}
+                            >
+                                Logout
+                            </Button>
+                        </Button.Group>
+                    </div>
                 </div>
-                <div className='ContextualActions__row ContextualActions__row--separator' />
                 {appState.zoomedItemId && (
-                    <React.Fragment>
+                    <div className='ContextualActions__block ContextualActions__zoomed'>
                         <div className='ContextualActions__row'>
                             <ShareMediaItem mediaItemUUID={appState.zoomedItemId} />
                             <div className='clear' />
@@ -77,45 +78,45 @@ export class ContextualActions extends React.Component<{} & IAppState, {}> {
                         <div className='ContextualActions__row'>
                             <CollectionsControls UUIDs={[appState.zoomedItemId]} />
                         </div>
-                        <div className='ContextualActions__row ContextualActions__row--separator' />
-                    </React.Fragment>
+                    </div>
                 )}
-                {appState.selectedUUIDs.length ? (
-                    <React.Fragment>
-                        <div className='ContextualActions__row'>
-                            <ToggleSelectionAll />
-                        </div>
-                        {appState.selectedUUIDs.length === 1 ? (
+                <div className='ContextualActions__block ContextualActions__selected'>
+                    {appState.selectedUUIDs.length ? (
+                        <React.Fragment>
                             <div className='ContextualActions__row'>
-                                <ShareMediaItem mediaItemUUID={appState.selectedUUIDs[0]} />
-                                <div className='clear' />
+                                <ToggleSelectionAll />
                             </div>
-                        ) : null}
-                        <div className='ContextualActions__row'>
-                            <CollectionsControls UUIDs={appState.selectedUUIDs} />
-                        </div>
-                        <div className='ContextualActions__row'>
-                            <TagsControls mediaUUIDs={appState.selectedUUIDs} />
-                        </div>
-                        <div className='ContextualActions__row'>
-                            <ToggleSelectionVisible />
-                        </div>
-                        <div className='ContextualActions__row ContextualActions__row--separator' />
-                    </React.Fragment>
-                ) : (
-                    <React.Fragment>
-                        <div className='ContextualActions__row'>
-                            <ToggleSelectionAll />
-                        </div>
-                        <div className='ContextualActions__row ContextualActions__row--separator' />
-                    </React.Fragment>
-                )}
-                <div className='ContextualActions__row'>
-                    <TagsList />
+                            {appState.selectedUUIDs.length === 1 ? (
+                                <div className='ContextualActions__row'>
+                                    <ShareMediaItem mediaItemUUID={appState.selectedUUIDs[0]} />
+                                    <div className='clear' />
+                                </div>
+                            ) : null}
+                            <div className='ContextualActions__row'>
+                                <CollectionsControls UUIDs={appState.selectedUUIDs} />
+                            </div>
+                            <div className='ContextualActions__row'>
+                                <TagsControls mediaUUIDs={appState.selectedUUIDs} />
+                            </div>
+                            <div className='ContextualActions__row'>
+                                <ToggleSelectionVisible />
+                            </div>
+                        </React.Fragment>
+                    ) : (
+                        <React.Fragment>
+                            <div className='ContextualActions__row'>
+                                <ToggleSelectionAll />
+                            </div>
+                        </React.Fragment>
+                    )}
                 </div>
-                <div className='ContextualActions__row ContextualActions__row--separator' />
-                <div className='ContextualActions__row'>
-                    <Collections2 />
+                <div className='ContextualActions__block ContextualActions__collections'>
+                    <div className='ContextualActions__row'>
+                        <TagsList />
+                    </div>
+                    <div className='ContextualActions__row'>
+                        <Collections2 />
+                    </div>
                 </div>
             </div>
         )
