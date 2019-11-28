@@ -1,9 +1,8 @@
 import * as React from 'react'
-import {observer} from 'mobx-react'
-import {inject} from 'mobx-react'
+import {inject, observer} from 'mobx-react'
 import {IAppState} from '../app-state'
 import {UUID} from '../../common/interfaces'
-import {Button, Icon} from 'semantic-ui-react'
+import {Button} from 'semantic-ui-react'
 
 interface IProps {
     UUIDs: Array<UUID>

@@ -20,7 +20,7 @@ import {unShareMedia} from './controllers/un-share-media'
 import {shareCollection} from './controllers/share-collection'
 import {unShareCollection} from './controllers/un-share-collection'
 import {checkCollection} from './controllers/checkCollection'
-import { updateCollection } from './controllers/update-collection'
+import {updateCollection} from './controllers/update-collection'
 
 const passport = require('passport')
 

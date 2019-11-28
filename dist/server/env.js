@@ -1,6 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UPLOADS_DIR = process.env.UPLOADS_DIR;
-exports.WEB_PORT = process.env.PORT;
+exports.PORT = process.env.PORT;
 exports.MONGO_URL = process.env.MONGO_URL;
+exports.DEMO = process.env.DEMO;
+exports.ACCOUNT_NAME = process.env.ACCOUNT_NAME;
+exports.ACCOUNT_PASSWORD = process.env.ACCOUNT_PASSWORD;
 //# sourceMappingURL=env.js.map

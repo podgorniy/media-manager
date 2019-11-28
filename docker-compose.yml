@@ -1,31 +1,35 @@
 version: '3'
 
 services:
-    app:
+    media-manager:
         build:
             context: .
             dockerfile: Dockerfile
-        restart: unless-stopped
-        container_name: webapp
+        restart: always
+        container_name: media-manager
         volumes:
-            - /srv/media-manager/uploads:/var/uploads
+            - "${DIR}/uploads:${UPLOADS_DIR}"
         env_file:
-          - .env
+          - ".env"
         environment:
             - NODE_ENV=production
             - MONGO_URL=mongodb://mongodb/media-manager
+            - ACCOUNT_NAME
+            - ACCOUNT_PASSWORD
+            - DEMO
+            - EXPOSED_PORT
         networks:
             - webappnetwork
         depends_on:
             - mongodb
         ports:
-            - '8088:8080'
+            - "${EXPOSED_PORT}:${PORT}"
     mongodb:
         image: mongo
         restart: always
         container_name: mongodb
         volumes:
-            - /srv/media-manager/db:/data/db
+            - '${DIR}/db:/data/db'
         command: mongod --noauth --smallfiles
         networks:
             - webappnetwork

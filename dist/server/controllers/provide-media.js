@@ -90,9 +90,10 @@ exports.provideMedia = utils_1.asyncHandler(function (req, res) { return __await
                     $in: matchingCollection.media
                 };
                 _b.label = 2;
-            case 2: return [4 /*yield*/, media_1.MediaModel.find(query).count()];
+            case 2: return [4 /*yield*/, media_1.MediaModel.countDocuments(query)]; // TODO: update types of @types/connect-mongo
             case 3:
-                itemsCountForQuery = _b.sent();
+                itemsCountForQuery = _b.sent() // TODO: update types of @types/connect-mongo
+                ;
                 canProvideMoreItems = querySkipItems + queryLimitItems < itemsCountForQuery;
                 return [4 /*yield*/, media_1.MediaModel.find(query, null, {
                         skip: querySkipItems,

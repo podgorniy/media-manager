@@ -3,7 +3,8 @@ import {initMiddleware} from './middleware'
 import {initRoutes} from './routes'
 import * as path from 'path'
 import {connect} from 'mongoose'
-import {MONGO_URL, WEB_PORT} from './env'
+import {ACCOUNT_NAME, ACCOUNT_PASSWORD, DEMO, MONGO_URL, PORT} from './env'
+import {createDemoUser, validateAndCreateMasterUser} from './user'
 
 export async function startServer() {
     const app = express()
@@ -14,8 +15,20 @@ export async function startServer() {
         // @ts-ignore
         {useNewUrlParser: true}
     )
+    let someAccountWasCreated = false
+    if (DEMO) {
+        await createDemoUser()
+        someAccountWasCreated = true
+    }
+    if (ACCOUNT_NAME || ACCOUNT_PASSWORD) {
+        await validateAndCreateMasterUser()
+        someAccountWasCreated = true
+    }
+    if (!someAccountWasCreated) {
+        throw Error(`No account created. Either specify DEMO env either provide ACCOUNT_NAME and ACCOUNT_PASSWORD`)
+    }
     initMiddleware(app)
     initRoutes(app)
-    app.listen(WEB_PORT)
-    console.log(`App started at http://localhost:${WEB_PORT}`)
+    app.listen(PORT)
+    console.log(`Web server started on ${PORT} port`)
 }

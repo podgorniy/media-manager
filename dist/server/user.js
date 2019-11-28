@@ -38,6 +38,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var mongoose_1 = require("mongoose");
 var utils_1 = require("./utils");
+var env_1 = require("./env");
 var UserSchema = new mongoose_1.Schema({
     name: {
         type: String,
@@ -52,46 +53,63 @@ var UserSchema = new mongoose_1.Schema({
     collection: 'users'
 });
 exports.UserModel = mongoose_1.model('user', UserSchema);
-function createDemoUser() {
+/**
+ * Creates user if not creates
+ *
+ * @param userName
+ * @param password
+ */
+function updateOrCreateUser(userName, password) {
     return __awaiter(this, void 0, void 0, function () {
-        var DEMO_USERNAME, DEMO_USERNAME_PASSWORD, defaultUser, _a, _b;
-        return __generator(this, function (_c) {
-            switch (_c.label) {
-                case 0:
-                    DEMO_USERNAME = 'demo';
-                    DEMO_USERNAME_PASSWORD = '123';
-                    return [4 /*yield*/, exports.UserModel.findOne({ name: DEMO_USERNAME })];
-                case 1:
-                    defaultUser = _c.sent();
-                    if (!!defaultUser) return [3 /*break*/, 3];
-                    _a = exports.UserModel.bind;
-                    _b = {
-                        name: DEMO_USERNAME
-                    };
-                    return [4 /*yield*/, utils_1.hashString(DEMO_USERNAME_PASSWORD)];
-                case 2: return [2 /*return*/, new (_a.apply(exports.UserModel, [void 0, (_b.password = _c.sent(),
-                            _b)]))().save()];
-                case 3: return [2 /*return*/];
-            }
-        });
-    });
-}
-;
-(function () {
-    return __awaiter(this, void 0, void 0, function () {
+        var recordSelector, existingUserDoc, passwordHash;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: 
-                // TODO: figure out
-                // Need user for demonstration, create it at all times
-                return [4 /*yield*/, createDemoUser()];
+                case 0:
+                    recordSelector = { name: userName };
+                    return [4 /*yield*/, exports.UserModel.findOne(recordSelector)];
                 case 1:
-                    // TODO: figure out
-                    // Need user for demonstration, create it at all times
-                    _a.sent();
+                    existingUserDoc = _a.sent();
+                    return [4 /*yield*/, utils_1.hashString(password)];
+                case 2:
+                    passwordHash = _a.sent();
+                    if (!existingUserDoc) {
+                        return [2 /*return*/, new exports.UserModel({
+                                name: userName,
+                                password: passwordHash
+                            }).save()];
+                    }
+                    else {
+                        return [2 /*return*/, exports.UserModel.updateOne(recordSelector, { $set: { password: passwordHash } })];
+                    }
                     return [2 /*return*/];
             }
         });
     });
-})();
+}
+exports.updateOrCreateUser = updateOrCreateUser;
+function createDemoUser() {
+    return __awaiter(this, void 0, void 0, function () {
+        return __generator(this, function (_a) {
+            return [2 /*return*/, updateOrCreateUser('demo', '123')];
+        });
+    });
+}
+exports.createDemoUser = createDemoUser;
+function validateAndCreateMasterUser() {
+    return __awaiter(this, void 0, void 0, function () {
+        var accountName, accountPassword;
+        return __generator(this, function (_a) {
+            accountName = (env_1.ACCOUNT_NAME || '').trim();
+            accountPassword = (env_1.ACCOUNT_PASSWORD || '').trim();
+            if (!accountName || !accountPassword) {
+                throw Error("Either both \"ACCOUNT_NAME\" and \"ACCOUNT_PASSWORD\" should be specified either none");
+            }
+            else {
+                return [2 /*return*/, updateOrCreateUser(accountName, accountPassword)];
+            }
+            return [2 /*return*/];
+        });
+    });
+}
+exports.validateAndCreateMasterUser = validateAndCreateMasterUser;
 //# sourceMappingURL=user.js.map

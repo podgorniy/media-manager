@@ -54,7 +54,7 @@ function asyncHandler(fn) {
 }
 exports.asyncHandler = asyncHandler;
 function filePathForPersistence(fileName) {
-    return path.join(env_1.UPLOADS_DIR, fileName);
+    return path.resolve(path.join(env_1.UPLOADS_DIR, fileName));
 }
 exports.filePathForPersistence = filePathForPersistence;
 function hashString(password) {

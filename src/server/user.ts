@@ -1,5 +1,6 @@
 import {Document, model, Model, Schema} from 'mongoose'
 import {hashString} from './utils'
+import {ACCOUNT_NAME, ACCOUNT_PASSWORD} from './env'
 
 export interface IUserFields {
     _id: any
@@ -31,20 +32,36 @@ const UserSchema = new Schema(
 
 export const UserModel = model<IUser, IUserModel>('user', UserSchema)
 
-async function createDemoUser() {
-    const DEMO_USERNAME = 'demo'
-    const DEMO_USERNAME_PASSWORD = '123'
-    const defaultUser = await UserModel.findOne({name: DEMO_USERNAME})
-    if (!defaultUser) {
+/**
+ * Creates user if not creates
+ *
+ * @param userName
+ * @param password
+ */
+export async function updateOrCreateUser(userName, password) {
+    const recordSelector = {name: userName}
+    const existingUserDoc = await UserModel.findOne(recordSelector)
+    const passwordHash = await hashString(password)
+    if (!existingUserDoc) {
         return new UserModel({
-            name: DEMO_USERNAME,
-            password: await hashString(DEMO_USERNAME_PASSWORD)
+            name: userName,
+            password: passwordHash
         }).save()
+    } else {
+        return UserModel.updateOne(recordSelector, {$set: {password: passwordHash}})
     }
 }
 
-;(async function() {
-    // TODO: figure out
-    // Need user for demonstration, create it at all times
-    await createDemoUser()
-})()
+export async function createDemoUser() {
+    return updateOrCreateUser('demo', '123')
+}
+
+export async function validateAndCreateMasterUser() {
+    const accountName = (ACCOUNT_NAME || '').trim()
+    const accountPassword = (ACCOUNT_PASSWORD || '').trim()
+    if (!accountName || !accountPassword) {
+        throw Error(`Either both "ACCOUNT_NAME" and "ACCOUNT_PASSWORD" should be specified either none`)
+    } else {
+        return updateOrCreateUser(accountName, accountPassword)
+    }
+}

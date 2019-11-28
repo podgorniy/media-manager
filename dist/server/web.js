@@ -49,9 +49,10 @@ var routes_1 = require("./routes");
 var path = __importStar(require("path"));
 var mongoose_1 = require("mongoose");
 var env_1 = require("./env");
+var user_1 = require("./user");
 function startServer() {
     return __awaiter(this, void 0, void 0, function () {
-        var app;
+        var app, someAccountWasCreated;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -63,10 +64,28 @@ function startServer() {
                         { useNewUrlParser: true })];
                 case 1:
                     _a.sent();
+                    someAccountWasCreated = false;
+                    if (!env_1.DEMO) return [3 /*break*/, 3];
+                    return [4 /*yield*/, user_1.createDemoUser()];
+                case 2:
+                    _a.sent();
+                    someAccountWasCreated = true;
+                    _a.label = 3;
+                case 3:
+                    if (!(env_1.ACCOUNT_NAME || env_1.ACCOUNT_PASSWORD)) return [3 /*break*/, 5];
+                    return [4 /*yield*/, user_1.validateAndCreateMasterUser()];
+                case 4:
+                    _a.sent();
+                    someAccountWasCreated = true;
+                    _a.label = 5;
+                case 5:
+                    if (!someAccountWasCreated) {
+                        throw Error("No account created. Either specify DEMO env either provide ACCOUNT_NAME and ACCOUNT_PASSWORD");
+                    }
                     middleware_1.initMiddleware(app);
                     routes_1.initRoutes(app);
-                    app.listen(env_1.WEB_PORT);
-                    console.log("App started at http://localhost:" + env_1.WEB_PORT);
+                    app.listen(env_1.PORT);
+                    console.log("Web server started on " + env_1.PORT + " port");
                     return [2 /*return*/];
             }
         });

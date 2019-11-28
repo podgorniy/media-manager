@@ -12,7 +12,7 @@ export function asyncHandler(fn: RequestHandler) {
 }
 
 export function filePathForPersistence(fileName) {
-    return path.join(UPLOADS_DIR, fileName)
+    return path.resolve(path.join(UPLOADS_DIR, fileName))
 }
 
 export async function hashString(password) {

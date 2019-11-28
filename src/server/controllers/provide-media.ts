@@ -56,7 +56,8 @@ export const provideMedia = asyncHandler(async (req, res) => {
                 $in: matchingCollection.media
             }
         }
-        const itemsCountForQuery = await MediaModel.find(query).count()
+        // @ts-ignore
+        const itemsCountForQuery = await MediaModel.countDocuments(query) // TODO: update types of @types/connect-mongo
         const canProvideMoreItems = querySkipItems + queryLimitItems < itemsCountForQuery
         const userMediaItems = await MediaModel.find(query, null, {
             skip: querySkipItems,

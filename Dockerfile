@@ -6,5 +6,5 @@ WORKDIR ./
 COPY package*.json ./
 RUN npm install --production
 COPY dist ./dist
-EXPOSE 8080
+EXPOSE ${EXPOSED_PORT}
 CMD ["npm", "run", "prod"]
