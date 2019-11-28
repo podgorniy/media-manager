@@ -5,3 +5,8 @@
 .vscode
 .dev
 node_modules
+
+# application data
+data
+
+!/data/README.md
