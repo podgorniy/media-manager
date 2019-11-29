@@ -22,15 +22,16 @@ services:
             - webappnetwork
         depends_on:
             - mongodb
+        command: sh -c './bin/wait-for mongodb:27017 -t 20 -- npm run prod'
         ports:
             - "${EXPOSED_PORT}:${PORT}"
     mongodb:
-        image: mongo
+        image: mongo:4.2
         restart: always
         container_name: mongodb
         volumes:
             - '${DIR}/db:/data/db'
-        command: mongod --noauth --smallfiles
+        command: mongod --noauth
         networks:
             - webappnetwork
 networks:
