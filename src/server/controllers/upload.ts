@@ -27,7 +27,12 @@ function getTypeOfDoc(mimeType: string): MediaType {
 }
 
 function getTags(extension: string): Array<string> {
-    return ['new', extension]
+    let tags = ['new']
+    if (['gif', 'mp4'].indexOf(extension) !== -1) {
+        tags.push('animation')
+    }
+    tags.push(extension)
+    return tags
 }
 
 // Returns mongo doc of corresponding file
