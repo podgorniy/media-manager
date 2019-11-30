@@ -1,6 +1,7 @@
 import {AppState} from './app-state'
+import {isDev} from '../common/lib'
 
-export const ITEMS_COUNT_TO_QUERY = 18
+export const ITEMS_COUNT_TO_QUERY = isDev() ? 18 : 50
 
 export function objToQueryString(obj: Object): string {
     let res = ''

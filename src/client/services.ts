@@ -1,7 +1,8 @@
 import {AppState} from './app-state'
 import {autorun} from 'mobx'
+import {isDev} from '../common/lib'
 
-const VIEW_PORTS_BELOW_SCREEN_TO_TRIGGER_LOADING = 1.5
+const VIEW_PORTS_BELOW_SCREEN_TO_TRIGGER_LOADING = isDev() ? 1.5 : 3
 
 function initLoadingMoreService(appState: AppState) {
     autorun(function() {
