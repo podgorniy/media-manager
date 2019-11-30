@@ -5,12 +5,14 @@ import {configurePassport} from './passport'
 import {isDev} from '../common/lib'
 import session = require('express-session')
 import bodyParser = require('body-parser')
+const compression = require('compression')
 
 const mongoose = require('mongoose')
 const connectMongo = require('connect-mongo')
 const MongoStore = connectMongo(session)
 
 export function initMiddleware(app: Express) {
+    app.use(compression())
     app.use(express.static(path.resolve(__dirname, '../static')))
     app.use((req, res, next) => {
         if (isDev()) {

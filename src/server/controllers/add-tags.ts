@@ -8,7 +8,8 @@ export const addTags = asyncHandler(async (req, res) => {
             {
                 uuid: {
                     $in: media
-                }
+                },
+                owner: req.user._id
             },
             {
                 $addToSet: {

@@ -1,8 +1,12 @@
 # Bugs
 make links clickable in new tab
 reset zoom/moved state on swapping next
-review if recalculation of layout is needed (as now I know media sizes)
+refresh media on upload
 
 # Features
-Win more side width by making menu appear on stripe
-Shuffled view
+fancy zoom-in zoom out
+[not now] Shuffled view
+
+# Optimize
+hide images which are outside viewport
+review if recalculation of layout is needed (as now I know media sizes)

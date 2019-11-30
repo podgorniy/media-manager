@@ -13,10 +13,12 @@ var passport_1 = require("./passport");
 var lib_1 = require("../common/lib");
 var session = require("express-session");
 var bodyParser = require("body-parser");
+var compression = require('compression');
 var mongoose = require('mongoose');
 var connectMongo = require('connect-mongo');
 var MongoStore = connectMongo(session);
 function initMiddleware(app) {
+    app.use(compression());
     app.use(express.static(path.resolve(__dirname, '../static')));
     app.use(function (req, res, next) {
         if (lib_1.isDev()) {

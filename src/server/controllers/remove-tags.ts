@@ -8,7 +8,8 @@ export const removeTags = asyncHandler(async (req, res) => {
             {
                 uuid: {
                     $in: media
-                }
+                },
+                owner: req.user._id
             },
             {
                 $pull: {

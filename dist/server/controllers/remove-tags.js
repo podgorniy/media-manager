@@ -50,7 +50,8 @@ exports.removeTags = utils_1.asyncHandler(function (req, res) { return __awaiter
                 return [4 /*yield*/, media_1.MediaModel.updateMany({
                         uuid: {
                             $in: media
-                        }
+                        },
+                        owner: req.user._id
                     }, {
                         $pull: {
                             tags: {
