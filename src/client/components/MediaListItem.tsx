@@ -1,4 +1,4 @@
-import {autorun} from 'mobx'
+import {autorun, untracked} from 'mobx'
 import * as React from 'react'
 import {inject, observer} from 'mobx-react'
 import {IAppState} from '../app-state'
@@ -42,13 +42,14 @@ export class MediaListItem extends React.Component<IMediaListItemProps & IAppSta
         this.stopAutoScrollIntoView = autorun(() => {
             const current: HTMLElement = self.ref.current
             if (appState.zoomedItemId === uuid) {
-                const {height, bottom} = current.getBoundingClientRect()
-                const isInViewport =
-                    bottom > appState.pageScrolled + height * 0.3 && bottom < appState.pageScrolled + window.innerHeight
+                const {bottom, top} = current.getBoundingClientRect()
+                const bottomIsHidden = bottom > window.innerHeight
+                const topIsHidden = top < 0
+                const isInViewport = !bottomIsHidden && !topIsHidden
                 if (!isInViewport) {
                     current.scrollIntoView({
                         behavior: 'smooth',
-                        inline: 'nearest'
+                        block: topIsHidden ? 'start' : 'end'
                     })
                 }
             }
