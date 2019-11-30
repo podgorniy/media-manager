@@ -18,6 +18,8 @@ import {
 import {IClientMediaItem, ICollectionItem, IMediaResponse, IUserMediaItem, UUID} from '../common/interfaces'
 import {AppRouter} from './app-router'
 import {getLoadMoreQuery, getRefreshQuery} from './lib'
+import {RPCConfig} from '../common/rpc'
+import {createRpcClient, IRpcClient} from './rpc-framework-client'
 
 const axios = require('axios')
 
@@ -63,9 +65,12 @@ export class AppState {
     constructor() {
         this.router = new AppRouter(location.href)
         this.setAuthenticated(!!window['isAuthenticated'])
+        this.rpc = createRpcClient(new RPCConfig())
     }
 
     router: AppRouter
+
+    rpc: IRpcClient<RPCConfig>
 
     @observable
     media: IObservableArray<IClientMediaItem> = [] as IObservableArray<IClientMediaItem>

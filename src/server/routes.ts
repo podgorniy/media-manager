@@ -73,7 +73,6 @@ export function initRoutes(app: Express) {
     app.post('/api/v1/update-collection', isAuthenticated, updateCollection)
     app.post('/api/v1/share-media', isAuthenticated, shareMedia)
     app.post('/api/v1/un-share-media', isAuthenticated, unShareMedia)
-
     app.post('/api/v1/share-collection', isAuthenticated, shareCollection)
     app.post('/api/v1/un-share-collection', isAuthenticated, unShareCollection)
     app.get('/api/v1/check-collection', checkCollection)

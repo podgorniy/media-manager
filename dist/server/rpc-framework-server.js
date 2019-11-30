@@ -35,63 +35,59 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
-    result["default"] = mod;
-    return result;
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-var express = require("express");
-var middleware_1 = require("./middleware");
-var routes_1 = require("./routes");
-var path = __importStar(require("path"));
-var mongoose_1 = require("mongoose");
-var env_1 = require("./env");
-var user_1 = require("./user");
-var rpc_1 = require("./rpc");
-function startServer() {
-    return __awaiter(this, void 0, void 0, function () {
-        var app, someAccountWasCreated;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
+var utils_1 = require("./utils");
+function createRpcProvider(rpcConfig, serverImplementation) {
+    var _this = this;
+    var configMethods = Object.keys(rpcConfig);
+    var serverMethods = Object.keys(serverImplementation);
+    var notImplementedMethods = configMethods.filter(function (m) { return serverMethods.indexOf(m) === -1; });
+    if (notImplementedMethods.length) {
+        throw new Error("Not all config methods are implemented by server: " + notImplementedMethods.join(',') + ". Terminating");
+    }
+    return utils_1.asyncHandler(function (req, res) { return __awaiter(_this, void 0, void 0, function () {
+        var _a, method, params, methodConfig, result, err_1;
+        return __generator(this, function (_b) {
+            switch (_b.label) {
                 case 0:
-                    app = express();
-                    app.set('view engine', 'pug');
-                    app.set('views', path.resolve(__dirname, '../', 'server-views'));
-                    return [4 /*yield*/, mongoose_1.connect(env_1.MONGO_URL, 
-                        // @ts-ignore
-                        { useNewUrlParser: true })];
-                case 1:
-                    _a.sent();
-                    someAccountWasCreated = false;
-                    if (!env_1.DEMO) return [3 /*break*/, 3];
-                    return [4 /*yield*/, user_1.createDemoUser()];
-                case 2:
-                    _a.sent();
-                    someAccountWasCreated = true;
-                    _a.label = 3;
-                case 3:
-                    if (!(env_1.ACCOUNT_NAME || env_1.ACCOUNT_PASSWORD)) return [3 /*break*/, 5];
-                    return [4 /*yield*/, user_1.validateAndCreateMasterUser()];
-                case 4:
-                    _a.sent();
-                    someAccountWasCreated = true;
-                    _a.label = 5;
-                case 5:
-                    if (!someAccountWasCreated) {
-                        throw Error("No account created. Either specify DEMO env either provide ACCOUNT_NAME and ACCOUNT_PASSWORD");
+                    _a = req.body, method = _a.method, params = _a.params;
+                    methodConfig = rpcConfig[method];
+                    if (!methodConfig) {
+                        res.json({
+                            success: false,
+                            reason: "Unrecognized RPC method " + method
+                        });
+                        return [2 /*return*/];
                     }
-                    middleware_1.initMiddleware(app);
-                    rpc_1.initRpc(app);
-                    routes_1.initRoutes(app);
-                    app.listen(env_1.PORT);
-                    console.log("Web server started on " + env_1.PORT + " port");
-                    return [2 /*return*/];
+                    if (methodConfig.authRequired && !req.isAuthenticated()) {
+                        res.json({
+                            success: false,
+                            reason: "User is not authenticated"
+                        });
+                        return [2 /*return*/];
+                    }
+                    _b.label = 1;
+                case 1:
+                    _b.trys.push([1, 3, , 4]);
+                    return [4 /*yield*/, serverImplementation[method](params, req)];
+                case 2:
+                    result = _b.sent();
+                    res.json({
+                        success: true,
+                        data: result
+                    });
+                    return [3 /*break*/, 4];
+                case 3:
+                    err_1 = _b.sent();
+                    res.json({
+                        success: false,
+                        reason: "Server error: " + (err_1.essage || err_1).toString()
+                    });
+                    return [3 /*break*/, 4];
+                case 4: return [2 /*return*/];
             }
         });
-    });
+    }); });
 }
-exports.startServer = startServer;
-//# sourceMappingURL=web.js.map
+exports.createRpcProvider = createRpcProvider;
+//# sourceMappingURL=rpc-framework-server.js.map

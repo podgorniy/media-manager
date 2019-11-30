@@ -5,6 +5,7 @@ import * as path from 'path'
 import {connect} from 'mongoose'
 import {ACCOUNT_NAME, ACCOUNT_PASSWORD, DEMO, MONGO_URL, PORT} from './env'
 import {createDemoUser, validateAndCreateMasterUser} from './user'
+import {initRpc} from './rpc'
 
 export async function startServer() {
     const app = express()
@@ -28,6 +29,7 @@ export async function startServer() {
         throw Error(`No account created. Either specify DEMO env either provide ACCOUNT_NAME and ACCOUNT_PASSWORD`)
     }
     initMiddleware(app)
+    initRpc(app)
     initRoutes(app)
     app.listen(PORT)
     console.log(`Web server started on ${PORT} port`)

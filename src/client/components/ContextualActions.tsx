@@ -12,6 +12,7 @@ import {logout} from '../api'
 import {Collections2} from './Collections2'
 import {TagsControls} from './TagsControls'
 import {SelectionControls} from './SelectionControls'
+import { DeleteMedia } from './DeleteMedia'
 
 @inject('appState')
 @observer
@@ -85,6 +86,9 @@ export class ContextualActions extends React.Component<{} & IAppState, {}> {
                         <React.Fragment>
                             <div className='ContextualActions__row'>
                                 <ToggleSelectionAll />
+                            </div>
+                            <div className="ContextualActions__row">
+                                <DeleteMedia />
                             </div>
                             {appState.selectedUUIDs.length === 1 ? (
                                 <div className='ContextualActions__row'>
