@@ -123,6 +123,9 @@ export class MediaListItem extends React.Component<IMediaListItemProps & IAppSta
               ).toString()}`
         return (
             <div
+                style={{
+                    willChange: 'visibility'
+                }}
                 ref={this.ref}
                 onMouseEnter={() => {
                     appState.setHoveredId(uuid)

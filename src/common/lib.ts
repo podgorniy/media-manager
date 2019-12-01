@@ -21,7 +21,7 @@ export function getRandomIntInclusive(min, max) {
 export function throttleTo60Fps(func): () => void {
     let animationFrameRequested = false
     let params
-    return function(...args) {
+    return (...args) => {
         params = [...args]
         if (!animationFrameRequested) {
             animationFrameRequested = true

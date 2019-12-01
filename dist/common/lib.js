@@ -28,10 +28,10 @@ exports.getRandomIntInclusive = getRandomIntInclusive;
  * Throttles func to 60 fps. Calls with params passed on latest call
  */
 function throttleTo60Fps(func) {
+    var _this = this;
     var animationFrameRequested = false;
     var params;
     return function () {
-        var _this = this;
         var args = [];
         for (var _i = 0; _i < arguments.length; _i++) {
             args[_i] = arguments[_i];
