@@ -29,7 +29,7 @@ configure({
 
 type ISetAuthenticatedParams = boolean | {userName: string}
 
-const SIDE_WIDTH_EXPANDED = 300
+const SIDE_WIDTH_EXPANDED = 320
 const SIDE_WIDTH_COLLAPSED = 60
 
 function toClientSideRepresentation(mediaDoc: IUserMediaItem): IClientMediaItem {
@@ -169,11 +169,11 @@ export class AppState {
     @computed
     get layoutColumnsCount(): number {
         if (!this.isAuthenticated) {
-            return 5
+            return 6
         } else if (this.sideExpanded) {
-            return 4
-        } else {
             return 5
+        } else {
+            return 6
         }
     }
 

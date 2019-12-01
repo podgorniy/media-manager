@@ -4,11 +4,11 @@ import {Disposer, inject, observer} from 'mobx-react'
 import {IAppState} from '../app-state'
 import Shuffle from 'shufflejs'
 import {MediaListItem} from './MediaListItem'
-import {isDev} from '../../common/lib'
+import {isDev, throttleTo60Fps} from '../../common/lib'
 import {autorun} from 'mobx'
 
 const SHUFFLE_ANIMATION_DURATION = 250
-const SCREEN_FRAME_DURATION = 17
+const SCREEN_FRAME_DURATION = 16
 
 interface IProps extends IAppState {}
 
@@ -17,7 +17,8 @@ interface IProps extends IAppState {}
 export class MediaList extends React.Component<IProps, {}> {
     listRef = React.createRef<HTMLUListElement>()
     shuffle: Shuffle
-    disposeLayoutWatcher: Disposer
+    disposeLayoutWatcher1: Disposer
+    disposeLayoutWatcher2: Disposer
 
     private _calcComponentHeight() {
         const componentHeight = this.listRef.current ? this.listRef.current.offsetHeight : 0
@@ -37,33 +38,36 @@ export class MediaList extends React.Component<IProps, {}> {
             window['s'] = this.shuffle
         }
         const {appState} = this.props
-        this.disposeLayoutWatcher = autorun(() => {
-            if (appState.layoutRerenderCount) {
-                this.shuffle.update()
-            }
-        })
         this.shuffle['on'](Shuffle.EventType.LAYOUT, () => {
             // Component height is available only after shuffle completes layout animation
             setTimeout(() => {
                 this._calcComponentHeight()
             }, SHUFFLE_ANIMATION_DURATION + SCREEN_FRAME_DURATION * 2)
         })
+        const relayout = throttleTo60Fps(() => {
+            this.shuffle.resetItems()
+            this.shuffle.update()
+            this._calcComponentHeight()
+        })
+        this.disposeLayoutWatcher2 = autorun(() => {
+            if (appState.layoutRerenderCount) {
+                relayout()
+            }
+        })
+        this.disposeLayoutWatcher1 = autorun(() => {
+            if (appState.media.length || !appState.media.length) {
+                relayout()
+            }
+        })
     }
 
     componentWillUnmount(): void {
         this.shuffle.destroy()
         this.shuffle = null
-        this.disposeLayoutWatcher()
-        this.disposeLayoutWatcher = null
-    }
-
-    componentDidUpdate(): void {
-        // TODO: optimize
-        // update due to change of list items should reset items
-        this.shuffle.resetItems()
-        // update due to change of layout should just update
-        this.shuffle.update()
-        this._calcComponentHeight()
+        this.disposeLayoutWatcher1()
+        this.disposeLayoutWatcher1 = null
+        this.disposeLayoutWatcher2()
+        this.disposeLayoutWatcher2 = null
     }
 
     render() {
@@ -74,12 +78,7 @@ export class MediaList extends React.Component<IProps, {}> {
                 {appState.media.map(({uuid}) => {
                     return (
                         <li key={uuid} className='media-item-wrapper-outer'>
-                            <MediaListItem
-                                uuid={uuid}
-                                onLoad={() => {
-                                    this.componentDidUpdate()
-                                }}
-                            />
+                            <MediaListItem uuid={uuid} onLoad={() => {}} />
                         </li>
                     )
                 })}

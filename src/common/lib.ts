@@ -14,3 +14,21 @@ export function getRandomIntInclusive(min, max) {
     max = Math.floor(max)
     return Math.floor(Math.random() * (max - min + 1)) + min
 }
+
+/**
+ * Throttles func to 60 fps. Calls with params passed on latest call
+ */
+export function throttleTo60Fps(func): () => void {
+    let animationFrameRequested = false
+    let params
+    return function(...args) {
+        params = [...args]
+        if (!animationFrameRequested) {
+            animationFrameRequested = true
+            requestAnimationFrame(() => {
+                animationFrameRequested = false
+                func.apply(this, params) // call with latest params passed
+            })
+        }
+    }
+}

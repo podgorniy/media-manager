@@ -1,8 +1,8 @@
-import {autorun, untracked} from 'mobx'
+import {autorun} from 'mobx'
 import * as React from 'react'
 import {inject, observer} from 'mobx-react'
 import {IAppState} from '../app-state'
-import {getRandomIntInclusive} from '../../common/lib'
+import {getRandomIntInclusive, throttleTo60Fps} from '../../common/lib'
 
 require('./MediaListItem.less')
 
@@ -24,10 +24,31 @@ export class MediaListItem extends React.Component<IMediaListItemProps & IAppSta
             loaded: false
         }
         this.handleOnLoad = this.handleOnLoad.bind(this)
+        this.showOnlyInViewport = throttleTo60Fps(() => {
+            const [bottomIsHidden, topIsHidden, isInViewport, isPartiallyInViewport] = this.viewPortState(
+                this.ref.current
+            )
+            if (isPartiallyInViewport) {
+                if (!this.isVisible) {
+                    this.ref.current.style.visibility = 'visible'
+                    this.isVisible = true
+                }
+            } else {
+                if (this.isVisible) {
+                    this.ref.current.style.visibility = 'hidden'
+                    this.isVisible = false
+                }
+            }
+        })
     }
 
     private ref = React.createRef<HTMLDivElement>()
+
     private stopAutoScrollIntoView
+
+    private showOnlyInViewport
+
+    private isVisible = true
 
     private handleOnLoad() {
         this.props.onLoad()
@@ -36,16 +57,25 @@ export class MediaListItem extends React.Component<IMediaListItemProps & IAppSta
         })
     }
 
+    viewPortState(node) {
+        const {bottom, top} = node.getBoundingClientRect()
+        const bottomIsHidden = bottom > window.innerHeight
+        const topIsHidden = top < 0
+        const isFullyInViewport = !bottomIsHidden && !topIsHidden
+        const isPartiallyInViewport =
+            ((bottom) => 0 && bottom < window.innerHeight) ||
+            ((top) => 0 && top < window.innerHeight) ||
+            (top <= 0 && bottom - window.innerHeight > 0)
+        return [bottomIsHidden, topIsHidden, isFullyInViewport, isPartiallyInViewport]
+    }
+
     componentDidMount() {
         const {appState, uuid} = this.props
         let self = this
         this.stopAutoScrollIntoView = autorun(() => {
             const current: HTMLElement = self.ref.current
             if (appState.zoomedItemId === uuid) {
-                const {bottom, top} = current.getBoundingClientRect()
-                const bottomIsHidden = bottom > window.innerHeight
-                const topIsHidden = top < 0
-                const isInViewport = !bottomIsHidden && !topIsHidden
+                const [_, topIsHidden, isInViewport] = this.viewPortState(self.ref.current)
                 if (!isInViewport) {
                     current.scrollIntoView({
                         behavior: 'smooth',
@@ -54,10 +84,15 @@ export class MediaListItem extends React.Component<IMediaListItemProps & IAppSta
                 }
             }
         })
+        window.addEventListener('scroll', this.showOnlyInViewport)
+        window.addEventListener('resize', this.showOnlyInViewport)
+        this.showOnlyInViewport()
     }
 
     componentWillUnmount() {
         this.stopAutoScrollIntoView()
+        window.removeEventListener('scroll', this.showOnlyInViewport)
+        window.removeEventListener('resize', this.showOnlyInViewport)
     }
 
     clickHandler = (event) => {
@@ -67,6 +102,10 @@ export class MediaListItem extends React.Component<IMediaListItemProps & IAppSta
         } else {
             appState.setZoomed(uuid)
         }
+    }
+
+    componentDidUpdate() {
+        this.showOnlyInViewport()
     }
 
     render() {
