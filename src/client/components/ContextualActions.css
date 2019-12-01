@@ -1,4 +1,6 @@
 .ContextualActions {
+    flex-grow: 1;
+    overflow: auto;
 }
 
 .ContextualActions__block {
