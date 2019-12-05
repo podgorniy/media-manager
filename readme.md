@@ -23,7 +23,7 @@ https://mm.dmitrypodgorniy.com
         - Drag aground
 - Tags
     - Filter media by tags.
-    - Media us auto tagged (tags based on media type type, shared files are tagged)
+    - Media is auto tagged (tags based on media type type, shared files are tagged)
 - Collections
     - Create, delete, rename
     - Public and private collections
@@ -40,7 +40,7 @@ Check environment variables for configuration in `docker-compose.yml` and defaul
 
 For example:
 
-Create account `dima` (if created password will be changed) with password `ppp` and run web app on `8888` port:
+Create account `dima` (if account exists password will be changed) with password `ppp` and run web app on `8888` port:
 
 ```
 export ACCOUNT_NAME=dima && export ACCOUNT_PASSWORD=ppp && export EXPOSED_PORT=8888 && docker-compose up --build -d
@@ -76,7 +76,7 @@ Prerequisites:
 - mongodb
 - ffmpeg
 
-Runs in demo mode: account `demo` with password `123` created.
+Runs in demo mode with account `demo` and password `123`.
 
 ```
 npm install
