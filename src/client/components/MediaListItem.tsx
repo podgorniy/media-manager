@@ -13,6 +13,7 @@ interface IMediaListItemProps {
 
 interface IMediaListItemState {
     loaded: boolean
+    shouldShow: boolean
 }
 
 // TODO: review implementation
@@ -26,7 +27,8 @@ export class MediaListItem extends React.Component<IMediaListItemProps & IAppSta
     constructor(props) {
         super(props)
         this.state = {
-            loaded: false
+            loaded: false,
+            shouldShow: true
         }
         this.handleOnLoad = this.handleOnLoad.bind(this)
         this.showOnlyInViewport = throttleTo60Fps(() => {
@@ -34,14 +36,16 @@ export class MediaListItem extends React.Component<IMediaListItemProps & IAppSta
                 this.ref.current
             )
             if (isPartiallyInViewport) {
-                if (!this.isVisible) {
-                    this.ref.current.style.visibility = 'visible'
-                    this.isVisible = true
+                if (!this.state.shouldShow) {
+                    this.setState({
+                        shouldShow: true
+                    })
                 }
             } else {
-                if (this.isVisible) {
-                    this.ref.current.style.visibility = 'hidden'
-                    this.isVisible = false
+                if (this.state.shouldShow) {
+                    this.setState({
+                        shouldShow: false
+                    })
                 }
             }
         })
@@ -68,8 +72,8 @@ export class MediaListItem extends React.Component<IMediaListItemProps & IAppSta
         const topIsHidden = top < 0
         const isFullyInViewport = !bottomIsHidden && !topIsHidden
         const isPartiallyInViewport =
-            ((bottom) => 0 && bottom < window.innerHeight) ||
-            ((top) => 0 && top < window.innerHeight) ||
+            (bottom >= 0 && bottom < window.innerHeight) ||
+            (top >= 0 && top < window.innerHeight) ||
             (top <= 0 && bottom - window.innerHeight > 0)
         return [bottomIsHidden, topIsHidden, isFullyInViewport, isPartiallyInViewport]
     }
@@ -129,7 +133,8 @@ export class MediaListItem extends React.Component<IMediaListItemProps & IAppSta
         return (
             <div
                 style={{
-                    willChange: 'visibility'
+                    willChange: 'visibility',
+                    visibility: this.state.shouldShow ? 'visible' : 'hidden'
                 }}
                 ref={this.ref}
                 onMouseEnter={() => {

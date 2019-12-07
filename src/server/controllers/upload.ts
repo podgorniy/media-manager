@@ -100,7 +100,7 @@ interface IGenerateThumbnailParams {
     thumbnailFilePath: string
 }
 
-const THUMBNAIL_WIDTH = 650
+const THUMBNAIL_WIDTH = 350
 
 async function generateThumbnail(params: IGenerateThumbnailParams) {
     const {sourceFilePath, thumbnailFilePath} = params

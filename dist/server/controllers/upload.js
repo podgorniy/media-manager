@@ -153,7 +153,7 @@ function registerFile(sourcePath, ownerId) {
         });
     });
 }
-var THUMBNAIL_WIDTH = 650;
+var THUMBNAIL_WIDTH = 350;
 function generateThumbnail(params) {
     return __awaiter(this, void 0, void 0, function () {
         var sourceFilePath, thumbnailFilePath;
