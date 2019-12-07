@@ -42,6 +42,10 @@ var MediaSchema = new mongoose_1.Schema({
     height: {
         type: Number,
         required: true
+    },
+    hasPreview: {
+        type: Boolean,
+        default: false
     }
 }, {
     collection: 'media'
@@ -56,7 +60,8 @@ function toApiRepresentation(doc) {
     return {
         uuid: doc.uuid,
         tags: doc.tags,
-        url: "/m/" + getFileName(doc),
+        originalUrl: "/m/" + getFileName(doc),
+        previewUrl: "/p/" + (doc.uuid + '.' + (doc.hasPreview ? 'jpeg' : doc.fileExtension)),
         type: doc.type,
         sharedIndividually: doc.sharedIndividually,
         height: doc.height,

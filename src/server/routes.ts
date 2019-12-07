@@ -2,7 +2,7 @@ import {Express} from 'express'
 import {asyncHandler} from './utils'
 import {upload} from './controllers/upload'
 import {uploader} from './uploader'
-import {sendMedia} from './controllers/send-media'
+import {sendMedia, sendPreview} from './controllers/send-media'
 import {logout} from './controllers/logout'
 import {check} from './controllers/check'
 import {provideMedia} from './controllers/provide-media'
@@ -77,6 +77,7 @@ export function initRoutes(app: Express) {
     app.post('/api/v1/un-share-collection', isAuthenticated, unShareCollection)
     app.get('/api/v1/check-collection', checkCollection)
     app.get('/m/:fileName', sendMedia)
+    app.get('/p/:fileName', sendPreview)
     app.get(
         '*',
         asyncHandler(async (req, res) => {

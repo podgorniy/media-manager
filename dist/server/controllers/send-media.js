@@ -72,7 +72,51 @@ exports.sendMedia = utils_1.asyncHandler(function (req, res) { return __awaiter(
                 mediaBelongsToRequestedSharedCollection = !!sharedCollectionsWithThisDoc;
                 mediaBelongsToAuthenticatedUser = req.isAuthenticated() && req.user._id.toString() === matchedDoc.owner;
                 if (mediaIsSharedIndividually || mediaBelongsToRequestedSharedCollection || mediaBelongsToAuthenticatedUser) {
-                    return [2 /*return*/, res.sendFile(utils_1.filePathForPersistence(media_1.getFileName(matchedDoc)))];
+                    return [2 /*return*/, res.sendFile(utils_1.getFilePathForPersistence(media_1.getFileName(matchedDoc), 'upload'))];
+                }
+                else {
+                    return [2 /*return*/, res.status(404).send("Not found or don't have permissions to view")];
+                }
+                _a.label = 4;
+            case 4: return [2 /*return*/];
+        }
+    });
+}); });
+exports.sendPreview = utils_1.asyncHandler(function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var fileName, fileUUID, refererUrl, parsedReferred, pathSegments, _, refererCollectionUri, matchedDoc, sharedCollectionsWithThisDoc, mediaIsSharedIndividually, mediaBelongsToRequestedSharedCollection, mediaBelongsToAuthenticatedUser;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                fileName = req.params.fileName;
+                fileUUID = utils_1.getName(fileName);
+                refererUrl = req.headers.referer || '';
+                parsedReferred = urlParse(refererUrl);
+                pathSegments = lib_1.getPathSegments(parsedReferred.pathname);
+                _ = pathSegments[0], refererCollectionUri = pathSegments[1];
+                return [4 /*yield*/, media_1.MediaModel.findOne({
+                        uuid: fileUUID
+                    })];
+            case 1:
+                matchedDoc = _a.sent();
+                if (!!matchedDoc) return [3 /*break*/, 2];
+                return [2 /*return*/, res.status(404).send("Not found or don't have permissions to view")];
+            case 2: return [4 /*yield*/, collection_1.CollectionsModel.findOne({
+                    media: matchedDoc.uuid,
+                    uri: refererCollectionUri,
+                    public: true
+                })];
+            case 3:
+                sharedCollectionsWithThisDoc = _a.sent();
+                mediaIsSharedIndividually = matchedDoc.sharedIndividually;
+                mediaBelongsToRequestedSharedCollection = !!sharedCollectionsWithThisDoc;
+                mediaBelongsToAuthenticatedUser = req.isAuthenticated() && req.user._id.toString() === matchedDoc.owner;
+                if (mediaIsSharedIndividually || mediaBelongsToRequestedSharedCollection || mediaBelongsToAuthenticatedUser) {
+                    if (matchedDoc.hasPreview) {
+                        return [2 /*return*/, res.sendFile(utils_1.getFilePathForPersistence(matchedDoc.uuid + '.jpeg', 'preview'))];
+                    }
+                    else {
+                        return [2 /*return*/, res.sendFile(utils_1.getFilePathForPersistence(media_1.getFileName(matchedDoc), 'upload'))];
+                    }
                 }
                 else {
                     return [2 /*return*/, res.status(404).send("Not found or don't have permissions to view")];

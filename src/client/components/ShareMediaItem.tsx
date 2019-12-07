@@ -25,8 +25,8 @@ export class ShareMediaItem extends React.Component<IProps & IAppState, IState> 
         if (!mediaItem) {
             return null
         }
-        const {sharedIndividually, uuid, url} = mediaItem
-        const fullUrl = `${location.protocol}//${location.host}${url}`
+        const {sharedIndividually, uuid, originalUrl} = mediaItem
+        const fullUrl = `${location.protocol}//${location.host}${originalUrl}`
         return sharedIndividually ? (
             <Button.Group compact size='small' floated='left'>
                 <Button

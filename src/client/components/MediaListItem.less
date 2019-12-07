@@ -11,6 +11,16 @@
     position: relative;
 }
 
+.MediaListItem__outer-gif:before {
+    position: absolute;
+    top: 0;
+    left: 0;
+    content: 'GIF';
+    color: #fff;
+    background: #000;
+    z-index: 5;
+}
+
 .MediaListItem__outer.selected {
     border-color: #fffd00;
 }
@@ -55,7 +65,7 @@
 .MediaListItem__aspect_inner--loading {
     animation-iteration-count: infinite;
     background-size: 400% 400%;
-    animation: loadingPlaceholder 2s ease infinite;
+    animation: 4s loadingPlaceholder ease infinite;
 }
 
 @keyframes loadingPlaceholder {

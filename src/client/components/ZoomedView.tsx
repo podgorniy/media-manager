@@ -16,6 +16,8 @@ interface IZoomedView {
     startMoveShiftLeft: number
     startMoveShiftTop: number
     dragging: boolean
+    prevSrc: string
+    currentSrc: string
 }
 
 interface IZoomedViewProps {}
@@ -25,12 +27,16 @@ const FITTING_RATIO = 0.85
 @inject('appState')
 @observer
 export class ZoomedView extends React.Component<IZoomedViewProps & IAppState, IZoomedView> {
-    componentRootRef = React.createRef<HTMLDivElement>()
-    innerWrapperRef = React.createRef<HTMLDivElement>()
-    stopWatching
+    private componentRootRef = React.createRef<HTMLDivElement>()
+    private innerWrapperRef = React.createRef<HTMLDivElement>()
+    private stopWatchingSideWidth
+    private stopWatchingUrlChange
+    private imageNodeRef = React.createRef<HTMLImageElement>()
 
     constructor(props) {
         super(props)
+        const {zoomedItem} = this.props.appState
+        const {originalUrl} = zoomedItem
         this.state = {
             scale: 0,
             currentShiftLeft: 0,
@@ -39,7 +45,9 @@ export class ZoomedView extends React.Component<IZoomedViewProps & IAppState, IZ
             startMoveShiftTop: 0,
             startMoveX: 0,
             startMoveY: 0,
-            dragging: false
+            dragging: false,
+            prevSrc: '',
+            currentSrc: originalUrl
         }
     }
 
@@ -142,13 +150,15 @@ export class ZoomedView extends React.Component<IZoomedViewProps & IAppState, IZ
         this.fitIntoView()
     }
 
+    componentDidUpdate() {}
+
     componentDidMount() {
         document.body.classList.add('disable-scroll')
         document.documentElement.addEventListener('keydown', this.keyDown)
         document.documentElement.addEventListener('keyup', this.keyup)
         this.innerWrapperRef.current.addEventListener('mousedown', this.mousedown)
         window.addEventListener('resize', this.resize)
-        this.stopWatching = autorun(() => {
+        this.stopWatchingSideWidth = autorun(() => {
             // sideWidth is required to react to change of this value
             // when component is dismounted there is not zoomedItem, but callback is called.
             // So check for zoomed item existence
@@ -156,6 +166,22 @@ export class ZoomedView extends React.Component<IZoomedViewProps & IAppState, IZ
             if (zoomedItem) {
                 // Wait for components to render after sideWidth change so fitIntoView uses relevant value
                 setTimeout(this.fitIntoView, 0)
+            }
+        })
+        this.stopWatchingUrlChange = autorun(() => {
+            if (this.props.appState.zoomedItem) {
+                const {originalUrl} = this.props.appState.zoomedItem
+                if (originalUrl !== this.state.currentSrc) {
+                    this.setState({
+                        prevSrc: this.state.currentSrc,
+                        currentSrc: ''
+                    })
+                    requestAnimationFrame(() => {
+                        this.setState({
+                            currentSrc: originalUrl
+                        })
+                    })
+                }
             }
         })
     }
@@ -168,7 +194,8 @@ export class ZoomedView extends React.Component<IZoomedViewProps & IAppState, IZ
         document.documentElement.removeEventListener('mouseup', this.mouseup)
         document.documentElement.removeEventListener('mousemove', this.mousemove)
         window.removeEventListener('resize', this.resize)
-        this.stopWatching()
+        this.stopWatchingSideWidth()
+        this.stopWatchingUrlChange()
     }
 
     close() {
@@ -178,9 +205,24 @@ export class ZoomedView extends React.Component<IZoomedViewProps & IAppState, IZ
     render() {
         const {appState} = this.props
         const {zoomedItem, sideWidth} = appState
-        const {type, url} = zoomedItem
+        const {type, originalUrl, previewUrl} = zoomedItem
+        const srcUrl = this.state.currentSrc
+        // console.log(`originalUrl`, originalUrl)
         const {currentShiftLeft, currentShiftTop} = this.state
         const transformString = `translate(${currentShiftLeft}px, ${currentShiftTop}px) scale(${this.state.scale})`
+        // setTimeout(() => {
+        //     if (this.innerWrapperRef && this.innerWrapperRef.current) {
+        //         const t = this.innerWrapperRef.current.style.transform.slice()
+        //         this.innerWrapperRef.current.style.transform = ''
+        //         setTimeout(() => {
+        //             // console.warn('123321', t)
+        //             // console.log(`t`, t)
+        //             this.innerWrapperRef.current.style.transform = t
+        //         }, 16)
+        //
+        //         // this.innerWrapperRef.current.style.transform = t
+        //     }
+        // }, 16)
         return (
             <div
                 className={`ZoomedView ${this.state.dragging ? 'ZoomedView--move-cursor' : ''}`}
@@ -215,7 +257,18 @@ export class ZoomedView extends React.Component<IZoomedViewProps & IAppState, IZ
                         ref={this.innerWrapperRef}
                     >
                         {zoomedItem
-                            ? type === 'img' && <img className='ZoomedView__container ZoomedView__img' src={url} />
+                            ? type === 'img' && (
+                                  <img
+                                      alt=''
+                                      className='ZoomedView__container ZoomedView__img'
+                                      style={{
+                                          width: zoomedItem.width,
+                                          height: zoomedItem.height
+                                      }}
+                                      ref={this.imageNodeRef}
+                                      src={srcUrl}
+                                  />
+                              )
                             : null}
                         {zoomedItem
                             ? type === 'video' && (
@@ -223,7 +276,7 @@ export class ZoomedView extends React.Component<IZoomedViewProps & IAppState, IZ
                                       autoPlay={true}
                                       controls
                                       className='ZoomedView__container ZoomedView__video'
-                                      src={url}
+                                      src={srcUrl}
                                   />
                               )
                             : null}

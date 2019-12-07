@@ -1,4 +1,4 @@
-export const UPLOADS_DIR = process.env.UPLOADS_DIR
+export const FILES_DIR = process.env.FILES_DIR
 export const PORT = process.env.PORT
 export const MONGO_URL = process.env.MONGO_URL
 export const DEMO = process.env.DEMO

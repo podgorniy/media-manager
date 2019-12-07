@@ -56,7 +56,30 @@
     padding: 20px;
 }
 
+/*
+[Trick]
+Icon of broken image is shown on zoomed view of image
+Because I have to set src='' to image in order to reset image on "next" "prev" of zoom
+
+Trick below hides icon of broken image (was needed only for Chrome)
+ */
+.ZoomedView__media-wrapper-inner {
+    overflow: hidden;
+}
+
+.ZoomedView__img[alt]:before {
+    display: block;
+    content: '';
+    margin-bottom: -16px;
+}
+/*[/Trick]*/
+
 .ZoomedView__img {
+    position: relative;
+    background-image: linear-gradient(138deg, #6e34d6, #48c5de);
+    animation-iteration-count: infinite;
+    background-size: 400% 400%;
+    animation: 3s loadingPlaceholder ease infinite;
 }
 
 .ZoomedView__video {

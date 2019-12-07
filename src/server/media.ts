@@ -11,6 +11,7 @@ export interface IMediaDoc {
     sharedIndividually: boolean
     width: number
     height: number
+    hasPreview: boolean
 }
 
 interface IMedia extends Document, IMediaDoc {}
@@ -59,6 +60,10 @@ const MediaSchema = new Schema(
         height: {
             type: Number,
             required: true
+        },
+        hasPreview: {
+            type: Boolean,
+            default: false
         }
     },
     {
@@ -76,7 +81,8 @@ export function toApiRepresentation(doc: IMediaDoc): IUserMediaItem {
     return {
         uuid: doc.uuid,
         tags: doc.tags,
-        url: `/m/${getFileName(doc)}`,
+        originalUrl: `/m/${getFileName(doc)}`,
+        previewUrl: `/p/${doc.uuid + '.' + (doc.hasPreview ? 'jpeg' : doc.fileExtension)}`,
         type: doc.type,
         sharedIndividually: doc.sharedIndividually,
         height: doc.height,

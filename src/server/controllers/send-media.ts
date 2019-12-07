@@ -1,4 +1,4 @@
-import {asyncHandler, filePathForPersistence, getExtension, getName} from '../utils'
+import {asyncHandler, getExtension, getFilePathForPersistence, getName} from '../utils'
 import {getFileName, MediaModel} from '../media'
 import {CollectionsModel} from '../collection'
 import {getPathSegments} from '../../common/lib'
@@ -29,7 +29,40 @@ export const sendMedia = asyncHandler(async (req, res) => {
         const mediaBelongsToRequestedSharedCollection = !!sharedCollectionsWithThisDoc
         const mediaBelongsToAuthenticatedUser = req.isAuthenticated() && req.user._id.toString() === matchedDoc.owner
         if (mediaIsSharedIndividually || mediaBelongsToRequestedSharedCollection || mediaBelongsToAuthenticatedUser) {
-            return res.sendFile(filePathForPersistence(getFileName(matchedDoc)))
+            return res.sendFile(getFilePathForPersistence(getFileName(matchedDoc), 'upload'))
+        } else {
+            return res.status(404).send(`Not found or don't have permissions to view`)
+        }
+    }
+})
+
+export const sendPreview = asyncHandler(async (req, res) => {
+    const fileName = req.params.fileName
+    const fileUUID = getName(fileName)
+    const refererUrl = req.headers.referer || ''
+    const parsedReferred = urlParse(refererUrl)
+    const pathSegments = getPathSegments(parsedReferred.pathname)
+    const [_, refererCollectionUri] = pathSegments
+    const matchedDoc = await MediaModel.findOne({
+        uuid: fileUUID
+    })
+    if (!matchedDoc) {
+        return res.status(404).send(`Not found or don't have permissions to view`)
+    } else {
+        let sharedCollectionsWithThisDoc = await CollectionsModel.findOne({
+            media: matchedDoc.uuid,
+            uri: refererCollectionUri,
+            public: true
+        })
+        const mediaIsSharedIndividually = matchedDoc.sharedIndividually
+        const mediaBelongsToRequestedSharedCollection = !!sharedCollectionsWithThisDoc
+        const mediaBelongsToAuthenticatedUser = req.isAuthenticated() && req.user._id.toString() === matchedDoc.owner
+        if (mediaIsSharedIndividually || mediaBelongsToRequestedSharedCollection || mediaBelongsToAuthenticatedUser) {
+            if (matchedDoc.hasPreview) {
+                return res.sendFile(getFilePathForPersistence(matchedDoc.uuid + '.jpeg', 'preview'))
+            } else {
+                return res.sendFile(getFilePathForPersistence(getFileName(matchedDoc), 'upload'))
+            }
         } else {
             return res.status(404).send(`Not found or don't have permissions to view`)
         }

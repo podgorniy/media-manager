@@ -1,6 +1,6 @@
 import {RequestHandler} from 'express'
 import * as path from 'path'
-import {UPLOADS_DIR} from './env'
+import {FILES_DIR} from './env'
 import {compare, hash} from 'bcrypt'
 
 export const SHARED_TAG = 'shared'
@@ -11,9 +11,17 @@ export function asyncHandler(fn: RequestHandler) {
     }
 }
 
-export function filePathForPersistence(fileName) {
-    return path.resolve(path.join(UPLOADS_DIR, fileName))
+export function getFolderPathForPersistence(subdirPath = '') {
+    return path.resolve(path.join(FILES_DIR, subdirPath))
 }
+
+export function getFilePathForPersistence(fileName, subDirPath = '') {
+    let folderPath = getFolderPathForPersistence(subDirPath)
+    return path.resolve(folderPath, fileName)
+}
+
+export const MEDIA_FOLDER_PATH = getFolderPathForPersistence('upload')
+export const THUMBNAILS_FOLDER_PATH = getFolderPathForPersistence('preview')
 
 export async function hashString(password) {
     return hash(password, 10)

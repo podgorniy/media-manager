@@ -4,7 +4,8 @@
 import {Document} from 'mongoose'
 
 export interface IUserMediaItem {
-    url: string
+    originalUrl: string
+    previewUrl: string
     tags: Array<string>
     uuid: string
     type: MediaType

@@ -53,10 +53,19 @@ function asyncHandler(fn) {
     };
 }
 exports.asyncHandler = asyncHandler;
-function filePathForPersistence(fileName) {
-    return path.resolve(path.join(env_1.UPLOADS_DIR, fileName));
+function getFolderPathForPersistence(subdirPath) {
+    if (subdirPath === void 0) { subdirPath = ''; }
+    return path.resolve(path.join(env_1.FILES_DIR, subdirPath));
 }
-exports.filePathForPersistence = filePathForPersistence;
+exports.getFolderPathForPersistence = getFolderPathForPersistence;
+function getFilePathForPersistence(fileName, subDirPath) {
+    if (subDirPath === void 0) { subDirPath = ''; }
+    var folderPath = getFolderPathForPersistence(subDirPath);
+    return path.resolve(folderPath, fileName);
+}
+exports.getFilePathForPersistence = getFilePathForPersistence;
+exports.MEDIA_FOLDER_PATH = getFolderPathForPersistence('upload');
+exports.THUMBNAILS_FOLDER_PATH = getFolderPathForPersistence('preview');
 function hashString(password) {
     return __awaiter(this, void 0, void 0, function () {
         return __generator(this, function (_a) {

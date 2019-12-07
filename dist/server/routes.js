@@ -112,6 +112,7 @@ function initRoutes(app) {
     app.post('/api/v1/un-share-collection', isAuthenticated, un_share_collection_1.unShareCollection);
     app.get('/api/v1/check-collection', checkCollection_1.checkCollection);
     app.get('/m/:fileName', send_media_1.sendMedia);
+    app.get('/p/:fileName', send_media_1.sendPreview);
     app.get('*', utils_1.asyncHandler(function (req, res) { return __awaiter(_this, void 0, void 0, function () {
         return __generator(this, function (_a) {
             res.locals.title = 'Media Manager';

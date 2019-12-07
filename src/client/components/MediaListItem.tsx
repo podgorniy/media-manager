@@ -15,6 +15,11 @@ interface IMediaListItemState {
     loaded: boolean
 }
 
+// TODO: review implementation
+function isGif(src: string): boolean {
+    return src.split('.')[1] === 'gif'
+}
+
 @inject('appState')
 @observer
 export class MediaListItem extends React.Component<IMediaListItemProps & IAppState, IMediaListItemState> {
@@ -112,7 +117,7 @@ export class MediaListItem extends React.Component<IMediaListItemProps & IAppSta
         const {appState, uuid, onLoad} = this.props
         const {selectedUUIDs} = appState
         const mediaItem = appState.media.find((item) => item.uuid === uuid)
-        const {url, focused, type, width, height} = mediaItem
+        const {originalUrl, previewUrl, focused, type, width, height} = mediaItem
         const aspectPadding = (height / width) * 100
         const selected = selectedUUIDs.indexOf(uuid) !== -1
         const wrapperExtraClass = this.state.loaded
@@ -137,17 +142,17 @@ export class MediaListItem extends React.Component<IMediaListItemProps & IAppSta
                 <div
                     className={`
                                 MediaListItem__outer
+                                ${isGif(originalUrl) ? 'MediaListItem__outer-gif' : ''}
                                 ${selected ? 'selected' : ''}
                                 ${focused ? 'focused' : ''}
                             `}
                 >
                     <div className='MediaListItem__aspect' style={{paddingBottom: aspectPadding + '%'}}>
-                        <div className={`MediaListItem__aspect_inner ${wrapperExtraClass}`}>
+                        <div onClick={this.clickHandler} className={`MediaListItem__aspect_inner ${wrapperExtraClass}`}>
                             {type === 'img' && (
                                 <img
-                                    onClick={this.clickHandler}
-                                    src={url}
-                                    className='MediaListItem'
+                                    src={previewUrl}
+                                    className={`MediaListItem`}
                                     alt={uuid}
                                     onLoad={this.handleOnLoad}
                                 />
@@ -156,8 +161,7 @@ export class MediaListItem extends React.Component<IMediaListItemProps & IAppSta
                             {type === 'video' && (
                                 <video
                                     controls
-                                    onClick={this.clickHandler}
-                                    src={url}
+                                    src={previewUrl}
                                     className='MediaListItem'
                                     onLoad={this.handleOnLoad}
                                     width='100%'

@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.UPLOADS_DIR = process.env.UPLOADS_DIR;
+exports.FILES_DIR = process.env.FILES_DIR;
 exports.PORT = process.env.PORT;
 exports.MONGO_URL = process.env.MONGO_URL;
 exports.DEMO = process.env.DEMO;
