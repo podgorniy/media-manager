@@ -133,7 +133,6 @@ export class MediaListItem extends React.Component<IMediaListItemProps & IAppSta
         return (
             <div
                 style={{
-                    willChange: 'visibility',
                     visibility: this.state.shouldShow ? 'visible' : 'hidden'
                 }}
                 ref={this.ref}
