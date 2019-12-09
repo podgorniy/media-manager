@@ -195,7 +195,7 @@ export class ZoomedView extends React.Component<IZoomedViewProps & IAppState, IZ
                         currentSrc: '',
                         showLoadingBackground: false
                     })
-                    requestAnimationFrame(() => {
+                    setTimeout(() => {
                         clearTimeout(showLoadingIndicatorTimeout)
                         this.setState({
                             currentSrc: originalUrl
@@ -205,7 +205,7 @@ export class ZoomedView extends React.Component<IZoomedViewProps & IAppState, IZ
                                 showLoadingBackground: true
                             })
                         }, 500)
-                    })
+                    }, 16 * 3)
                 }
             }
         })
@@ -272,7 +272,9 @@ export class ZoomedView extends React.Component<IZoomedViewProps & IAppState, IZ
                             ? type === 'img' && (
                                   <img
                                       alt=''
-                                      className={`ZoomedView__container ZoomedView__img ${this.state.showLoadingBackground ? 'ZoomedView__img-loading' : ''}`}
+                                      className={`ZoomedView__container ZoomedView__img ${
+                                          this.state.showLoadingBackground ? 'ZoomedView__img-loading' : ''
+                                      }`}
                                       style={{
                                           width: zoomedItem.width,
                                           height: zoomedItem.height
