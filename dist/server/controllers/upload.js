@@ -98,6 +98,9 @@ function registerFile(sourcePath, ownerId) {
                     ;
                     fileMimeType = mime_1.getType(fileExtensionWithDot);
                     fileType = getTypeOfDoc(fileMimeType);
+                    if (!fileType) {
+                        throw new Error("Unsupported mime type \"" + fileMimeType + "\"");
+                    }
                     extension = mime_1.getExtension(fileMimeType);
                     fileName = uuid + fileExtensionWithDot;
                     fileTargetPath = utils_1.getFilePathForPersistence(fileName, 'upload');

@@ -1,6 +1,7 @@
 import {AppState} from './app-state'
 import {autorun} from 'mobx'
 import {isDev} from '../common/lib'
+import {throttle} from './lib'
 
 const VIEW_PORTS_BELOW_SCREEN_TO_TRIGGER_LOADING = isDev() ? 1.5 : 3
 
@@ -30,9 +31,12 @@ function initLoadingMoreService(appState: AppState) {
     })
 
     appState.calcPageScrolled()
-    window.addEventListener('scroll', () => {
-        appState.calcPageScrolled()
-    })
+    window.addEventListener(
+        'scroll',
+        throttle(() => {
+            appState.calcPageScrolled()
+        }, 150)
+    )
 
     appState.updateViewPortHeight()
     window.addEventListener('resize', () => {

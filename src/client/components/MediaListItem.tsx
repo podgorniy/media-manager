@@ -2,7 +2,7 @@ import {autorun} from 'mobx'
 import * as React from 'react'
 import {inject, observer} from 'mobx-react'
 import {IAppState} from '../app-state'
-import {getRandomIntInclusive, throttleTo60Fps} from '../../common/lib'
+import {getRandomIntInclusive} from '../../common/lib'
 
 require('./MediaListItem.less')
 
@@ -13,7 +13,6 @@ interface IMediaListItemProps {
 
 interface IMediaListItemState {
     loaded: boolean
-    shouldShow: boolean
 }
 
 // TODO: review implementation
@@ -27,37 +26,14 @@ export class MediaListItem extends React.Component<IMediaListItemProps & IAppSta
     constructor(props) {
         super(props)
         this.state = {
-            loaded: false,
-            shouldShow: true
+            loaded: false
         }
         this.handleOnLoad = this.handleOnLoad.bind(this)
-        this.showOnlyInViewport = throttleTo60Fps(() => {
-            const [bottomIsHidden, topIsHidden, isInViewport, isPartiallyInViewport] = this.viewPortState(
-                this.ref.current
-            )
-            if (isPartiallyInViewport) {
-                if (!this.state.shouldShow) {
-                    this.setState({
-                        shouldShow: true
-                    })
-                }
-            } else {
-                if (this.state.shouldShow) {
-                    this.setState({
-                        shouldShow: false
-                    })
-                }
-            }
-        })
     }
 
     private ref = React.createRef<HTMLDivElement>()
 
     private stopAutoScrollIntoView
-
-    private showOnlyInViewport
-
-    private isVisible = true
 
     private handleOnLoad() {
         this.props.onLoad()
@@ -93,15 +69,10 @@ export class MediaListItem extends React.Component<IMediaListItemProps & IAppSta
                 }
             }
         })
-        window.addEventListener('scroll', this.showOnlyInViewport)
-        window.addEventListener('resize', this.showOnlyInViewport)
-        this.showOnlyInViewport()
     }
 
     componentWillUnmount() {
         this.stopAutoScrollIntoView()
-        window.removeEventListener('scroll', this.showOnlyInViewport)
-        window.removeEventListener('resize', this.showOnlyInViewport)
     }
 
     clickHandler = (event) => {
@@ -113,12 +84,8 @@ export class MediaListItem extends React.Component<IMediaListItemProps & IAppSta
         }
     }
 
-    componentDidUpdate() {
-        this.showOnlyInViewport()
-    }
-
     render() {
-        const {appState, uuid, onLoad} = this.props
+        const {appState, uuid} = this.props
         const {selectedUUIDs} = appState
         const mediaItem = appState.media.find((item) => item.uuid === uuid)
         const {originalUrl, previewUrl, focused, type, width, height} = mediaItem
@@ -132,9 +99,6 @@ export class MediaListItem extends React.Component<IMediaListItemProps & IAppSta
               ).toString()}`
         return (
             <div
-                style={{
-                    visibility: this.state.shouldShow ? 'visible' : 'hidden'
-                }}
                 ref={this.ref}
                 onMouseEnter={() => {
                     appState.setHoveredId(uuid)

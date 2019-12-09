@@ -50,6 +50,9 @@ async function registerFile(sourcePath: string, ownerId: string) {
     const fileExtensionWithDot = path.extname(sourcePath) // with dot
     const fileMimeType = getType(fileExtensionWithDot)
     const fileType = getTypeOfDoc(fileMimeType)
+    if (!fileType) {
+        throw new Error(`Unsupported mime type "${fileMimeType}"`)
+    }
     const extension = getExtension(fileMimeType)
     const fileName = uuid + fileExtensionWithDot
     const fileTargetPath = getFilePathForPersistence(fileName, 'upload')
