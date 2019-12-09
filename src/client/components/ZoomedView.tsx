@@ -183,6 +183,7 @@ export class ZoomedView extends React.Component<IZoomedViewProps & IAppState, IZ
                         this.imageNodeRef.current.onload = () => {
                             // Component might be already unmounted
                             if (!this.unmounted) {
+                                clearTimeout(showLoadingIndicatorTimeout)
                                 this.setState({
                                     showLoadingBackground: false
                                 })
