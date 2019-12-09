@@ -70,12 +70,15 @@ Trick below hides icon of broken image (was needed only for Chrome)
 .ZoomedView__img[alt]:before {
     display: block;
     content: '';
-    margin-bottom: -16px;
+    margin-bottom: 99999px;
 }
 /*[/Trick]*/
 
 .ZoomedView__img {
     position: relative;
+}
+
+.ZoomedView__img-loading {
     background-image: linear-gradient(138deg, #6e34d6, #48c5de);
     animation-iteration-count: infinite;
     background-size: 400% 400%;

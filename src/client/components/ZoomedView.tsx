@@ -18,6 +18,7 @@ interface IZoomedView {
     dragging: boolean
     prevSrc: string
     currentSrc: string
+    showLoadingBackground: boolean
 }
 
 interface IZoomedViewProps {}
@@ -47,7 +48,8 @@ export class ZoomedView extends React.Component<IZoomedViewProps & IAppState, IZ
             startMoveY: 0,
             dragging: false,
             prevSrc: '',
-            currentSrc: originalUrl
+            currentSrc: '',
+            showLoadingBackground: false
         }
     }
 
@@ -168,18 +170,27 @@ export class ZoomedView extends React.Component<IZoomedViewProps & IAppState, IZ
                 setTimeout(this.fitIntoView, 0)
             }
         })
+
+        let showLoadingIndicatorTimeout
         this.stopWatchingUrlChange = autorun(() => {
             if (this.props.appState.zoomedItem) {
                 const {originalUrl} = this.props.appState.zoomedItem
                 if (originalUrl !== this.state.currentSrc) {
                     this.setState({
                         prevSrc: this.state.currentSrc,
-                        currentSrc: ''
+                        currentSrc: '',
+                        showLoadingBackground: false
                     })
                     requestAnimationFrame(() => {
+                        clearTimeout(showLoadingIndicatorTimeout)
                         this.setState({
                             currentSrc: originalUrl
                         })
+                        showLoadingIndicatorTimeout = setTimeout(() => {
+                            this.setState({
+                                showLoadingBackground: true
+                            })
+                        }, 500)
                     })
                 }
             }
@@ -207,22 +218,8 @@ export class ZoomedView extends React.Component<IZoomedViewProps & IAppState, IZ
         const {zoomedItem, sideWidth} = appState
         const {type, originalUrl, previewUrl} = zoomedItem
         const srcUrl = this.state.currentSrc
-        // console.log(`originalUrl`, originalUrl)
         const {currentShiftLeft, currentShiftTop} = this.state
         const transformString = `translate(${currentShiftLeft}px, ${currentShiftTop}px) scale(${this.state.scale})`
-        // setTimeout(() => {
-        //     if (this.innerWrapperRef && this.innerWrapperRef.current) {
-        //         const t = this.innerWrapperRef.current.style.transform.slice()
-        //         this.innerWrapperRef.current.style.transform = ''
-        //         setTimeout(() => {
-        //             // console.warn('123321', t)
-        //             // console.log(`t`, t)
-        //             this.innerWrapperRef.current.style.transform = t
-        //         }, 16)
-        //
-        //         // this.innerWrapperRef.current.style.transform = t
-        //     }
-        // }, 16)
         return (
             <div
                 className={`ZoomedView ${this.state.dragging ? 'ZoomedView--move-cursor' : ''}`}
@@ -260,7 +257,7 @@ export class ZoomedView extends React.Component<IZoomedViewProps & IAppState, IZ
                             ? type === 'img' && (
                                   <img
                                       alt=''
-                                      className='ZoomedView__container ZoomedView__img'
+                                      className={`ZoomedView__container ZoomedView__img ${this.state.showLoadingBackground ? 'ZoomedView__img-loading' : ''}`}
                                       style={{
                                           width: zoomedItem.width,
                                           height: zoomedItem.height
