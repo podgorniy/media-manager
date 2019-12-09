@@ -178,6 +178,17 @@ export class ZoomedView extends React.Component<IZoomedViewProps & IAppState, IZ
             if (this.props.appState.zoomedItem) {
                 const {originalUrl} = this.props.appState.zoomedItem
                 if (originalUrl !== this.state.currentSrc) {
+                    // Video might be active at the moment
+                    if (this.imageNodeRef && this.imageNodeRef.current) {
+                        this.imageNodeRef.current.onload = () => {
+                            // Component might be already unmounted
+                            if (!this.unmounted) {
+                                this.setState({
+                                    showLoadingBackground: false
+                                })
+                            }
+                        }
+                    }
                     this.setState({
                         prevSrc: this.state.currentSrc,
                         currentSrc: '',
@@ -188,17 +199,6 @@ export class ZoomedView extends React.Component<IZoomedViewProps & IAppState, IZ
                         this.setState({
                             currentSrc: originalUrl
                         })
-                        // Video might be active at the moment
-                        if (this.imageNodeRef && this.imageNodeRef.current) {
-                            this.imageNodeRef.current.onload = () => {
-                                // Component might be already unmounted
-                                if (!this.unmounted) {
-                                    this.setState({
-                                        showLoadingBackground: false
-                                    })
-                                }
-                            }
-                        }
                         showLoadingIndicatorTimeout = setTimeout(() => {
                             this.setState({
                                 showLoadingBackground: true
