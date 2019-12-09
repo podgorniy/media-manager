@@ -33,6 +33,7 @@ export class ZoomedView extends React.Component<IZoomedViewProps & IAppState, IZ
     private stopWatchingSideWidth
     private stopWatchingUrlChange
     private imageNodeRef = React.createRef<HTMLImageElement>()
+    private unmounted = true
 
     constructor(props) {
         super(props)
@@ -155,6 +156,7 @@ export class ZoomedView extends React.Component<IZoomedViewProps & IAppState, IZ
     componentDidUpdate() {}
 
     componentDidMount() {
+        this.unmounted = false
         document.body.classList.add('disable-scroll')
         document.documentElement.addEventListener('keydown', this.keyDown)
         document.documentElement.addEventListener('keyup', this.keyup)
@@ -186,6 +188,17 @@ export class ZoomedView extends React.Component<IZoomedViewProps & IAppState, IZ
                         this.setState({
                             currentSrc: originalUrl
                         })
+                        // Video might be active at the moment
+                        if (this.imageNodeRef && this.imageNodeRef.current) {
+                            this.imageNodeRef.current.onload = () => {
+                                // Component might be already unmounted
+                                if (!this.unmounted) {
+                                    this.setState({
+                                        showLoadingBackground: false
+                                    })
+                                }
+                            }
+                        }
                         showLoadingIndicatorTimeout = setTimeout(() => {
                             this.setState({
                                 showLoadingBackground: true
@@ -207,6 +220,7 @@ export class ZoomedView extends React.Component<IZoomedViewProps & IAppState, IZ
         window.removeEventListener('resize', this.resize)
         this.stopWatchingSideWidth()
         this.stopWatchingUrlChange()
+        this.unmounted = true
     }
 
     close() {
