@@ -24,7 +24,15 @@ export async function authenticate({userName, password}): Promise<{userName?: st
             password
         })
     })
-    const loginRes = await loginRequestObj.json()
+    let loginRes
+    try {
+        loginRes = await loginRequestObj.json()
+    } catch (err) {
+        // handle non-json responses like bad request
+        return {
+            success: false
+        }
+    }
     if (loginRes.success) {
         return {
             success: true
