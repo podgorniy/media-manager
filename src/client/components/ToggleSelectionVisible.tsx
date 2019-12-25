@@ -22,7 +22,7 @@ export class ToggleSelectionVisible extends React.Component<IProps & IAppState, 
             <div>
                 {itemsSelected && itemsSelected !== appState.selectedUUIDs.length ? (
                     <Button size='small' compact onClick={appState.unselectSelected}>
-                        Deselect <strong>{itemsSelected}</strong> items
+                        {`Deselect <strong>${itemsSelected}</strong> item${itemsSelected === 1 ? '' : 's'}`}
                     </Button>
                 ) : null}
             </div>

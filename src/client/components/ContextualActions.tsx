@@ -12,7 +12,7 @@ import {logout} from '../api'
 import {Collections2} from './Collections2'
 import {TagsControls} from './TagsControls'
 import {SelectionControls} from './SelectionControls'
-import { DeleteMedia } from './DeleteMedia'
+import {DeleteMedia} from './DeleteMedia'
 
 @inject('appState')
 @observer
@@ -74,6 +74,9 @@ export class ContextualActions extends React.Component<{} & IAppState, {}> {
                             <SelectionControls UUIDs={[appState.zoomedItemId]} />
                         </div>
                         <div className='ContextualActions__row'>
+                            <DeleteMedia UUIDs={[appState.zoomedItemId]} />
+                        </div>
+                        <div className='ContextualActions__row'>
                             <TagsControls mediaUUIDs={[appState.zoomedItemId]} />
                         </div>
                         <div className='ContextualActions__row'>
@@ -87,8 +90,8 @@ export class ContextualActions extends React.Component<{} & IAppState, {}> {
                             <div className='ContextualActions__row'>
                                 <ToggleSelectionAll />
                             </div>
-                            <div className="ContextualActions__row">
-                                <DeleteMedia />
+                            <div className='ContextualActions__row'>
+                                <DeleteMedia UUIDs={appState.selectedUUIDs} />
                             </div>
                             {appState.selectedUUIDs.length === 1 ? (
                                 <div className='ContextualActions__row'>
