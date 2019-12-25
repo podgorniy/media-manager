@@ -237,12 +237,13 @@ export class ZoomedView extends React.Component<IZoomedViewProps & IAppState, IZ
         const transformString = `translate(${currentShiftLeft}px, ${currentShiftTop}px) scale(${this.state.scale})`
         return (
             <div
-                className={`ZoomedView ${this.state.dragging ? 'ZoomedView--move-cursor' : ''}`}
+                className={`ZoomedView js-overlay ${this.state.dragging ? 'ZoomedView--move-cursor' : ''}`}
                 style={{
                     left: sideWidth + 'px'
                 }}
                 ref={this.componentRootRef}
                 onClick={(event) => {
+                    // This is tricky one: there are multiple layers which are even.target and are in fact click on grey area
                     if ((event.target as HTMLElement).classList.contains('js-overlay')) {
                         this.close()
                     }
