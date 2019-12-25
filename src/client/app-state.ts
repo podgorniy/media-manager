@@ -65,6 +65,7 @@ export class AppState {
     constructor() {
         this.router = new AppRouter(location.href)
         this.setAuthenticated(!!window['isAuthenticated'])
+        this.hasDemoAccount = !!window['hasDemoAccount']
         this.rpc = createRpcClient(new RPCConfig())
     }
 
@@ -165,6 +166,8 @@ export class AppState {
 
     @observable
     isAuthenticated = false
+
+    hasDemoAccount = false
 
     @computed
     get layoutColumnsCount(): number {

@@ -58,6 +58,7 @@ var share_collection_1 = require("./controllers/share-collection");
 var un_share_collection_1 = require("./controllers/un-share-collection");
 var checkCollection_1 = require("./controllers/checkCollection");
 var update_collection_1 = require("./controllers/update-collection");
+var user_1 = require("./user");
 var passport = require('passport');
 // https://stackoverflow.com/a/47448486
 // declare global {
@@ -114,11 +115,19 @@ function initRoutes(app) {
     app.get('/m/:fileName', send_media_1.sendMedia);
     app.get('/p/:fileName', send_media_1.sendPreview);
     app.get('*', utils_1.asyncHandler(function (req, res) { return __awaiter(_this, void 0, void 0, function () {
-        return __generator(this, function (_a) {
-            res.locals.title = 'Media Manager';
-            res.locals.isAuthenticated = !!req.user;
-            res.render('default');
-            return [2 /*return*/];
+        var _a;
+        return __generator(this, function (_b) {
+            switch (_b.label) {
+                case 0:
+                    res.locals.title = 'Media Manager';
+                    res.locals.isAuthenticated = !!req.user;
+                    _a = res.locals;
+                    return [4 /*yield*/, user_1.UserModel.findOne({ name: 'demo' })];
+                case 1:
+                    _a.hasDemoAccount = !!(_b.sent());
+                    res.render('default');
+                    return [2 /*return*/];
+            }
         });
     }); }));
 }

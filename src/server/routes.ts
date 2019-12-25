@@ -21,6 +21,7 @@ import {shareCollection} from './controllers/share-collection'
 import {unShareCollection} from './controllers/un-share-collection'
 import {checkCollection} from './controllers/checkCollection'
 import {updateCollection} from './controllers/update-collection'
+import {UserModel} from './user'
 
 const passport = require('passport')
 
@@ -83,6 +84,7 @@ export function initRoutes(app: Express) {
         asyncHandler(async (req, res) => {
             res.locals.title = 'Media Manager'
             res.locals.isAuthenticated = !!req.user
+            res.locals.hasDemoAccount = !!(await UserModel.findOne({name: 'demo'}))
             res.render('default')
         })
     )

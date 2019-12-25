@@ -10,4 +10,5 @@ html
         div(id="app")
         script
             != 'window["isAuthenticated"] = ' + !!isAuthenticated + ';'
+            != 'window["hasDemoAccount"] = ' + !!hasDemoAccount + ';'
         script(src="/client/client.js")

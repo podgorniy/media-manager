@@ -98,13 +98,17 @@ export class Auth extends React.Component<IProps & IAppState, IState> {
                             <Button size='huge' primary>
                                 Authenticate
                             </Button>
-                            {process.env.DEMO ? (
-                                <Button onClick={() => {
-                                    this.setState({
-                                        name: 'demo',
-                                        password: '123'
-                                    })
-                                }} size='huge' secondary>
+                            {appState.hasDemoAccount ? (
+                                <Button
+                                    onClick={() => {
+                                        this.setState({
+                                            name: 'demo',
+                                            password: '123'
+                                        })
+                                    }}
+                                    size='huge'
+                                    secondary
+                                >
                                     Log in demo account
                                 </Button>
                             ) : null}
