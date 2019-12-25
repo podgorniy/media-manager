@@ -45,9 +45,13 @@ export class MediaList extends React.Component<IProps, {}> {
             }, SHUFFLE_ANIMATION_DURATION + SCREEN_FRAME_DURATION * 2)
         })
         const relayout = throttleTo60Fps(() => {
-            this.shuffle.resetItems()
-            this.shuffle.update()
-            this._calcComponentHeight()
+            // Component might be unmounted when this func call is scheduled
+            // For example on logout
+            if (this.shuffle) {
+                this.shuffle.resetItems()
+                this.shuffle.update()
+                this._calcComponentHeight()
+            }
         })
         this.disposeLayoutWatcher2 = autorun(() => {
             if (appState.layoutRerenderCount) {
