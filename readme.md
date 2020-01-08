@@ -43,7 +43,7 @@ For example:
 Create account `dima` (if account exists password will be changed) with password `ppp` and run web app on `8888` port:
 
 ```
-export ACCOUNT_NAME=dima && export ACCOUNT_PASSWORD=ppp && export EXPOSED_PORT=8888 && docker-compose up --build -d
+ACCOUNT_NAME=dima ACCOUNT_PASSWORD=ppp EXPOSED_PORT=8888 docker-compose up --build -d
 ```
 
 

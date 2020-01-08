@@ -8,4 +8,4 @@ COPY package*.json ./
 RUN npm install --production
 COPY dist ./dist
 EXPOSE ${EXPOSED_PORT}
-CMD ["npm", "run", "prod"]
+CMD ["node", "./dist/server/index.js"]

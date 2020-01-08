@@ -22,9 +22,10 @@ services:
             - webappnetwork
         depends_on:
             - mongodb
-        command: sh -c './bin/wait-for mongodb:27017 -t 20 -- npm run prod'
+        command: sh -c './bin/wait-for mongodb:27017 -t 20 -- node ./dist/server/index.js'
         ports:
             - "${EXPOSED_PORT}:${PORT}"
+        image: podgorniy/media-manager
     mongodb:
         image: mongo:4.2
         restart: always
