@@ -7,6 +7,8 @@ https://mm.dmitrypodgorniy.com
 - login: demo
 - password: 123
 
+Or just click "Login to demo account" button.
+
 ## Features
 
 - Media
