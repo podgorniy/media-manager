@@ -80,7 +80,7 @@
     "semantic-ui-react": "^0.88.1",
     "shelljs": "^0.8.3",
     "shufflejs": "^5.2.3",
-    "sync-files": "git+ssh://git@github.com/podgorniy/node-sync-files.git#v1.0.5",
+    "sync-files": "git://github.com/podgorniy/node-sync-files.git#v1.0.5",
     "typescript": "^3.6.4"
   }
 }
