@@ -176,6 +176,7 @@ export class Collections2 extends React.Component<IProps & IAppState, IState> {
                                     ) : null}
                                 </div>
                                 {collection.public ? <CollectionPublicPassword collection={collection} /> : null}
+                                <div className='Collections2__separator'></div>
                             </React.Fragment>
                         )
                     })}

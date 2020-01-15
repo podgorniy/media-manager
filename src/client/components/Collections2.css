@@ -24,11 +24,12 @@
     flex-wrap: wrap;
 }
 
-.Collections2__collection-actions:not(:last-of-type) {
+.Collections2__separator:not(:last-of-type) {
     border-bottom: 1px dotted #999;
+    margin-top: 5px;
 }
 
 .Collections2__collection-actions > * {
-    margin-top: 5px !important;
+    margin-bottom: 5px !important;
     margin-right: 5px !important;
 }
