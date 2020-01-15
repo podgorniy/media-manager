@@ -1,7 +1,7 @@
 # Use a lighter version of Node as a parent image
 FROM node:10
 RUN apt-get -q update
-RUN apt-get -qy --assume-yes install ffmpeg netcat
+RUN apt-get -qy --assume-yes install netcat
 WORKDIR ./
 COPY ./bin/* ./bin
 COPY package*.json ./

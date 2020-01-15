@@ -57,7 +57,6 @@ Prerequisites:
 
 - nodejs
 - mongodb
-- ffmpeg
 
 Install production dependencies
 
@@ -78,7 +77,6 @@ Prerequisites:
 
 - nodejs
 - mongodb
-- ffmpeg
 
 Runs in demo mode with account `demo` and password `123`.
 
