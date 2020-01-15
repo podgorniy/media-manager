@@ -76,7 +76,7 @@ export class DeleteMedia extends React.Component<IProps & IAppState, IState> {
                     }
                 }}
             >
-                {`Delete ${UUIDsToDelete.length} element${UUIDsToDelete.length === 1 ? '' : 's'}`}
+                {`Delete ${UUIDsToDelete.length}`}
             </Button>
         )
     }

@@ -19,9 +19,7 @@ export class ToggleSelectionAll extends React.Component<{} & IAppState, {}> {
             <div>
                 {totalItemsSelected ? (
                     <Button size='small' compact onClick={appState.unselectAll}>
-                        {`Deselect ${totalItemsSelected > 1 ? 'all ' : ''} ${totalItemsSelected} element${
-                            totalItemsSelected === 1 ? '' : 's'
-                        }`}
+                        {`Deselect ${totalItemsSelected > 1 ? 'all ' : ''} ${totalItemsSelected}`}
                     </Button>
                 ) : (
                     <SelectAllLoaded />

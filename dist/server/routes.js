@@ -59,6 +59,7 @@ var un_share_collection_1 = require("./controllers/un-share-collection");
 var checkCollection_1 = require("./controllers/checkCollection");
 var update_collection_1 = require("./controllers/update-collection");
 var user_1 = require("./user");
+var download_1 = require("./controllers/download");
 var passport = require('passport');
 // https://stackoverflow.com/a/47448486
 // declare global {
@@ -112,6 +113,7 @@ function initRoutes(app) {
     app.post('/api/v1/share-collection', isAuthenticated, share_collection_1.shareCollection);
     app.post('/api/v1/un-share-collection', isAuthenticated, un_share_collection_1.unShareCollection);
     app.get('/api/v1/check-collection', checkCollection_1.checkCollection);
+    app.post('/api/v1/download', isAuthenticated, download_1.download);
     app.get('/m/:fileName', send_media_1.sendMedia);
     app.get('/p/:fileName', send_media_1.sendPreview);
     app.get('*', utils_1.asyncHandler(function (req, res) { return __awaiter(_this, void 0, void 0, function () {

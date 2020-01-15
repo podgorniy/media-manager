@@ -6,6 +6,7 @@ import {isDev} from '../common/lib'
 import session = require('express-session')
 import bodyParser = require('body-parser')
 const compression = require('compression')
+require('express-zip') // lol, but this enables the thing
 
 const mongoose = require('mongoose')
 const connectMongo = require('connect-mongo')
@@ -14,6 +15,7 @@ const MongoStore = connectMongo(session)
 export function initMiddleware(app: Express) {
     app.use(compression())
     app.use(express.static(path.resolve(__dirname, '../static')))
+    app.use(express.urlencoded())
     app.use((req, res, next) => {
         if (isDev()) {
             setTimeout(next, Math.random() * 999 + 500) // 500 - 1500ms of delay

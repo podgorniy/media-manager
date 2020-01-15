@@ -22,6 +22,7 @@ import {unShareCollection} from './controllers/un-share-collection'
 import {checkCollection} from './controllers/checkCollection'
 import {updateCollection} from './controllers/update-collection'
 import {UserModel} from './user'
+import { download } from './controllers/download'
 
 const passport = require('passport')
 
@@ -77,6 +78,7 @@ export function initRoutes(app: Express) {
     app.post('/api/v1/share-collection', isAuthenticated, shareCollection)
     app.post('/api/v1/un-share-collection', isAuthenticated, unShareCollection)
     app.get('/api/v1/check-collection', checkCollection)
+    app.post('/api/v1/download', isAuthenticated, download)
     app.get('/m/:fileName', sendMedia)
     app.get('/p/:fileName', sendPreview)
     app.get(

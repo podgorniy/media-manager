@@ -6,6 +6,7 @@ import {deleteCollection, renameCollection, shareCollection, unShareCollection} 
 import {Button, Input} from 'semantic-ui-react'
 import './Collections2.css'
 import {CollectionPublicPassword} from './CollectionPublicPassword'
+import {DownloadMedia} from './DownloadMedia'
 import copy = require('copy-to-clipboard')
 
 interface IProps {}
@@ -154,6 +155,7 @@ export class Collections2 extends React.Component<IProps & IAppState, IState> {
                                     >
                                         {collection.public ? 'Copy link' : 'Share'}
                                     </Button>
+                                    <DownloadMedia collectionId={collection._id} count={collection.media.length} />
                                     {collection.public ? (
                                         <Button
                                             onClick={async () => {

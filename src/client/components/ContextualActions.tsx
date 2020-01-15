@@ -13,6 +13,7 @@ import {Collections2} from './Collections2'
 import {TagsControls} from './TagsControls'
 import {SelectionControls} from './SelectionControls'
 import {DeleteMedia} from './DeleteMedia'
+import {DownloadMedia} from './DownloadMedia'
 
 @inject('appState')
 @observer
@@ -74,7 +75,10 @@ export class ContextualActions extends React.Component<{} & IAppState, {}> {
                             <SelectionControls UUIDs={[appState.zoomedItemId]} />
                         </div>
                         <div className='ContextualActions__row'>
-                            <DeleteMedia UUIDs={[appState.zoomedItemId]} />
+                            <Button.Group size='small' compact>
+                                <DeleteMedia UUIDs={[appState.zoomedItemId]} />
+                                <DownloadMedia UUIDs={[appState.zoomedItemId]} count={1} />
+                            </Button.Group>
                         </div>
                         <div className='ContextualActions__row'>
                             <TagsControls mediaUUIDs={[appState.zoomedItemId]} />
@@ -91,7 +95,10 @@ export class ContextualActions extends React.Component<{} & IAppState, {}> {
                                 <ToggleSelectionAll />
                             </div>
                             <div className='ContextualActions__row'>
-                                <DeleteMedia UUIDs={appState.selectedUUIDs} />
+                                <Button.Group size='small' compact>
+                                    <DeleteMedia UUIDs={appState.selectedUUIDs} />
+                                    <DownloadMedia UUIDs={appState.selectedUUIDs} count={appState.selectedUUIDs.length} />
+                                </Button.Group>
                             </div>
                             {appState.selectedUUIDs.length === 1 ? (
                                 <div className='ContextualActions__row'>
