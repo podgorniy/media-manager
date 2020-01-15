@@ -18,3 +18,17 @@
 .Collections2__collection-link-active {
     background: #8096b1;
 }
+
+.Collections2__collection-actions {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.Collections2__collection-actions:not(:last-of-type) {
+    border-bottom: 1px dotted #999;
+}
+
+.Collections2__collection-actions > * {
+    margin-top: 5px !important;
+    margin-right: 5px !important;
+}

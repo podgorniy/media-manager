@@ -62,7 +62,7 @@ export class Collections2 extends React.Component<IProps & IAppState, IState> {
                         <Button
                             className='Collections2__first-button'
                             compact
-                            size='tiny'
+                            size='small'
                             disabled={!!collectionIdToDelete}
                             onClick={async (event) => {
                                 event.preventDefault()
@@ -79,7 +79,7 @@ export class Collections2 extends React.Component<IProps & IAppState, IState> {
                         </Button>
                         <Button
                             compact
-                            size='tiny'
+                            size='small'
                             disabled={!collectionIdToDelete}
                             onClick={(event) => {
                                 event.preventDefault()
@@ -114,8 +114,10 @@ export class Collections2 extends React.Component<IProps & IAppState, IState> {
                                         {collection.title}
                                     </RouterLink>
                                 </h2>
-                                <Button.Group compact size='tiny'>
+                                <div className='Collections2__collection-actions'>
                                     <Button
+                                        compact
+                                        size='small'
                                         onClick={async () => {
                                             if (confirm(`Confirm deletion of collection "${collection.title}"`)) {
                                                 await deleteCollection({collectionId: collection._id})
@@ -131,6 +133,8 @@ export class Collections2 extends React.Component<IProps & IAppState, IState> {
                                         Delete
                                     </Button>
                                     <Button
+                                        compact
+                                        size='small'
                                         onClick={async () => {
                                             const newTitle = (
                                                 prompt('New title of the collection', collection.title) || ''
@@ -147,6 +151,8 @@ export class Collections2 extends React.Component<IProps & IAppState, IState> {
                                         Rename
                                     </Button>
                                     <Button
+                                        compact
+                                        size='small'
                                         onClick={async () => {
                                             copy(collectionUrl)
                                             await shareCollection({id: collection._id})
@@ -158,6 +164,8 @@ export class Collections2 extends React.Component<IProps & IAppState, IState> {
                                     <DownloadMedia collectionId={collection._id} count={collection.media.length} />
                                     {collection.public ? (
                                         <Button
+                                            compact
+                                            size='small'
                                             onClick={async () => {
                                                 await unShareCollection({id: collection._id})
                                                 appState.refreshCollections()
@@ -166,7 +174,7 @@ export class Collections2 extends React.Component<IProps & IAppState, IState> {
                                             Unshare
                                         </Button>
                                     ) : null}
-                                </Button.Group>
+                                </div>
                                 {collection.public ? <CollectionPublicPassword collection={collection} /> : null}
                             </React.Fragment>
                         )
