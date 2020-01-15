@@ -1,5 +1,7 @@
 # Self hosted media manager
 
+Community in [Spectrum Chat](https://spectrum.chat/media-manager).
+
 # Demo
 
 https://mm.dmitrypodgorniy.com
