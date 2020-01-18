@@ -97,7 +97,10 @@ export class ContextualActions extends React.Component<{} & IAppState, {}> {
                             <div className='ContextualActions__row'>
                                 <Button.Group size='small' compact>
                                     <DeleteMedia UUIDs={appState.selectedUUIDs} />
-                                    <DownloadMedia UUIDs={appState.selectedUUIDs} count={appState.selectedUUIDs.length} />
+                                    <DownloadMedia
+                                        UUIDs={appState.selectedUUIDs}
+                                        count={appState.selectedUUIDs.length}
+                                    />
                                 </Button.Group>
                             </div>
                             {appState.selectedUUIDs.length === 1 ? (

@@ -1,6 +1,5 @@
 import * as React from 'react'
-import {observer} from 'mobx-react'
-import {inject} from 'mobx-react'
+import {inject, observer} from 'mobx-react'
 import {IAppState} from '../app-state'
 import {Button} from 'semantic-ui-react'
 

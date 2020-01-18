@@ -30,7 +30,7 @@ configure({
 type ISetAuthenticatedParams = boolean | {userName: string}
 
 const SIDE_WIDTH_EXPANDED = 320
-const SIDE_WIDTH_COLLAPSED = 60
+const SIDE_WIDTH_COLLAPSED = 0
 
 function toClientSideRepresentation(mediaDoc: IUserMediaItem): IClientMediaItem {
     return {

@@ -1,13 +1,13 @@
 import {Icon, Progress} from 'semantic-ui-react'
+import * as React from 'react'
+import {inject, observer} from 'mobx-react'
+import {IAppState} from '../app-state'
+import {throttle} from '../lib'
 
 require('dropzone/dist/min/basic.min.css')
 require('dropzone/dist/min/dropzone.min.css')
 require('./Upload.css')
 import Dropzone = require('dropzone')
-import * as React from 'react'
-import {inject, observer} from 'mobx-react'
-import {IAppState} from '../app-state'
-import { throttle } from '../lib'
 
 interface IUploadState {
     itemsToProcess: number

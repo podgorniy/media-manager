@@ -42,9 +42,11 @@ export class Layout extends React.Component<{} & IAppState, {}> {
                     <IsLoading />
                     <div className='layout__content'>
                         <div
-                            className='layout__side'
+                            className={`layout__side ${
+                                sideExpanded ? 'layout__side--expanded' : 'layout__side--collapsed'
+                            }`}
                             style={{
-                                width: sideWidth + 'px'
+                                width: sideExpanded ? sideWidth + 'px' : 'auto'
                             }}
                         >
                             {sideExpanded ? <ContextualActions /> : <CollapsedMenu />}
