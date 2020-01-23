@@ -273,9 +273,7 @@ export class ZoomedView extends React.Component<IZoomedViewProps & IAppState, IZ
                             ? type === 'img' && (
                                   <img
                                       alt=''
-                                      className={`ZoomedView__container ZoomedView__img ${
-                                          this.state.showLoadingBackground ? 'ZoomedView__img-loading' : ''
-                                      }`}
+                                      className={`ZoomedView__container ZoomedView__img`}
                                       style={{
                                           width: zoomedItem.width,
                                           height: zoomedItem.height
