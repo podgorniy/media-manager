@@ -38,29 +38,35 @@ export class MediaList extends React.Component<IProps, {}> {
             window['s'] = this.shuffle
         }
         const {appState} = this.props
-        this.shuffle['on'](Shuffle.EventType.LAYOUT, () => {
-            // Component height is available only after shuffle completes layout animation
+        const calcHeightDelayed = () => {
+            this._calcComponentHeight()
             setTimeout(() => {
                 this._calcComponentHeight()
             }, SHUFFLE_ANIMATION_DURATION + SCREEN_FRAME_DURATION * 2)
+        }
+        this.shuffle['on'](Shuffle.EventType.LAYOUT, () => {
+            // Component height is available only after shuffle completes layout animation
+            calcHeightDelayed()
         })
-        const relayout = throttleTo60Fps(() => {
+        const relayout = throttleTo60Fps((mediaItemsChanged) => {
             // Component might be unmounted when this func call is scheduled
             // For example on logout
             if (this.shuffle) {
-                this.shuffle.resetItems()
+                if (mediaItemsChanged) {
+                    this.shuffle.resetItems()
+                }
                 this.shuffle.update()
-                this._calcComponentHeight()
+                calcHeightDelayed()
             }
         })
         this.disposeLayoutWatcher2 = autorun(() => {
             if (appState.layoutRerenderCount) {
-                relayout()
+                relayout(false)
             }
         })
         this.disposeLayoutWatcher1 = autorun(() => {
             if (appState.media.length || !appState.media.length) {
-                relayout()
+                relayout(true)
             }
         })
     }

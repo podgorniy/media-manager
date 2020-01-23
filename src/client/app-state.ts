@@ -171,13 +171,7 @@ export class AppState {
 
     @computed
     get layoutColumnsCount(): number {
-        if (!this.isAuthenticated) {
-            return 6
-        } else if (this.sideExpanded) {
-            return 5
-        } else {
-            return 6
-        }
+        return 6
     }
 
     @computed
