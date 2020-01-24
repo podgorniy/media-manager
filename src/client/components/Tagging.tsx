@@ -16,6 +16,8 @@ interface IState {
 @inject('appState')
 @observer
 export class Tagging extends React.Component<IProps & IAppState, IState> {
+    inputRef = React.createRef<Input>()
+
     constructor(props) {
         super(props)
         this.state = {
@@ -26,25 +28,41 @@ export class Tagging extends React.Component<IProps & IAppState, IState> {
 
     private async _attemptSubmit() {
         const {appState} = this.props
-        if (this.state.submissionDisabled) {
+        const tagName = this.state.val.trim()
+        if (!tagName) {
             return
         }
         this.setState({
             submissionDisabled: true
         })
-        await appState.addTagFor([this.state.val], this.props.mediaUUIDs)
+        await appState.addTagFor([tagName], this.props.mediaUUIDs)
         this.setState({
             val: '',
             submissionDisabled: false
         })
+        this.inputRef.current.focus()
     }
 
     render() {
         const {appState} = this.props
+        const tag = this.state.val.trim()
+        const relevantMedia = appState.media.filter((m) => {
+            return this.props.mediaUUIDs.indexOf(m.uuid) !== -1
+        })
+        const everyMediaHasCurrentTag = relevantMedia.every((m) => {
+            return m.tags.indexOf(tag) !== -1
+        })
+        const everyMediaDoesNotHaveCurrentTag = relevantMedia.every((m) => {
+            return m.tags.indexOf(tag) === -1
+        })
         return (
             <div>
                 <Input
+                    size='mini'
+                    list='tags'
                     placeholder='Add tag'
+                    value={this.state.val}
+                    ref={this.inputRef}
                     disabled={this.state.submissionDisabled}
                     onChange={(event) => {
                         this.setState({
@@ -56,27 +74,42 @@ export class Tagging extends React.Component<IProps & IAppState, IState> {
                             this._attemptSubmit()
                         }
                     }}
-                    value={this.state.val}
-                    size='mini'
-                    list='tags'
-                    action={
-                        <Button
-                            compact
-                            size='tiny'
-                            disabled={!this.state.val || this.state.submissionDisabled}
-                            onClick={async () => {
-                                this._attemptSubmit()
-                            }}
-                        >
-                            Add
-                        </Button>
-                    }
-                />
-                <datalist id='tags'>
-                    {appState.tags.map(({name}) => {
-                        return <option value={name} key={name} />
-                    })}
-                </datalist>
+                >
+                    <input />
+                    <datalist id='tags'>
+                        {appState.tags.map(({name}) => {
+                            return <option value={name} key={name} />
+                        })}
+                    </datalist>
+                    <Button
+                        compact
+                        size='small'
+                        disabled={!this.state.val || this.state.submissionDisabled || everyMediaHasCurrentTag}
+                        onClick={async () => {
+                            this._attemptSubmit()
+                        }}
+                    >
+                        Add
+                    </Button>
+                    <Button
+                        compact
+                        size='small'
+                        disabled={!this.state.val || this.state.submissionDisabled || everyMediaDoesNotHaveCurrentTag}
+                        onClick={async () => {
+                            this.setState({
+                                submissionDisabled: true
+                            })
+                            await appState.removeTagFrom(tag, this.props.mediaUUIDs)
+                            this.setState({
+                                submissionDisabled: false,
+                                val: ''
+                            })
+                            this.inputRef.current.focus()
+                        }}
+                    >
+                        Remove
+                    </Button>
+                </Input>
             </div>
         )
     }

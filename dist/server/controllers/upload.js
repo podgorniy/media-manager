@@ -117,7 +117,7 @@ function registerFile(sourcePath, ownerId) {
                     mediaSize.width = size.width;
                     mediaSize.height = size.height;
                     // gifs and png's are usually too large, so generate thumbnail for them anyway
-                    shouldHavePreview = (mediaSize.width > THUMBNAIL_WIDTH) || (extension === 'gif') || (extension === 'png');
+                    shouldHavePreview = mediaSize.width > THUMBNAIL_WIDTH || extension === 'gif' || extension === 'png';
                     previewFilePath = path.resolve(utils_1.THUMBNAILS_FOLDER_PATH, uuid + '.jpeg');
                     if (!shouldHavePreview) return [3 /*break*/, 5];
                     return [4 /*yield*/, generateThumbnail({ sourceFilePath: fileTargetPath, thumbnailFilePath: previewFilePath })];

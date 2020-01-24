@@ -22,7 +22,7 @@ import {unShareCollection} from './controllers/un-share-collection'
 import {checkCollection} from './controllers/checkCollection'
 import {updateCollection} from './controllers/update-collection'
 import {UserModel} from './user'
-import { download } from './controllers/download'
+import {download} from './controllers/download'
 
 const passport = require('passport')
 

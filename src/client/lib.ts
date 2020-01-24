@@ -1,5 +1,6 @@
 import {AppState} from './app-state'
 import {isDev} from '../common/lib'
+import {UUID} from '../common/interfaces'
 
 export const ITEMS_COUNT_TO_QUERY = isDev() ? 18 : 50
 
@@ -81,4 +82,22 @@ export function throttleTo60Fps(func): (args) => void {
             })
         }
     }
+}
+
+export function getTagsForMedia(appState: AppState, UUIDs: Array<UUID>): Array<string> {
+    let tagsSet: Set<string> = appState.media
+        .slice()
+        .filter((mediaItem) => {
+            return UUIDs.indexOf(mediaItem.uuid) !== -1
+        })
+        .map((mediaItem) => {
+            return mediaItem.tags
+        })
+        .reduce((resSet, tagsArr) => {
+            tagsArr.forEach((tag) => resSet.add(tag))
+            return resSet
+        }, new Set<string>())
+    let tagsArr = [...tagsSet]
+    tagsArr.sort()
+    return tagsArr
 }

@@ -33,8 +33,9 @@ export class Collections2 extends React.Component<IProps & IAppState, IState> {
 
     render() {
         const {appState} = this.props
+        const collectionName = this.state.text.trim()
         const matchedCollections = appState.collections.filter((collection) => {
-            return collection.title === this.state.text
+            return collection.title === collectionName
         })
         const collectionIdToDelete = (matchedCollections || [])[0]
         return (
@@ -63,11 +64,11 @@ export class Collections2 extends React.Component<IProps & IAppState, IState> {
                             className='Collections2__first-button'
                             compact
                             size='small'
-                            disabled={!!collectionIdToDelete}
+                            disabled={!!collectionIdToDelete || !collectionName}
                             onClick={async (event) => {
                                 event.preventDefault()
                                 this.setState({disabled: true})
-                                const res = await appState.createCollection(this.state.text)
+                                const res = await appState.createCollection(collectionName)
                                 this.setState({disabled: false})
                                 if (res) {
                                     this.setState({text: ''})
@@ -83,7 +84,9 @@ export class Collections2 extends React.Component<IProps & IAppState, IState> {
                             disabled={!collectionIdToDelete}
                             onClick={(event) => {
                                 event.preventDefault()
-                                appState.deleteCollection(collectionIdToDelete)
+                                if (confirm(`Confirm deletion of collection "${matchedCollections[0].title}"`)) {
+                                    appState.deleteCollection(collectionIdToDelete)
+                                }
                             }}
                         >
                             Delete

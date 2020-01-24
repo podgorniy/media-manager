@@ -67,7 +67,7 @@ async function registerFile(sourcePath: string, ownerId: string) {
         mediaSize.width = size.width
         mediaSize.height = size.height
         // gifs and png's are usually too large, so generate thumbnail for them anyway
-        shouldHavePreview = (mediaSize.width > THUMBNAIL_WIDTH) || (extension === 'gif') || (extension === 'png')
+        shouldHavePreview = mediaSize.width > THUMBNAIL_WIDTH || extension === 'gif' || extension === 'png'
         const previewFilePath = path.resolve(THUMBNAILS_FOLDER_PATH, uuid + '.jpeg')
         if (shouldHavePreview) {
             await generateThumbnail({sourceFilePath: fileTargetPath, thumbnailFilePath: previewFilePath})

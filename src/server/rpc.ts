@@ -1,8 +1,8 @@
 import {Express} from 'express'
 import {RPCConfig} from '../common/rpc'
 import {createRpcProvider} from './rpc-framework-server'
-import { MediaModel } from './media'
-import { CollectionsModel } from './collection'
+import {MediaModel} from './media'
+import {CollectionsModel} from './collection'
 
 export function initRpc(app: Express) {
     const rpcHandler = createRpcProvider(new RPCConfig(), {
@@ -20,15 +20,18 @@ export function initRpc(app: Express) {
             if (mediaBelongingToUser.length !== uuids.length) {
                 throw Error(`Can't delete list of provided media. Not all items are found belonging to user`)
             }
-            await CollectionsModel.update({
-                owner: userId
-            }, {
-                $pull: {
-                    media: {
-                        $in: uuids
+            await CollectionsModel.update(
+                {
+                    owner: userId
+                },
+                {
+                    $pull: {
+                        media: {
+                            $in: uuids
+                        }
                     }
                 }
-            })
+            )
             await MediaModel.deleteMany({
                 owner: userId,
                 uuid: {
