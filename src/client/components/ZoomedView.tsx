@@ -3,7 +3,7 @@ import {inject, observer} from 'mobx-react'
 import {IAppState} from '../app-state'
 import {Icon} from 'semantic-ui-react'
 import {autorun} from 'mobx'
-import {throttle} from '../lib'
+import {isControlFocused, throttle} from '../lib'
 
 require('./ZoomedView.css')
 
@@ -56,7 +56,7 @@ export class ZoomedView extends React.Component<IZoomedViewProps & IAppState, IZ
 
     keyDown = (event) => {
         const {appState} = this.props
-        if (event.code === 'Space') {
+        if (event.code === 'Space' && !isControlFocused()) {
             // In zoomed view. Exit zoomed view
             if (appState.zoomedItemId) {
                 this.close()

@@ -51,3 +51,34 @@ export function throttle(fn, time) {
         }
     }
 }
+
+const CONTROLS_NODE_NAMES = ['BUTTON', 'A', 'INPUT']
+
+export function isControlFocused(): boolean {
+    const activeElement = document.activeElement
+    if (activeElement && activeElement.nodeName) {
+        const activeElementNodeName = activeElement.nodeName
+        if (CONTROLS_NODE_NAMES.indexOf(activeElementNodeName) !== -1) {
+            return true
+        }
+    }
+    return false
+}
+
+/**
+ * Throttles func to 60 fps. Calls with params passed on latest call
+ */
+export function throttleTo60Fps(func): (args) => void {
+    let animationFrameRequested = false
+    let params
+    return (...args) => {
+        params = [...args]
+        if (!animationFrameRequested) {
+            animationFrameRequested = true
+            requestAnimationFrame(() => {
+                animationFrameRequested = false
+                func.apply(this, params) // call with latest params passed
+            })
+        }
+    }
+}

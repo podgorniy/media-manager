@@ -2,6 +2,7 @@ import * as React from 'react'
 import {inject, observer} from 'mobx-react'
 import {IAppState} from '../app-state'
 import {ZoomedView} from './ZoomedView'
+import {isControlFocused} from '../lib'
 
 interface IZoom {
     scale: number
@@ -26,7 +27,7 @@ export class Zoom extends React.Component<{} & IAppState, IZoom> {
         const {appState} = this.props
         if (event.code === 'Space') {
             // Some element is focused
-            if (appState.focusedId) {
+            if (appState.focusedId && !isControlFocused()) {
                 appState.setZoomed(appState.focusedId)
                 event.preventDefault()
                 return
