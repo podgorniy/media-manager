@@ -65,29 +65,6 @@ export class ContextualActions extends React.Component<{} & IAppState, {}> {
                         </Button.Group>
                     </div>
                 </div>
-                {appState.zoomedItemId && (
-                    <div className='ContextualActions__block ContextualActions__zoomed'>
-                        <div className='ContextualActions__row'>
-                            <ShareMediaItem mediaItemUUID={appState.zoomedItemId} />
-                            <div className='clear' />
-                        </div>
-                        <div className='ContextualActions__row'>
-                            <SelectionControls UUIDs={[appState.zoomedItemId]} />
-                        </div>
-                        <div className='ContextualActions__row'>
-                            <Button.Group size='small' compact>
-                                <DeleteMedia UUIDs={[appState.zoomedItemId]} />
-                                <DownloadMedia UUIDs={[appState.zoomedItemId]} count={1} />
-                            </Button.Group>
-                        </div>
-                        <div className='ContextualActions__row'>
-                            <TagsControls mediaUUIDs={[appState.zoomedItemId]} />
-                        </div>
-                        <div className='ContextualActions__row'>
-                            <CollectionsControls UUIDs={[appState.zoomedItemId]} />
-                        </div>
-                    </div>
-                )}
                 <div className='ContextualActions__block ContextualActions__selected'>
                     {appState.selectedUUIDs.length ? (
                         <React.Fragment>
@@ -127,6 +104,29 @@ export class ContextualActions extends React.Component<{} & IAppState, {}> {
                         </React.Fragment>
                     )}
                 </div>
+                {appState.zoomedItemId && (
+                    <div className='ContextualActions__block ContextualActions__zoomed'>
+                        <div className='ContextualActions__row'>
+                            <ShareMediaItem mediaItemUUID={appState.zoomedItemId} />
+                            <div className='clear' />
+                        </div>
+                        <div className='ContextualActions__row'>
+                            <SelectionControls UUIDs={[appState.zoomedItemId]} />
+                        </div>
+                        <div className='ContextualActions__row'>
+                            <Button.Group size='small' compact>
+                                <DeleteMedia UUIDs={[appState.zoomedItemId]} />
+                                <DownloadMedia UUIDs={[appState.zoomedItemId]} count={1} />
+                            </Button.Group>
+                        </div>
+                        <div className='ContextualActions__row'>
+                            <TagsControls mediaUUIDs={[appState.zoomedItemId]} />
+                        </div>
+                        <div className='ContextualActions__row'>
+                            <CollectionsControls UUIDs={[appState.zoomedItemId]} />
+                        </div>
+                    </div>
+                )}
                 <div className='ContextualActions__block ContextualActions__collections'>
                     <div className='ContextualActions__row'>
                         <TagsList />
