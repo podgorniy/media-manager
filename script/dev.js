@@ -4,7 +4,6 @@ const path = require('path')
 // Add node_modules/.bin to path as it's not included by default
 shell.env['PATH'] += path.delimiter + path.join(process.cwd(), 'node_modules', '.bin')
 shell.env['NODE_ENV'] = 'development'
-shell.env['DEMO'] = '1'
 shell.env['FILES_DIR'] = './data/files'
 
 shell.mkdir('-p', './.dev/server/')

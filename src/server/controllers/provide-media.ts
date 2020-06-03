@@ -10,9 +10,9 @@ const MAX_LIMIT = 100
 export const provideMedia = asyncHandler(async (req, res) => {
     try {
         const {skip, limit, tags, collectionUri} = req.query
-        const intLimit = parseInt(limit)
+        const intLimit = parseInt(limit as string)
         const normalizedCount = !intLimit || intLimit <= 0 ? DEFAULT_LIMIT : intLimit
-        const querySkipItems = parseInt(skip) || 0
+        const querySkipItems = parseInt(skip as string) || 0
         const isAuthenticated = req.isAuthenticated()
         let queryLimitItems
         if (normalizedCount > MAX_LIMIT) {

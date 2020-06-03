@@ -203,6 +203,15 @@ export class AppState {
         return this.media[zoomedIndex]
     }
 
+    @computed
+    get urlsToPreload(): Array<IClientMediaItem> {
+        let res = []
+        for (let i = -2; i < 2; i += 1) {
+            res.push(this.media[this.getZoomedIndex(i)])
+        }
+        return res
+    }
+
     /**
      * One item that currently has focus
      * Focus will be assigned on hover
@@ -349,16 +358,34 @@ export class AppState {
      */
     @action.bound
     shiftZoomed(indexShift: number) {
+        // const zoomedIndex = this.media.findIndex((item) => item.uuid === this.zoomedItemId)
+        // const newZoomedIndex = zoomedIndex + indexShift
+
+        const nextIndex = this.getZoomedIndex(indexShift)
+        this.setZoomed(this.media[nextIndex].uuid)
+        // const lastItemIndex = this.media.length - 1
+        // if (newZoomedIndex > lastItemIndex) {
+        //     this.setZoomed(this.media[lastItemIndex].uuid)
+        // } else if (newZoomedIndex < 0) {
+        //     this.setZoomed(this.media[0].uuid)
+        // } else {
+        //     this.setZoomed(this.media[newZoomedIndex].uuid)
+        // }
+    }
+
+    getZoomedIndex(indexShift) {
         const zoomedIndex = this.media.findIndex((item) => item.uuid === this.zoomedItemId)
         const newZoomedIndex = zoomedIndex + indexShift
         const lastItemIndex = this.media.length - 1
+        let res
         if (newZoomedIndex > lastItemIndex) {
-            this.setZoomed(this.media[lastItemIndex].uuid)
+            res = lastItemIndex
         } else if (newZoomedIndex < 0) {
-            this.setZoomed(this.media[0].uuid)
+            res = 0
         } else {
-            this.setZoomed(this.media[newZoomedIndex].uuid)
+            res = newZoomedIndex
         }
+        return res
     }
 
     @action.bound

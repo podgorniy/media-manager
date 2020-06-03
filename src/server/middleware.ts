@@ -18,6 +18,8 @@ export function initMiddleware(app: Express) {
     app.use(express.static(path.resolve(__dirname, '../static')))
     app.use(express.urlencoded())
     app.use((req, res, next) => {
+        next()
+        return
         if (isDev()) {
             setTimeout(next, Math.random() * 999 + 500) // 500 - 1500ms of delay
         } else {

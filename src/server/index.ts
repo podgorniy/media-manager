@@ -7,6 +7,8 @@ import {startServer} from './web'
 fs.ensureDirSync(MEDIA_FOLDER_PATH)
 fs.ensureDirSync(THUMBNAILS_FOLDER_PATH)
 
-startServer().catch((err) => {
+startServer().then(() => {
+    console.log('Server started')
+}).catch((err) => {
     console.error(err)
 })

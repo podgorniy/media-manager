@@ -2,7 +2,7 @@ import 'semantic-ui-css/semantic.min.css'
 import * as React from 'react'
 import {initApp} from './components/App'
 import {render} from 'react-dom'
-import {AppState} from './app-state'
+import {AppState} from './app-state';
 import {isDev} from '../common/lib'
 import {initServices} from './services'
 

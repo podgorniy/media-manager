@@ -55,24 +55,27 @@ export class MediaListItem extends React.Component<IMediaListItemProps & IAppSta
     }
 
     componentDidMount() {
-        const {appState, uuid} = this.props
-        let self = this
         this.stopAutoScrollIntoView = autorun(() => {
-            const current: HTMLElement = self.ref.current
-            if (appState.zoomedItemId === uuid) {
-                const [_, topIsHidden, isInViewport] = this.viewPortState(self.ref.current)
-                if (!isInViewport) {
-                    current.scrollIntoView({
-                        behavior: 'smooth',
-                        block: topIsHidden ? 'start' : 'end'
-                    })
-                }
-            }
+            this._autoScrollIntoView()
         })
     }
 
     componentWillUnmount() {
         this.stopAutoScrollIntoView()
+    }
+
+    _autoScrollIntoView = () => {
+        const {appState, uuid} = this.props
+        const current: HTMLElement = this.ref.current
+        if (appState.zoomedItemId === uuid) {
+            const [_, topIsHidden, isInViewport] = this.viewPortState(this.ref.current)
+            if (!isInViewport) {
+                current.scrollIntoView({
+                    behavior: 'smooth',
+                    block: topIsHidden ? 'start' : 'end'
+                })
+            }
+        }
     }
 
     clickHandler = (event) => {

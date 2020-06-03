@@ -67,7 +67,7 @@ npm install --production
 Override environment variables from `.env` file an run
 
 ```
-npm run prod
+node ./dist/server/index.js
 ```
 
 

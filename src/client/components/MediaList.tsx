@@ -9,7 +9,7 @@ import {autorun} from 'mobx'
 
 require('./MediaList.less')
 
-const SHUFFLE_ANIMATION_DURATION = 250
+const SHUFFLE_ANIMATION_DURATION = 0
 const SCREEN_FRAME_DURATION = 16
 
 interface IProps extends IAppState {}

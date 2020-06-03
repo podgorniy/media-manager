@@ -76,6 +76,7 @@ export class Tagging extends React.Component<IProps & IAppState, IState> {
                     }}
                 >
                     <input />
+
                     <datalist id='tags'>
                         {appState.tags.map(({name}) => {
                             return <option value={name} key={name} />

@@ -95,10 +95,24 @@ function initGuestCollection(appState: AppState) {
     })
 }
 
+let preloaded = new WeakMap()
+function initPreloading(appState: AppState) {
+    autorun((r) => {
+        appState.urlsToPreload.forEach(o => {
+            if (o && o.type === 'img') {
+                const img = new Image()
+                img.src = o.originalUrl
+                preloaded.set(img, null)
+            }
+        })
+    })
+}
+
 // Reacts to state changes
 export function initServices(appState: AppState) {
     initResettingService(appState) // 1. Order matters
     initLoadingMoreService(appState) // 2. Order matters
     initSelectingCurrentCollectionId(appState)
     initGuestCollection(appState)
+    initPreloading(appState)
 }
