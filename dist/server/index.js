@@ -14,7 +14,9 @@ var utils_1 = require("./utils");
 var web_1 = require("./web");
 fs.ensureDirSync(utils_1.MEDIA_FOLDER_PATH);
 fs.ensureDirSync(utils_1.THUMBNAILS_FOLDER_PATH);
-web_1.startServer().catch(function (err) {
+web_1.startServer().then(function () {
+    console.log('Server started');
+}).catch(function (err) {
     console.error(err);
 });
 //# sourceMappingURL=index.js.map
