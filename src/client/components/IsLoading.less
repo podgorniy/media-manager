@@ -1,0 +1,42 @@
+@progress-stripe-size: 1rem;
+
+.IsLoading {
+    background: #007bff;
+    height: 10px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 999;
+}
+
+.IsLoading--striped {
+    background-image: linear-gradient(
+        45deg,
+        rgba(255, 255, 255, 0.15) 25%,
+        transparent 25%,
+        transparent 50%,
+        rgba(255, 255, 255, 0.15) 50%,
+        rgba(255, 255, 255, 0.15) 75%,
+        transparent 75%,
+        transparent
+    );
+    background-size: @progress-stripe-size @progress-stripe-size;
+    animation-name: loading;
+    animation-duration: 1s;
+    animation-timing-function: linear;
+    animation-delay: 0s;
+    animation-iteration-count: infinite;
+    animation-direction: normal;
+    animation-fill-mode: none;
+    animation-play-state: running;
+}
+
+@keyframes loading {
+    from {
+        background-position: @progress-stripe-size 0;
+    }
+    to {
+        background-position: 0 0;
+    }
+}

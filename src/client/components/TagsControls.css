@@ -1,0 +1,9 @@
+.TagControls__list {
+    margin-top: 5px;
+}
+
+.TagControls__list .label.ui {
+    vertical-align: middle;
+    margin-right: 5px;
+    margin-top: 5px;
+}

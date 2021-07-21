@@ -1,0 +1,31 @@
+import {asyncHandler} from '../utils'
+import {MediaModel} from '../media'
+
+export const removeTags = asyncHandler(async (req, res) => {
+    const {tags, media} = req.body
+    try {
+        await MediaModel.updateMany(
+            {
+                uuid: {
+                    $in: media
+                },
+                owner: req.user._id
+            },
+            {
+                $pull: {
+                    tags: {
+                        $in: tags
+                    }
+                }
+            }
+        )
+    } catch (err) {
+        console.error(err)
+        res.status(500).send({
+            success: false
+        })
+    }
+    res.send({
+        success: true
+    })
+})

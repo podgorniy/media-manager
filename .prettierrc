@@ -1,0 +1,29 @@
+{
+    "tabWidth": 4,
+    "semi": false,
+    "singleQuote": true,
+    "overrides": [
+        {
+            "files": ["*.tsx", "*.ts"],
+            "options": {
+                "printWidth": 120,
+                "parser": "typescript",
+                "jsxSingleQuote": true,
+                "bracketSpacing": false,
+                "arrowParens": "always"
+            }
+        },
+        {
+            "files": "*.less",
+            "options": {
+                "parser": "less"
+            }
+        },
+        {
+            "files": ".prettierrc",
+            "options": {
+                "parser": "json"
+            }
+        }
+    ]
+}

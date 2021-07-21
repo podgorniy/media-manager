@@ -1,0 +1,40 @@
+version: '3'
+
+services:
+    media-manager:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        restart: always
+        container_name: media-manager
+        volumes:
+            - "${DIR}/files:${FILES_DIR}"
+        env_file:
+          - ".env"
+        environment:
+            - NODE_ENV=production
+            - MONGO_URL=mongodb://mongodb/media-manager
+            - ACCOUNT_NAME
+            - ACCOUNT_PASSWORD
+            - DEMO
+            - EXPOSED_PORT
+        networks:
+            - webappnetwork
+        depends_on:
+            - mongodb
+        command: sh -c './bin/wait-for mongodb:27017 -t 20 -- node ./dist/server/index.js'
+        ports:
+            - "${EXPOSED_PORT}:${PORT}"
+        image: podgorniy/media-manager
+    mongodb:
+        image: mongo:4.2
+        restart: always
+        container_name: mongodb
+        volumes:
+            - '${DIR}/db:/data/db'
+        command: mongod --noauth
+        networks:
+            - webappnetwork
+networks:
+    webappnetwork:
+        driver: bridge

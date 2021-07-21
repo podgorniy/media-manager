@@ -1,0 +1,81 @@
+.MediaListItem {
+    display: block;
+    margin: 0 auto;
+    width: 100%;
+    object-fit: fill;
+}
+
+.MediaListItem__outer {
+    border: 5px solid transparent;
+    border-radius: 5px;
+    position: relative;
+}
+
+.MediaListItem__outer-gif:before {
+    position: absolute;
+    top: 0;
+    left: 0;
+    content: 'GIF';
+    color: #fff;
+    background: #000;
+    z-index: 5;
+}
+
+.MediaListItem__outer.selected {
+    border-color: #fffd00;
+}
+
+.MediaListItem__outer.focused {
+    border-color: #50e151;
+}
+
+.MediaListItem__aspect {
+    position: relative;
+    width: 100%;
+    height: 0;
+    padding-bottom: 100%;
+    overflow: hidden;
+}
+
+.MediaListItem__aspect_inner {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: none;
+}
+
+.MediaListItem__aspect_inner--loading-1 {
+    background-image: linear-gradient(138deg, #6e34d6, #48c5de);
+}
+.MediaListItem__aspect_inner--loading-2 {
+    background-image: linear-gradient(138deg, #51ff28, #803dde);
+}
+.MediaListItem__aspect_inner--loading-3 {
+    background-image: linear-gradient(138deg, #d65bcd, #1cb0de);
+}
+.MediaListItem__aspect_inner--loading-4 {
+    background-image: linear-gradient(138deg, #d6139c, #480dde);
+}
+.MediaListItem__aspect_inner--loading-5 {
+    background-image: linear-gradient(138deg, #1bd677, #233fde);
+}
+
+.MediaListItem__aspect_inner--loading {
+    animation-iteration-count: infinite;
+    background-size: 400% 400%;
+    animation: 4s loadingPlaceholder ease infinite;
+}
+
+@keyframes loadingPlaceholder {
+    0% {
+        background-position: 2% 0;
+    }
+    50% {
+        background-position: 99% 100%;
+    }
+    100% {
+        background-position: 2% 0;
+    }
+}

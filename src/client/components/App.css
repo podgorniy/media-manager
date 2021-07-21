@@ -1,0 +1,14 @@
+/* Main Styles */
+body {
+    background: #121212;
+    color: whitesmoke;
+}
+
+.clear {
+    clear: both;
+}
+
+.ui.button.dropdown-wrapper {
+    display: block;
+    padding: 0;
+}

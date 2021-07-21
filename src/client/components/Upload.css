@@ -1,0 +1,59 @@
+.Upload {
+    background: rgba(0, 0, 0, 0.9);
+    /* override .dropzone-s styles */
+    border: 0;
+    padding: 0;
+    /* /override .dropzone-s styles */
+    bottom: 0;
+    left: 0;
+    position: fixed;
+    right: 0;
+    top: 0;
+    z-index: 10;
+}
+
+.dropzone .dz-preview.dz-image-preview {
+    background: none;
+}
+
+.dropzone .dz-preview .dz-image {
+    background: #fff;
+}
+
+.dropzone .dz-preview.dz-error .dz-image {
+    background: #f00;
+}
+
+.dropzone .dz-preview.dz-error {
+}
+
+.Upload__dropzone {
+    overflow: auto;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
+.Upload__head {
+    padding: 20px 20px 0;
+}
+
+.Upload__close {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+}
+
+.Upload__progress {
+    margin-top: 20px !important;
+}
+
+.Upload__progress.ui.indicating.progress .label {
+    color: #fff;
+}
+
+* {
+    /*border: 1px solid red!important;*/
+}

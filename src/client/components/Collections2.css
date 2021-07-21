@@ -1,0 +1,35 @@
+.Collections2__first-button {
+    margin-left: 3px !important;
+}
+
+.Collections2__collection-link {
+    margin-bottom: 0;
+    margin-top: 5px;
+}
+
+.Collections2__collection-link a {
+    color: #fefefe;
+    padding: 0 10px;
+    display: inline-block;
+    margin-bottom: 5px;
+    border-radius: 5px;
+}
+
+.Collections2__collection-link-active {
+    background: #8096b1;
+}
+
+.Collections2__collection-actions {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.Collections2__separator:not(:last-of-type) {
+    border-bottom: 1px dotted #999;
+    margin-top: 5px;
+}
+
+.Collections2__collection-actions > * {
+    margin-bottom: 5px !important;
+    margin-right: 5px !important;
+}

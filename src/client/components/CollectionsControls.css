@@ -1,0 +1,23 @@
+.CollectionsControls {
+    display: flex;
+}
+
+.CollectionsControls__item {
+    flex-grow: 0;
+}
+
+.CollectionsControls__item--grow {
+    flex-grow: 1;
+}
+
+.CollectionsControls__item--buttons {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-content: center;
+    margin-left: 5px;
+}
+
+.CollectionsControls__buttons {
+    flex-grow: 0;
+}
